@@ -1,0 +1,13 @@
+{
+  "name": "archi-law-cl-01",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev . --compatibility-date=2025-01-01",
+    "d1:apply": "wrangler d1 execute archi_law_db --file=./db/schema.sql",
+    "d1:seed": "wrangler d1 execute archi_law_db --file=./db/seed.sql",
+    "ingest:meta": "node ./scripts/ingest_meta.js",
+    "ingest:articles": "node ./scripts/ingest_articles.js"
+  },
+  "dependencies": {}
+}

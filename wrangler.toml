@@ -1,0 +1,8 @@
+name = "archi-law-cl-01"
+compatibility_date = "2025-01-01"
+
+# Pages Functions에서는 [[d1_databases]] 바인딩을 사용
+[[d1_databases]]
+binding = "DB"
+database_name = "archi_law_db"
+database_id = ""
