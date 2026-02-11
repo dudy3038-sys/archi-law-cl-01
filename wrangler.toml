@@ -5,4 +5,4 @@ compatibility_date = "2025-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "archi_law_db"
-database_id = ""
+database_id = "2e1e9a33-8bf5-4824-aa73-89e1eb13cc75"
