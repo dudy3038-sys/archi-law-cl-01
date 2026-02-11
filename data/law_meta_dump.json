@@ -1,0 +1,16 @@
+[
+  {
+    "law_id": "c1e8cbcccd4b",
+    "law_name": "건축법",
+    "ministry": "국토교통부",
+    "시행일": "2024-01-01",
+    "source_url": "https://example.com/law/archi"
+  },
+  {
+    "law_id": "bd3465004307",
+    "law_name": "국토의 계획 및 이용에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2024-02-01",
+    "source_url": "https://example.com/law/land"
+  }
+]

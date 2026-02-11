@@ -9,5 +9,7 @@
     "ingest:meta": "node ./scripts/ingest_meta.js",
     "ingest:articles": "node ./scripts/ingest_articles.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
 }
