@@ -1,16 +1,702 @@
 [
   {
-    "law_id": "c1e8cbcccd4b",
-    "law_name": "건축법",
-    "ministry": "국토교통부",
-    "시행일": "2024-01-01",
-    "source_url": "https://example.com/law/archi"
+    "law_id": "010719",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
+    "ministry": "문화체육관광부",
+    "시행일": "2023-08-08",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=253527&type=HTML&mobileYn=&efYd=20230808"
   },
   {
-    "law_id": "bd3465004307",
-    "law_name": "국토의 계획 및 이용에 관한 법률",
-    "ministry": "국토교통부",
-    "시행일": "2024-02-01",
-    "source_url": "https://example.com/law/land"
+    "law_id": "010719",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
+    "ministry": "문화체육관광부",
+    "시행일": "2021-05-18",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=232157&type=HTML&mobileYn=&efYd=20210518"
+  },
+  {
+    "law_id": "010719",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
+    "ministry": "문화체육관광부",
+    "시행일": "2019-03-25",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=206034&type=HTML&mobileYn=&efYd=20190325"
+  },
+  {
+    "law_id": "010719",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
+    "ministry": "문화체육관광부",
+    "시행일": "2016-06-30",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180715&type=HTML&mobileYn=&efYd=20160630"
+  },
+  {
+    "law_id": "010719",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
+    "ministry": "문화체육관광부",
+    "시행일": "2013-08-23",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=140323&type=HTML&mobileYn=&efYd=20130823"
+  },
+  {
+    "law_id": "010719",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
+    "ministry": "문화체육관광부",
+    "시행일": "2013-05-22",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=140323&type=HTML&mobileYn=&efYd=20130522"
+  },
+  {
+    "law_id": "010719",
+    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률",
+    "ministry": "문화체육관광부",
+    "시행일": "2010-01-25",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=102121&type=HTML&mobileYn=&efYd=20100125"
+  },
+  {
+    "law_id": "010719",
+    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률",
+    "ministry": "문화체육관광부",
+    "시행일": "2008-06-29",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=86330&type=HTML&mobileYn=&efYd=20080629"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2025-10-01",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=277805&type=HTML&mobileYn=&efYd=20251001"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2024-11-12",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=266351&type=HTML&mobileYn=&efYd=20241112"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2024-07-30",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=264477&type=HTML&mobileYn=&efYd=20240730"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2023-06-05",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=249727&type=HTML&mobileYn=&efYd=20230605"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2021-09-29",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=235703&type=HTML&mobileYn=&efYd=20210929"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2019-07-02",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=209597&type=HTML&mobileYn=&efYd=20190702"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2016-06-30",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=183817&type=HTML&mobileYn=&efYd=20160630"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2015-12-31",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=178674&type=HTML&mobileYn=&efYd=20151231"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2015-01-06",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=166590&type=HTML&mobileYn=&efYd=20150106"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2013-08-23",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=143184&type=HTML&mobileYn=&efYd=20130823"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2013-03-23",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=135518&type=HTML&mobileYn=&efYd=20130323"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2012-05-23",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=125535&type=HTML&mobileYn=&efYd=20120523"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2012-01-06",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=121427&type=HTML&mobileYn=&efYd=20120106"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2011-11-11",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=118667&type=HTML&mobileYn=&efYd=20111111"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2010-05-05",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=104835&type=HTML&mobileYn=&efYd=20100505"
+  },
+  {
+    "law_id": "010831",
+    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
+    "ministry": "문화체육관광부",
+    "시행일": "2008-09-09",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=88753&type=HTML&mobileYn=&efYd=20080909"
+  },
+  {
+    "law_id": "014656",
+    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법",
+    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
+    "시행일": "2026-05-11",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=283303&type=HTML&mobileYn=&efYd=20260511"
+  },
+  {
+    "law_id": "014656",
+    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법",
+    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
+    "시행일": "2026-01-02",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=277295&type=HTML&mobileYn=&efYd=20260102"
+  },
+  {
+    "law_id": "014656",
+    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법",
+    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
+    "시행일": "2024-05-21",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=262693&type=HTML&mobileYn=&efYd=20240521"
+  },
+  {
+    "law_id": "014808",
+    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법 시행령",
+    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
+    "시행일": "2026-01-02",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=281503&type=HTML&mobileYn=&efYd=20260102"
+  },
+  {
+    "law_id": "014808",
+    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법 시행령",
+    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
+    "시행일": "2025-10-01",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=277693&type=HTML&mobileYn=&efYd=20251001"
+  },
+  {
+    "law_id": "014808",
+    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법 시행령",
+    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
+    "시행일": "2025-01-14",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=268201&type=HTML&mobileYn=&efYd=20250114"
+  },
+  {
+    "law_id": "014565",
+    "law_name": "112신고의 운영 및 처리에 관한 법률",
+    "ministry": "경찰청",
+    "시행일": "2024-07-03",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=257787&type=HTML&mobileYn=&efYd=20240703"
+  },
+  {
+    "law_id": "014679",
+    "law_name": "112신고의 운영 및 처리에 관한 법률 시행령",
+    "ministry": "경찰청",
+    "시행일": "2024-07-03",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263521&type=HTML&mobileYn=&efYd=20240703"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2025-06-04",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=266637&type=HTML&mobileYn=&efYd=20250604"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2024-07-03",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=257789&type=HTML&mobileYn=&efYd=20240703"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2024-02-17",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=253949&type=HTML&mobileYn=&efYd=20240217"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2022-01-20",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236231&type=HTML&mobileYn=&efYd=20220120"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2022-01-06",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228097&type=HTML&mobileYn=&efYd=20220106"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2021-10-21",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222449&type=HTML&mobileYn=&efYd=20211021"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2021-07-06",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228097&type=HTML&mobileYn=&efYd=20210706"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2021-01-21",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222449&type=HTML&mobileYn=&efYd=20210121"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2018-06-27",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=200188&type=HTML&mobileYn=&efYd=20180627"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2017-07-26",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=195264&type=HTML&mobileYn=&efYd=20170726"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2017-01-28",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180485&type=HTML&mobileYn=&efYd=20170128"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2016-03-16",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=177211&type=HTML&mobileYn=&efYd=20160316"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2014-11-19",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=162385&type=HTML&mobileYn=&efYd=20141119"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2013-03-23",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=138422&type=HTML&mobileYn=&efYd=20130323"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2012-07-01",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=124074&type=HTML&mobileYn=&efYd=20120701"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2012-06-22",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=124074&type=HTML&mobileYn=&efYd=20120622"
+  },
+  {
+    "law_id": "011349",
+    "law_name": "119구조ㆍ구급에 관한 법률",
+    "ministry": "소방청",
+    "시행일": "2011-09-09",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=110950&type=HTML&mobileYn=&efYd=20110909"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2025-06-04",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=271545&type=HTML&mobileYn=&efYd=20250604"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2025-01-01",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265713&type=HTML&mobileYn=&efYd=20250101"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2024-12-27",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=267477&type=HTML&mobileYn=&efYd=20241227"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2024-10-04",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265713&type=HTML&mobileYn=&efYd=20241004"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2024-08-14",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=264957&type=HTML&mobileYn=&efYd=20240814"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2024-04-23",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=261953&type=HTML&mobileYn=&efYd=20240423"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2023-03-31",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=249483&type=HTML&mobileYn=&efYd=20230331"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2023-01-02",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=247423&type=HTML&mobileYn=&efYd=20230102"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2022-07-21",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=243963&type=HTML&mobileYn=&efYd=20220721"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2022-03-30",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=241659&type=HTML&mobileYn=&efYd=20220330"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2022-01-06",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=239313&type=HTML&mobileYn=&efYd=20220106"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2021-07-13",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=233917&type=HTML&mobileYn=&efYd=20210713"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2021-07-06",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=233753&type=HTML&mobileYn=&efYd=20210706"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2021-01-21",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228889&type=HTML&mobileYn=&efYd=20210121"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2020-08-05",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=220681&type=HTML&mobileYn=&efYd=20200805"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2019-11-02",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=210086&type=HTML&mobileYn=&efYd=20191102"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2018-12-27",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=206223&type=HTML&mobileYn=&efYd=20181227"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2017-07-26",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=196225&type=HTML&mobileYn=&efYd=20170726"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2017-02-10",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191722&type=HTML&mobileYn=&efYd=20170210"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2017-01-28",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191460&type=HTML&mobileYn=&efYd=20170128"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2017-01-26",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191460&type=HTML&mobileYn=&efYd=20170126"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2016-01-27",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180539&type=HTML&mobileYn=&efYd=20160127"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2014-11-19",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=163971&type=HTML&mobileYn=&efYd=20141119"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2014-07-15",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=156982&type=HTML&mobileYn=&efYd=20140715"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2013-09-17",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=144131&type=HTML&mobileYn=&efYd=20130917"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2012-07-01",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126344&type=HTML&mobileYn=&efYd=20120701"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조·구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2012-06-22",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126344&type=HTML&mobileYn=&efYd=20120622"
+  },
+  {
+    "law_id": "011457",
+    "law_name": "119구조·구급에 관한 법률 시행규칙",
+    "ministry": "소방청",
+    "시행일": "2011-09-09",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=116823&type=HTML&mobileYn=&efYd=20110909"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2025-10-02",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=273763&type=HTML&mobileYn=&efYd=20251002"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2024-07-03",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263525&type=HTML&mobileYn=&efYd=20240703"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2024-04-23",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=261847&type=HTML&mobileYn=&efYd=20240423"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2022-01-06",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236155&type=HTML&mobileYn=&efYd=20220106"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2021-10-21",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236155&type=HTML&mobileYn=&efYd=20211021"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2021-07-06",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=233717&type=HTML&mobileYn=&efYd=20210706"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2021-01-21",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228807&type=HTML&mobileYn=&efYd=20210121"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2020-07-14",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=220037&type=HTML&mobileYn=&efYd=20200714"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2020-04-01",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=215419&type=HTML&mobileYn=&efYd=20200401"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2017-07-26",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=195947&type=HTML&mobileYn=&efYd=20170726"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2017-01-28",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191386&type=HTML&mobileYn=&efYd=20170128"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2016-10-25",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=187304&type=HTML&mobileYn=&efYd=20161025"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2016-09-05",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=186139&type=HTML&mobileYn=&efYd=20160905"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2016-03-16",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=181703&type=HTML&mobileYn=&efYd=20160316"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2015-12-31",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=178732&type=HTML&mobileYn=&efYd=20151231"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2014-11-19",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=163582&type=HTML&mobileYn=&efYd=20141119"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2014-07-15",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=156663&type=HTML&mobileYn=&efYd=20140715"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2014-07-08",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=156542&type=HTML&mobileYn=&efYd=20140708"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2013-12-17",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=148005&type=HTML&mobileYn=&efYd=20131217"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2013-03-23",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=135570&type=HTML&mobileYn=&efYd=20130323"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2012-09-01",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=128294&type=HTML&mobileYn=&efYd=20120901"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2012-07-01",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126322&type=HTML&mobileYn=&efYd=20120701"
+  },
+  {
+    "law_id": "011452",
+    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
+    "ministry": "소방청",
+    "시행일": "2012-06-22",
+    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126322&type=HTML&mobileYn=&efYd=20120622"
   }
 ]
