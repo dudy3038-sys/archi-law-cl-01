@@ -5,7 +5,6 @@ import { execSync } from "child_process";
 
 const DB_FILE = path.resolve("./data/law_meta_dump.json");
 const SQL_FILE = path.resolve("./data/law_meta_insert.sql");
-
 const BASE_URL = "http://www.law.go.kr/DRF/lawSearch.do";
 const LAW_OC = process.env.LAW_OC;
 const ONLY_MOLIT = process.env.ONLY_MOLIT === "1";
