@@ -1,14 +1,135 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  <title>건축 법령 검색</title>
+  <link href="/style.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 40px;
+      background: #f7f9fc;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 8px 10px;
+      font-size: 14px;
+      width: 200px;
+    }
+
+    button {
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+
+    .results {
+      margin-top: 20px;
+    }
+
+    .item {
+      background: white;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      cursor: pointer;
+    }
+
+    .item:hover {
+      background: #eef4ff;
+    }
+
+    .detail {
+      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+
+  <h1>📘 건축법 조문 검색</h1>
+
+  <div class="search-box">
+    <input id="keyword" placeholder="검색어 (예: 피난)" />
+    <input id="lawId" placeholder="법령ID (예: 276925)" value="276925" />
+    <button onclick="search()">검색</button>
+  </div>
+
+  <div class="results" id="results"></div>
+
+  <div class="detail" id="detail" style="display:none;"></div>
+
+<script>
+async function search() {
+  const q = document.getElementById("keyword").value.trim();
+  const lawId = document.getElementById("lawId").value.trim();
+  const resultsEl = document.getElementById("results");
+  const detailEl = document.getElementById("detail");
+
+  detailEl.style.display = "none";
+  detailEl.innerHTML = "";
+
+  if (!q) {
+    alert("검색어를 입력하세요");
+    return;
+  }
+
+  resultsEl.innerHTML = "검색 중...";
+
+  const res = await fetch(`/api/law/article/search?q=${encodeURIComponent(q)}&lawId=${lawId}&limit=20`);
+  const data = await res.json();
+
+  if (!data.ok || !data.rows || data.rows.length === 0) {
+    resultsEl.innerHTML = "검색 결과가 없습니다.";
+    return;
+  }
+
+  resultsEl.innerHTML = "";
+
+  data.rows.forEach(row => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `<strong>${row.article_no}</strong> - ${row.title || ""}<br><small>${row.preview || ""}</small>`;
+    div.onclick = () => loadDetail(row.law_id, row.article_no);
+    resultsEl.appendChild(div);
+  });
+}
+
+async function loadDetail(lawId, articleNo) {
+  const detailEl = document.getElementById("detail");
+  detailEl.innerHTML = "불러오는 중...";
+  detailEl.style.display = "block";
+
+  const res = await fetch(`/api/law/article/get?lawId=${lawId}&articleNo=${encodeURIComponent(articleNo)}`);
+  const data = await res.json();
+
+  if (!data.ok || !data.row) {
+    detailEl.innerHTML = "조문을 불러올 수 없습니다.";
+    return;
+  }
+
+  detailEl.innerHTML = `
+    <h3>${data.row.article_no} ${data.row.title || ""}</h3>
+    <hr/>
+    ${data.row.body}
+  `;
+}
+</script>
+
 </body>
 </html>
