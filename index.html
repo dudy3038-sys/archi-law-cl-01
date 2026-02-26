@@ -184,22 +184,26 @@
     .btn-mini:hover{ background:#eef4ff; }
     .btn-danger:hover{ background:#ffecec; }
 
-    /* ===== 트리(샘플 자리) ===== */
-    .tree-wrap {
+    /* =========================================================
+       ✅ 법규 트리: 이 아래는 전부 #ruleTree 스코프 안에서만 적용
+       (건축개요/조문검색 절대 영향 X)
+    ========================================================= */
+    #ruleTree .tree-wrap {
       margin-top: 18px;
       display:grid;
       grid-template-columns: 320px 1fr;
       gap: 16px;
       align-items: start;
     }
-    .tree-left, .tree-right {
+    #ruleTree .tree-left, 
+    #ruleTree .tree-right {
       background:#fff;
       border-radius: 14px;
       border: 1px solid rgba(0,0,0,.06);
       box-shadow: 0 8px 24px rgba(0,0,0,.05);
       overflow:hidden;
     }
-    .tree-head {
+    #ruleTree .tree-head {
       padding: 14px 16px;
       font-weight: 900;
       background:#f3f6ff;
@@ -209,8 +213,8 @@
       justify-content: space-between;
       gap:10px;
     }
-    .tree-list { padding: 10px; }
-    .tree-item {
+    #ruleTree .tree-list { padding: 10px; }
+    #ruleTree .tree-item {
       padding: 12px 12px;
       border-radius: 10px;
       cursor:pointer;
@@ -221,11 +225,11 @@
       font-weight: 700;
       user-select:none;
     }
-    .tree-item:hover { background:#eef4ff; }
-    .tree-item.active { background:#dfeaff; }
-    .tree-right-inner { padding: 16px; }
+    #ruleTree .tree-item:hover { background:#eef4ff; }
+    #ruleTree .tree-item.active { background:#dfeaff; }
+    #ruleTree .tree-right-inner { padding: 16px; }
 
-    .chip {
+    #ruleTree .chip {
       font-size: 12px;
       padding: 4px 8px;
       border-radius: 999px;
@@ -235,15 +239,15 @@
       white-space:nowrap;
     }
 
-    /* ====== (법규 트리 전용) 우측 카드형 접기/펼치기 ====== */
-    .tree-cards { display:flex; flex-direction:column; gap:12px; }
-    .law-card {
+    /* 우측 카드형 접기/펼치기 */
+    #ruleTree .tree-cards { display:flex; flex-direction:column; gap:12px; }
+    #ruleTree .law-card {
       border: 1px solid rgba(0,0,0,.08);
       border-radius: 12px;
       overflow:hidden;
       background:#fff;
     }
-    .law-card summary{
+    #ruleTree .law-card summary{
       list-style:none;
       cursor:pointer;
       padding: 12px 14px;
@@ -255,8 +259,8 @@
       font-weight:900;
       background:#f7f9ff;
     }
-    .law-card summary::-webkit-details-marker{ display:none; }
-    .law-card .law-body{
+    #ruleTree .law-card summary::-webkit-details-marker{ display:none; }
+    #ruleTree .law-card .law-body{
       padding: 14px;
       border-top: 1px solid rgba(0,0,0,.06);
       color:#111;
@@ -264,12 +268,12 @@
       line-height: 1.5;
       white-space: pre-wrap;
     }
-    .law-card .hint-right {
+    #ruleTree .law-card .hint-right {
       color:#667;
       font-size:12px;
       font-weight:700;
     }
-    .tree-actions{
+    #ruleTree .tree-actions{
       display:flex;
       gap:8px;
       align-items:center;
@@ -358,75 +362,77 @@
 
   <!-- =========================
        🌳 법규 트리 (샘플)
+       ✅ 스코프 분리: ruleTree 내부만 조작/스타일 적용
   ========================== -->
-  <div class="section-title">🌳 법규 트리 (샘플)</div>
-  <p class="hint">* 지금은 UI 구조만 보여주는 테스트 화면입니다. (법/시행령/시행규칙/조례/지구단위계획 트리)</p>
+  <section id="ruleTree">
+    <div class="section-title">🌳 법규 트리 (샘플)</div>
+    <p class="hint">* 지금은 UI 구조만 보여주는 테스트 화면입니다. (법/시행령/시행규칙/조례/지구단위계획 트리)</p>
 
-  <div class="tree-wrap">
-    <div class="tree-left">
-      <div class="tree-head">[항목]</div>
-      <div class="tree-list" id="ruleItems"></div>
-    </div>
-
-    <div class="tree-right">
-      <div class="tree-head">
-        <div id="treeTitle">[항목] 건폐율</div>
-        <div class="tree-actions">
-          <button type="button" class="btn-mini" onclick="expandAllLawCards()">전체 펼치기</button>
-          <button type="button" class="btn-mini" onclick="collapseAllLawCards()">전체 접기</button>
-        </div>
+    <div class="tree-wrap">
+      <div class="tree-left">
+        <div class="tree-head">[항목]</div>
+        <div class="tree-list" id="ruleItems"></div>
       </div>
 
-      <div class="tree-right-inner">
-        <!-- ✅ 우측은 “카드 5개”만: (우측 캡처 형태) -->
-        <div class="tree-cards" id="lawCards">
-          <details class="law-card" data-kind="법">
-            <summary>
-              <span>법</span>
-              <span class="hint-right">클릭: 접기/펼치기</span>
-            </summary>
-            <div class="law-body" data-body></div>
-          </details>
-
-          <details class="law-card" data-kind="시행령">
-            <summary>
-              <span>시행령</span>
-              <span class="hint-right">클릭: 접기/펼치기</span>
-            </summary>
-            <div class="law-body" data-body></div>
-          </details>
-
-          <details class="law-card" data-kind="시행규칙">
-            <summary>
-              <span>시행규칙</span>
-              <span class="hint-right">클릭: 접기/펼치기</span>
-            </summary>
-            <div class="law-body" data-body></div>
-          </details>
-
-          <details class="law-card" data-kind="조례">
-            <summary>
-              <span>조례</span>
-              <span class="hint-right">클릭: 접기/펼치기</span>
-            </summary>
-            <div class="law-body" data-body></div>
-          </details>
-
-          <details class="law-card" data-kind="지구단위계획">
-            <summary>
-              <span>지구단위계획</span>
-              <span class="hint-right">클릭: 접기/펼치기</span>
-            </summary>
-            <div class="law-body" data-body></div>
-          </details>
+      <div class="tree-right">
+        <div class="tree-head">
+          <div id="treeTitle">[항목] 건폐율</div>
+          <div class="tree-actions">
+            <button type="button" class="btn-mini" onclick="expandAllLawCards()">전체 펼치기</button>
+            <button type="button" class="btn-mini" onclick="collapseAllLawCards()">전체 접기</button>
+          </div>
         </div>
 
-        <div style="margin-top:14px; color:#556; font-size:12px;">
-          - (예시) 나중에 DB/체크리스트 엔진과 연결되면 실제 조문 본문이 들어갑니다.
+        <div class="tree-right-inner">
+          <div class="tree-cards" id="lawCards">
+            <details class="law-card" data-kind="법">
+              <summary>
+                <span>법</span>
+                <span class="hint-right">클릭: 접기/펼치기</span>
+              </summary>
+              <div class="law-body" data-body></div>
+            </details>
+
+            <details class="law-card" data-kind="시행령">
+              <summary>
+                <span>시행령</span>
+                <span class="hint-right">클릭: 접기/펼치기</span>
+              </summary>
+              <div class="law-body" data-body></div>
+            </details>
+
+            <details class="law-card" data-kind="시행규칙">
+              <summary>
+                <span>시행규칙</span>
+                <span class="hint-right">클릭: 접기/펼치기</span>
+              </summary>
+              <div class="law-body" data-body></div>
+            </details>
+
+            <details class="law-card" data-kind="조례">
+              <summary>
+                <span>조례</span>
+                <span class="hint-right">클릭: 접기/펼치기</span>
+              </summary>
+              <div class="law-body" data-body></div>
+            </details>
+
+            <details class="law-card" data-kind="지구단위계획">
+              <summary>
+                <span>지구단위계획</span>
+                <span class="hint-right">클릭: 접기/펼치기</span>
+              </summary>
+              <div class="law-body" data-body></div>
+            </details>
+          </div>
+
+          <div style="margin-top:14px; color:#556; font-size:12px;">
+            - (예시) 나중에 DB/체크리스트 엔진과 연결되면 실제 조문 본문이 들어갑니다.
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
 <script>
 /* =========================
@@ -495,7 +501,8 @@ function escapeHtml(str) {
 }
 
 /* =========================
-   법규 트리 (샘플) - 원하는 형태로만 수정
+   ✅ 법규 트리 (샘플)
+   - 전부 #ruleTree 내부만 조작하도록 스코프 고정
 ========================= */
 const RULE_ITEMS = [
   "건폐율",
@@ -527,7 +534,7 @@ const RULE_ITEMS = [
 ];
 
 function setLawCardBodies(itemName){
-  // 샘플 텍스트(나중에 DB 연결)
+  const root = document.getElementById("ruleTree");
   const sample = {
     "법": `${itemName} 관련 법 (샘플)\n\n법 00조\n법규 내용`,
     "시행령": `${itemName} 관련 시행령 (샘플)\n\n시행령 00조\n법규 내용`,
@@ -536,7 +543,7 @@ function setLawCardBodies(itemName){
     "지구단위계획": `${itemName} 관련 지구단위계획 (샘플)\n\n지침 내용`
   };
 
-  document.querySelectorAll("#lawCards .law-card").forEach(card => {
+  root.querySelectorAll("#lawCards .law-card").forEach(card => {
     const kind = card.getAttribute("data-kind");
     const body = card.querySelector("[data-body]");
     body.textContent = sample[kind] || "";
@@ -544,28 +551,31 @@ function setLawCardBodies(itemName){
 }
 
 function collapseAllLawCards(){
-  document.querySelectorAll("#lawCards .law-card").forEach(d => d.open = false);
+  const root = document.getElementById("ruleTree");
+  root.querySelectorAll("#lawCards .law-card").forEach(d => d.open = false);
 }
 function expandAllLawCards(){
-  document.querySelectorAll("#lawCards .law-card").forEach(d => d.open = true);
+  const root = document.getElementById("ruleTree");
+  root.querySelectorAll("#lawCards .law-card").forEach(d => d.open = true);
 }
 
 (function initTree(){
-  const list = document.getElementById("ruleItems");
+  const root = document.getElementById("ruleTree");
+  const list = root.querySelector("#ruleItems");
+  const title = root.querySelector("#treeTitle");
+
   list.innerHTML = "";
 
   RULE_ITEMS.forEach((name, idx) => {
     const div = document.createElement("div");
     div.className = "tree-item" + (idx === 0 ? " active" : "");
-    // 좌측 화살표는 “그냥 표시(▶)”만: 우측처럼
     div.innerHTML = `<span>${name}</span><span class="chip">▶</span>`;
     div.onclick = () => {
-      document.querySelectorAll(".tree-item").forEach(el => el.classList.remove("active"));
+      root.querySelectorAll(".tree-item").forEach(el => el.classList.remove("active"));
       div.classList.add("active");
 
-      document.getElementById("treeTitle").textContent = `[항목] ${name}`;
-
-      // ✅ 항목 바꾸면 우측 5개 카드는 기본 “접힘” (우측 캡처처럼)
+      title.textContent = `[항목] ${name}`;
+      // 항목 변경 시: 우측 카드 기본은 “접힘”
       collapseAllLawCards();
       setLawCardBodies(name);
     };
@@ -574,7 +584,7 @@ function expandAllLawCards(){
 
   // 초기 표시
   const first = RULE_ITEMS[0] || "건폐율";
-  document.getElementById("treeTitle").textContent = `[항목] ${first}`;
+  title.textContent = `[항목] ${first}`;
   setLawCardBodies(first);
   collapseAllLawCards();
 })();
