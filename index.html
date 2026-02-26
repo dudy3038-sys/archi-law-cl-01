@@ -228,6 +228,20 @@
       background:#fff;
       white-space:nowrap;
     }
+
+    /* ✅ (추가) 왼쪽 ▶가 실제 토글 버튼처럼 보이도록 */
+    .chip.toggle {
+      cursor: pointer;
+      user-select: none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width: 28px;
+      height: 22px;
+      padding: 0;
+    }
+    .chip.toggle:hover { background:#eef4ff; }
+    .tree-right.is-collapsed #treeContent { display:none; }
   </style>
 </head>
 <body>
@@ -324,7 +338,7 @@
       <div class="tree-list" id="ruleItems"></div>
     </div>
 
-    <div class="tree-right">
+    <div class="tree-right" id="treeRight">
       <div class="tree-head" id="treeTitle">[항목] 단열재의 두께</div>
       <div class="tree-right-inner" id="treeContent">
         <div class="chip" style="margin-bottom:10px;">클릭: 접기/펼치기</div>
@@ -433,6 +447,10 @@ function escapeHtml(str) {
 
 /* =========================
    법규 트리 (샘플)
+   ✅ 요청한 것만 수정:
+   - 왼쪽 항목의 ▶ 버튼으로 우측 전체 접기/펼치기
+   - 항목 클릭 시 제목 변경 + 우측 자동 펼침
+   - 우측의 법/시행령/시행규칙/조례/지구단위계획은 기존 details로 접기/펼치기 유지
 ========================= */
 const RULE_ITEMS = [
   "건폐율",
@@ -463,22 +481,62 @@ const RULE_ITEMS = [
   "단열재의 두께"
 ];
 
+function setRightCollapsed(isCollapsed) {
+  const right = document.getElementById("treeRight");
+  if (!right) return;
+  if (isCollapsed) right.classList.add("is-collapsed");
+  else right.classList.remove("is-collapsed");
+}
+
 (function initTree(){
   const list = document.getElementById("ruleItems");
-  list.innerHTML = "";
-  RULE_ITEMS.forEach((name, idx) => {
-    const div = document.createElement("div");
-    div.className = "tree-item" + (idx === RULE_ITEMS.length - 1 ? " active" : "");
-    div.innerHTML = `<span>${name}</span><span class="chip">▶</span>`;
-    div.onclick = () => {
-      document.querySelectorAll(".tree-item").forEach(el => el.classList.remove("active"));
-      div.classList.add("active");
-      document.getElementById("treeTitle").textContent = `[항목] ${name}`;
-      // 샘플이라 내용은 동일 (나중에 항목별로 바꿀 수 있음)
-    };
-    list.appendChild(div);
-  });
-})(); 
+  const title = document.getElementById("treeTitle");
+
+  let activeIndex = RULE_ITEMS.length - 1; // 기본: 마지막 항목 active
+  let collapsed = false;                  // 우측 접힘 상태
+
+  function render() {
+    list.innerHTML = "";
+    RULE_ITEMS.forEach((name, idx) => {
+      const div = document.createElement("div");
+      div.className = "tree-item" + (idx === activeIndex ? " active" : "");
+
+      // ✅ 오른쪽 펼침/접힘 토글 버튼(▶/▼)
+      const toggleBtn = document.createElement("span");
+      toggleBtn.className = "chip toggle";
+      toggleBtn.textContent = collapsed ? "▶" : "▼";
+      toggleBtn.title = collapsed ? "펼치기" : "접기";
+      toggleBtn.onclick = (e) => {
+        e.stopPropagation();          // 항목 선택과 분리
+        collapsed = !collapsed;
+        setRightCollapsed(collapsed);
+        render();                     // 아이콘만 갱신
+      };
+
+      const label = document.createElement("span");
+      label.textContent = name;
+
+      div.appendChild(label);
+      div.appendChild(toggleBtn);
+
+      // ✅ 항목 클릭: 활성 항목 변경 + 우측 자동 펼침
+      div.onclick = () => {
+        activeIndex = idx;
+        title.textContent = `[항목] ${name}`;
+        collapsed = false;
+        setRightCollapsed(false);
+        render();
+      };
+
+      list.appendChild(div);
+    });
+  }
+
+  // 초기 상태 반영
+  title.textContent = `[항목] ${RULE_ITEMS[activeIndex]}`;
+  setRightCollapsed(false);
+  render();
+})();
 
 /* =========================
    대지면적 > 지번/공부상면적
