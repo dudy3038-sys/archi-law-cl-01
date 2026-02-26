@@ -5,543 +5,411 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>건축 법령 검색</title>
   <link href="/style.css" rel="stylesheet">
-
   <style>
-    :root{
-      --bg:#f7f9fc;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --line:rgba(15,23,42,.12);
-      --brand:#2563eb;
-      --brand2:#1d4ed8;
-      --soft:#eef4ff;
-      --shadow: 0 10px 30px rgba(0,0,0,.06);
-      --radius:14px;
-    }
-
-    *{box-sizing:border-box}
-    body{
+    body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 32px;
-      background: var(--bg);
-      color: var(--text);
+      margin: 40px;
+      background: #f7f9fc;
+      color:#0b1220;
     }
 
-    .container{max-width:1200px;margin:0 auto;}
-    h1{margin:0 0 16px 0;font-size:44px;letter-spacing:-.5px}
-    .sub{color:var(--muted);margin:0 0 20px 0}
+    h1 { margin-bottom: 20px; }
 
-    .section{
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px;
-      margin: 18px 0;
-    }
-
-    .sectionTitle{
-      display:flex;align-items:center;gap:10px;
-      font-size:22px;font-weight:800;margin:0 0 12px 0;
-    }
-
-    .search-box{
-      display:flex; gap:10px; flex-wrap:wrap;
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
       align-items:center;
-      margin: 6px 0 10px 0;
     }
 
-    input, textarea, select{
+    input, textarea {
       padding: 10px 12px;
       font-size: 14px;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(0,0,0,.12);
       border-radius: 10px;
       background: #fff;
       outline: none;
-      min-height: 40px;
+      width: 260px;
     }
-    input:focus, textarea:focus, select:focus{
-      border-color: rgba(37,99,235,.55);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    input:focus, textarea:focus {
+      border-color: rgba(59,130,246,.6);
+      box-shadow: 0 0 0 4px rgba(59,130,246,.12);
     }
 
-    button{
+    button {
       padding: 10px 14px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--brand);
-      color: #fff;
       cursor: pointer;
-      font-weight:700;
-    }
-    button:hover{background:var(--brand2)}
-    button.ghost{
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 10px;
       background: #fff;
-      color: var(--text);
     }
-    button.ghost:hover{
-      background: var(--soft);
-    }
+    button:hover { background:#eef4ff; }
 
-    .results{margin-top: 14px;}
-    .item{
+    .results { margin-top: 20px; }
+    .item {
       background: white;
       padding: 12px;
       margin-bottom: 10px;
       border-radius: 10px;
-      border: 1px solid var(--line);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       cursor: pointer;
     }
-    .item:hover{background: var(--soft);}
+    .item:hover { background: #eef4ff; }
 
-    .detail{
-      margin-top: 14px;
+    .detail {
+      margin-top: 30px;
       background: white;
-      padding: 16px;
+      padding: 20px;
       border-radius: 12px;
-      border: 1px solid var(--line);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       white-space: pre-wrap;
     }
 
-    .divider{
-      height:1px;background:var(--line);
-      margin: 22px 0;
+    hr.sep {
+      border: 0;
+      height: 1px;
+      background: rgba(0,0,0,.08);
+      margin: 26px 0;
     }
 
-    /* ===== 건축개요(표) ===== */
-    .overviewGrid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
+    /* ===== 건축개요(UI) ===== */
+    .section-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin: 10px 0 6px;
+      font-size: 22px;
+      font-weight: 800;
     }
-    .hint{
-      color: var(--muted);
+    .hint {
+      color:#556;
+      margin: 0 0 16px;
       font-size: 13px;
-      margin: 0 0 10px 0;
     }
 
-    table{
-      width:100%;
-      border-collapse: collapse;
-      overflow:hidden;
-      border-radius: 12px;
-      border: 1px solid var(--line);
+    .card {
       background:#fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.06);
+      overflow:hidden;
+      border: 1px solid rgba(0,0,0,.06);
     }
-    th, td{
-      border-bottom: 1px solid var(--line);
-      padding: 10px 10px;
-      vertical-align: middle;
-      font-size: 14px;
+    .grid {
+      display:grid;
+      grid-template-columns: 220px 1fr;
     }
-    th{
-      background: #f3f6ff;
-      text-align:left;
-      width: 160px;
-      color:#111827;
-      font-weight:800;
+    .row-label {
+      background:#f3f6ff;
+      padding: 18px 16px;
+      font-weight: 800;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
-    td .row{
+    .row-field {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
       display:flex;
       gap:10px;
       align-items:center;
-      flex-wrap:wrap;
+      flex-wrap: wrap;
     }
-    td .row > *{flex: 0 0 auto;}
-    .w100{width:100%}
-    .w240{width:240px}
-    .w200{width:200px}
-    .w160{width:160px}
-    .w120{width:120px}
-    .w90{width:90px}
-    .w80{width:80px}
-    .w70{width:70px}
-
-    .unit{
-      color:var(--muted);
-      font-weight:700;
-      font-size: 13px;
-      margin-left:4px;
+    .row-field .unit {
+      color:#667;
+      font-weight:600;
+      margin-left: 4px;
     }
-
-    .readonly{
-      background:#f8fafc !important;
-      color:#0f172a;
-      font-weight:800;
-    }
-    .badge{
-      display:inline-block;
-      padding:4px 10px;
+    .pill {
+      padding: 6px 10px;
       border-radius: 999px;
-      border:1px solid var(--line);
+      border: 1px solid rgba(0,0,0,.10);
       background:#fff;
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
+      font-size: 12px;
+      color:#334;
     }
-    .noteBox{
-      border: 1px dashed rgba(37,99,235,.35);
-      background: rgba(37,99,235,.06);
-      padding: 10px 12px;
-      border-radius: 12px;
-      color: #1f2a44;
-      font-size: 13px;
-      line-height: 1.45;
+    .mini {
+      width: 120px;
+      text-align: right;
+    }
+    .wide {
+      width: min(720px, 100%);
+      flex: 1 1 520px;
     }
 
-    /* ===== 법규 트리 샘플 ===== */
-    .treeWrap{
+    /* 접기/펼치기(대지면적 하단) */
+    details.parcels {
+      width: 100%;
+      border: 1px dashed rgba(0,0,0,.16);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fbfcff;
+    }
+    details.parcels > summary {
+      cursor: pointer;
+      font-weight: 800;
+      list-style: none;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:10px;
+      user-select: none;
+    }
+    details.parcels > summary::-webkit-details-marker { display:none; }
+    .summary-right {
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+    }
+    .sum-box {
+      font-size: 12px;
+      color:#223;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background:#eef4ff;
+      border: 1px solid rgba(59,130,246,.18);
+      font-weight: 700;
+    }
+    .parcels-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background:#fff;
+      border-radius: 12px;
+      overflow:hidden;
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .parcels-table th, .parcels-table td {
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      text-align:left;
+      font-size: 13px;
+    }
+    .parcels-table th {
+      background:#f7f9ff;
+      font-weight: 800;
+    }
+    .parcels-table td:last-child, .parcels-table th:last-child {
+      width: 88px;
+      text-align:center;
+    }
+    .btn-mini {
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      border: 1px solid rgba(0,0,0,.12);
+      background:#fff;
+      cursor:pointer;
+    }
+    .btn-mini:hover{ background:#eef4ff; }
+    .btn-danger:hover{ background:#ffecec; }
+
+    .right {
+      margin-left:auto;
+    }
+
+    /* ===== 트리(샘플 자리) ===== */
+    .tree-wrap {
+      margin-top: 18px;
       display:grid;
       grid-template-columns: 320px 1fr;
-      gap: 14px;
+      gap: 16px;
+      align-items: start;
     }
-    @media (max-width: 980px){
-      .treeWrap{grid-template-columns: 1fr;}
-    }
-    .treeLeft{
-      border:1px solid var(--line);
-      border-radius: 12px;
-      overflow:hidden;
+    .tree-left, .tree-right {
       background:#fff;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.06);
+      box-shadow: 0 8px 24px rgba(0,0,0,.05);
+      overflow:hidden;
     }
-    .treeLeftHeader{
-      padding:12px 12px;
-      font-weight:900;
+    .tree-head {
+      padding: 14px 16px;
+      font-weight: 900;
       background:#f3f6ff;
-      border-bottom:1px solid var(--line);
+      border-bottom: 1px solid rgba(0,0,0,.06);
     }
-    .treeList{margin:0;padding:0;list-style:none;}
-    .treeList li{
-      padding:12px 12px;
-      border-bottom:1px solid var(--line);
+    .tree-list {
+      padding: 10px;
+    }
+    .tree-item {
+      padding: 12px 12px;
+      border-radius: 10px;
       cursor:pointer;
-      font-weight:800;
       display:flex;
       align-items:center;
-      justify-content:space-between;
+      justify-content: space-between;
       gap:10px;
+      font-weight: 700;
     }
-    .treeList li:hover{background:var(--soft)}
-    .chev{color:var(--muted);font-weight:900}
-    .treeRight{
-      border:1px solid var(--line);
-      border-radius: 12px;
+    .tree-item:hover { background:#eef4ff; }
+    .tree-item.active { background:#dfeaff; }
+    .tree-right-inner { padding: 16px; }
+    .chip {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.10);
+      color:#445;
       background:#fff;
-      overflow:hidden;
+      white-space:nowrap;
     }
-    .treeRightHeader{
-      padding:12px 12px;
-      font-weight:900;
-      background:#f8fafc;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .treeRightBody{
-      padding:12px 12px;
-    }
-    .pillBtns{display:flex;gap:8px;flex-wrap:wrap}
-    .lawBlock{
-      border:1px solid var(--line);
-      border-radius: 12px;
-      overflow:hidden;
-      margin: 10px 0;
-    }
-    .lawBlockTitle{
-      background: #eef4ff;
-      padding: 10px 12px;
-      font-weight:900;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      cursor:pointer;
-    }
-    .lawBlockBody{
-      padding: 10px 12px;
-      display:none;
-      white-space:pre-wrap;
-      line-height: 1.6;
-    }
-    .lawBlockBody.show{display:block;}
-    .tiny{font-size:12px;color:var(--muted);font-weight:700}
   </style>
 </head>
-
 <body>
-  <div class="container">
 
-    <!-- 1) 조문 검색 -->
-    <div class="section">
-      <div class="sectionTitle">📘 건축법 조문 검색</div>
-      <p class="sub">DB에 적재된 조문을 키워드로 검색하고, 클릭하면 단건 조문을 표시합니다.</p>
+  <h1>📘 건축법 조문 검색</h1>
 
-      <div class="search-box">
-        <input id="keyword" class="w240" placeholder="검색어 (예: 피난)" />
-        <input id="lawId" class="w240" placeholder="법령ID (예: 276925)" value="276925" />
-        <button onclick="searchArticles()">검색</button>
-        <button class="ghost" onclick="clearArticles()">초기화</button>
-      </div>
+  <div class="search-box">
+    <input id="keyword" placeholder="검색어 (예: 피난)" />
+    <input id="lawId" placeholder="법령ID (예: 276925)" value="276925" />
+    <button onclick="search()">검색</button>
+  </div>
 
-      <div class="results" id="results"></div>
-      <div class="detail" id="detail" style="display:none;"></div>
-    </div>
+  <div class="results" id="results"></div>
 
-    <!-- 2) 건축개요 UI -->
-    <div class="section">
-      <div class="sectionTitle">🏗️ 건축 개요 (UI)</div>
-      <p class="hint">
-        * 지금은 <b>수동 입력</b> UI 단계입니다. <b>합계/비율</b>만 자동 계산됩니다. (소수점 2자리 반올림)
-      </p>
+  <div class="detail" id="detail" style="display:none;"></div>
 
-      <div class="overviewGrid">
-        <table>
-          <tbody>
-            <tr>
-              <th>공사명</th>
-              <td><input id="ov_project" class="w100" placeholder="예: 서울특별시 ○○센터 건립공사" /></td>
-            </tr>
+  <hr class="sep"/>
 
-            <tr>
-              <th>건축주</th>
-              <td><input id="ov_owner" class="w100" placeholder="예: ○○구청 / ○○공사 / 개인" /></td>
-            </tr>
+  <!-- =========================
+       🏗️ 건축 개요 (UI)
+  ========================== -->
+  <div class="section-title">🏗️ 건축 개요 (UI)</div>
+  <p class="hint">* 지금은 수동 입력 UI 단계입니다. <b>합계/비율만 자동 계산</b>됩니다. (소수점 2자리 반올림)</p>
 
-            <tr>
-              <th>대지위치</th>
-              <td><input id="ov_site" class="w100" placeholder="예: 서울특별시 ○○구 ○○동 ○○번지" /></td>
-            </tr>
+  <div class="card">
+    <div class="grid">
+      <div class="row-label">공사명</div>
+      <div class="row-field"><input class="wide" placeholder="예: 서울특별시 ○○센터 건립공사" /></div>
 
-            <tr>
-              <th>대지면적</th>
-              <td>
-                <div class="row">
-                  <input id="site_area" class="w160 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">㎡</span>
-                  <span class="badge">자동계산에 사용</span>
-                </div>
-              </td>
-            </tr>
+      <div class="row-label">건축주</div>
+      <div class="row-field"><input class="wide" placeholder="예: ○○구청 / ○○공사 / 개인" /></div>
 
-            <tr>
-              <th>지역·지구</th>
-              <td><input id="ov_zone" class="w100" placeholder="예: 도시지역, 제2종 일반주거지역(7층 이하), 공공청사" /></td>
-            </tr>
+      <div class="row-label">대지위치</div>
+      <div class="row-field"><input class="wide" placeholder="예: 서울특별시 ○○구 ○○동 ○○번지" /></div>
 
-            <tr>
-              <th>도로현황</th>
-              <td><input id="ov_road" class="w100" placeholder="예: 동측 20m 도로, 남측 12m 도로" /></td>
-            </tr>
+      <div class="row-label">대지면적</div>
+      <div class="row-field" style="align-items:flex-start;">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; width:100%;">
+          <input id="siteArea" class="mini" type="number" step="0.01" value="0" />
+          <span class="unit">㎡</span>
 
-            <tr>
-              <th>규모</th>
-              <td>
-                <div class="row">
-                  <span class="tiny">지하</span>
-                  <input id="floors_b" class="w70 int" inputmode="numeric" placeholder="0" />
-                  <span class="tiny">층</span>
-                  <span class="tiny" style="margin-left:10px;">지상</span>
-                  <input id="floors_a" class="w70 int" inputmode="numeric" placeholder="0" />
-                  <span class="tiny">층</span>
-                </div>
-              </td>
-            </tr>
+          <label class="pill" style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input id="useParcelSum" type="checkbox" checked />
+            공부상면적 합계를 대지면적으로 자동 반영
+          </label>
 
-            <tr>
-              <th>용도</th>
-              <td><input id="ov_use" class="w100" placeholder="예: 업무시설(공공청사, 사회복지시설)" /></td>
-            </tr>
-
-            <tr>
-              <th>주구조</th>
-              <td><input id="ov_struct" class="w100" placeholder="예: 철근콘크리트조" /></td>
-            </tr>
-
-            <tr>
-              <th>건축면적</th>
-              <td>
-                <div class="row">
-                  <input id="bldg_area" class="w160 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">㎡</span>
-                  <span class="badge">건폐율 자동</span>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <th>건폐율</th>
-              <td>
-                <div class="row">
-                  <span class="tiny">법정</span>
-                  <input id="bcr_legal" class="w120 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">%</span>
-
-                  <span class="tiny" style="margin-left:10px;">계획(자동)</span>
-                  <input id="bcr_plan" class="w120 readonly" readonly />
-                  <span class="unit">%</span>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <th>연면적</th>
-              <td>
-                <div class="row">
-                  <span class="tiny">지상</span>
-                  <input id="gfa_above" class="w160 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">㎡</span>
-
-                  <span class="tiny" style="margin-left:10px;">지하</span>
-                  <input id="gfa_below" class="w160 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">㎡</span>
-
-                  <span class="tiny" style="margin-left:10px;">합계(자동)</span>
-                  <input id="gfa_total" class="w160 readonly" readonly />
-                  <span class="unit">㎡</span>
-                </div>
-
-                <div class="row" style="margin-top:10px;">
-                  <span class="tiny">주차장면적(선택)</span>
-                  <input id="parking_area" class="w160 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">㎡</span>
-                  <span class="badge">참고용</span>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <th>용적률</th>
-              <td>
-                <div class="row">
-                  <span class="tiny">법정</span>
-                  <input id="far_legal" class="w120 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">%</span>
-
-                  <span class="tiny" style="margin-left:10px;">완화(선택)</span>
-                  <input id="far_relax" class="w120 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">%</span>
-
-                  <span class="tiny" style="margin-left:10px;">계획(자동)</span>
-                  <input id="far_plan" class="w120 readonly" readonly />
-                  <span class="unit">%</span>
-                </div>
-
-                <div class="noteBox" style="margin-top:10px;">
-                  ※ 용적률(계획)은 지금 단계에서 <b>(연면적 합계 ÷ 대지면적)×100</b>으로 계산합니다.  
-                  실제 실무는 “용적률 산정 연면적(지상 기준/제외면적 등)”이 달라질 수 있으니, 나중에 규칙 연결 단계에서 바꿉니다.
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <th>주차대수</th>
-              <td>
-                <div class="row">
-                  <span class="tiny">법정</span>
-                  <input id="pk_legal" class="w120 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">대</span>
-
-                  <span class="tiny" style="margin-left:10px;">계획</span>
-                  <input id="pk_plan" class="w120 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">대</span>
-
-                  <span class="tiny" style="margin-left:10px;">비고</span>
-                  <input id="pk_note" class="w240" placeholder="예: 자주식/기계식 등" />
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <th>조경면적</th>
-              <td>
-                <div class="row">
-                  <span class="tiny">법정</span>
-                  <input id="land_legal" class="w160 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">㎡</span>
-
-                  <span class="tiny" style="margin-left:10px;">계획</span>
-                  <input id="land_plan" class="w160 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">㎡</span>
-
-                  <span class="tiny" style="margin-left:10px;">비율(자동)</span>
-                  <input id="land_rate" class="w120 readonly" readonly />
-                  <span class="unit">%</span>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <th>공개공지</th>
-              <td>
-                <div class="row">
-                  <span class="tiny">법정</span>
-                  <input id="open_legal" class="w160 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">㎡</span>
-
-                  <span class="tiny" style="margin-left:10px;">계획</span>
-                  <input id="open_plan" class="w160 num" inputmode="decimal" placeholder="0" />
-                  <span class="unit">㎡</span>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <th>승강설비</th>
-              <td>
-                <div class="row">
-                  <span class="tiny">법정</span>
-                  <input id="elev_legal" class="w240" placeholder="예: 해당없음 / 1대 등" />
-                  <span class="tiny" style="margin-left:10px;">계획</span>
-                  <input id="elev_plan" class="w240" placeholder="예: 1대, 장애인용 20인승 포함" />
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="row" style="justify-content:flex-end; gap:10px;">
-          <button class="ghost" onclick="resetOverview()">개요 초기화</button>
-          <button onclick="recalcOverview()">합계/비율 다시계산</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3) 법규 트리 샘플 (UI만) -->
-    <div class="section">
-      <div class="sectionTitle">🧩 법규 트리 (샘플)</div>
-      <p class="hint">* 지금은 UI 구조만 보여주는 테스트 화면입니다. (법/시행령/시행규칙/조례/지구단위계획 트리)</p>
-
-      <div class="treeWrap">
-        <div class="treeLeft">
-          <div class="treeLeftHeader">[항목]</div>
-          <ul class="treeList" id="topicList"></ul>
+          <span class="right sum-box" id="parcelSumBadge">공부상면적 합계: 0.00 ㎡</span>
         </div>
 
-        <div class="treeRight">
-          <div class="treeRightHeader">
-            <div id="topicTitle">[항목] (선택하세요)</div>
-            <div class="pillBtns">
-              <button class="ghost" onclick="expandAll()">전체 펼치기</button>
-              <button class="ghost" onclick="collapseAll()">전체 접기</button>
-            </div>
+        <!-- ✅ 접기/펼치기: 지번 + 공부상면적 -->
+        <details class="parcels" id="parcelsBox" open style="margin-top:10px;">
+          <summary>
+            <span>지번 / 공부상면적 입력 (접기/펼치기)</span>
+            <span class="summary-right">
+              <button type="button" class="btn-mini" onclick="addParcelRow(); event.preventDefault();">+ 추가</button>
+            </span>
+          </summary>
+
+          <table class="parcels-table" aria-label="지번과 공부상면적 입력 테이블">
+            <thead>
+              <tr>
+                <th>지번</th>
+                <th>공부상면적(㎡)</th>
+                <th>삭제</th>
+              </tr>
+            </thead>
+            <tbody id="parcelRows"></tbody>
+          </table>
+
+          <div style="margin-top:10px; font-size:12px; color:#556;">
+            · 지번/공부상면적은 여러 개 입력 가능 · 합계는 자동 계산되어 상단 “공부상면적 합계”와 대지면적에 반영됩니다.
           </div>
-          <div class="treeRightBody" id="topicDetail"></div>
+        </details>
+      </div>
+
+      <div class="row-label">지역·지구</div>
+      <div class="row-field"><input class="wide" placeholder="예: 도시지역, 제2종 일반주거지역(7층 이하), 공공청사" /></div>
+
+      <div class="row-label">도로현황</div>
+      <div class="row-field"><input class="wide" placeholder="예: 동측 20m 도로, 남측 12m 도로" /></div>
+
+      <div class="row-label">규모</div>
+      <div class="row-field">
+        <span>지하</span> <input class="mini" type="number" step="1" value="0" />
+        <span class="unit">층</span>
+        <span style="margin-left:10px;">지상</span> <input class="mini" type="number" step="1" value="0" />
+        <span class="unit">층</span>
+      </div>
+
+      <div class="row-label">용도</div>
+      <div class="row-field"><input class="wide" placeholder="예: 업무시설(공공청사, 사회복지시설)" /></div>
+    </div>
+  </div>
+
+  <hr class="sep"/>
+
+  <!-- =========================
+       🌳 법규 트리 (샘플)
+  ========================== -->
+  <div class="section-title">🌳 법규 트리 (샘플)</div>
+  <p class="hint">* 지금은 UI 구조만 보여주는 테스트 화면입니다. (법/시행령/시행규칙/조례/지구단위계획 트리)</p>
+
+  <div class="tree-wrap">
+    <div class="tree-left">
+      <div class="tree-head">[항목]</div>
+      <div class="tree-list" id="ruleItems"></div>
+    </div>
+
+    <div class="tree-right">
+      <div class="tree-head" id="treeTitle">[항목] 단열재의 두께</div>
+      <div class="tree-right-inner" id="treeContent">
+        <div class="chip" style="margin-bottom:10px;">클릭: 접기/펼치기</div>
+
+        <details open style="margin:10px 0;">
+          <summary style="font-weight:900; cursor:pointer;">법</summary>
+          <div style="padding:10px 0 0 0;">
+            단열재의 두께 관련 법 (샘플)<br/><br/>
+            법 00조<br/>
+            법규 내용
+          </div>
+        </details>
+
+        <details style="margin:10px 0;">
+          <summary style="font-weight:900; cursor:pointer;">시행령</summary>
+          <div style="padding:10px 0 0 0;">시행령 00조<br/>법규 내용</div>
+        </details>
+
+        <details style="margin:10px 0;">
+          <summary style="font-weight:900; cursor:pointer;">시행규칙</summary>
+          <div style="padding:10px 0 0 0;">시행규칙 00조<br/>법규 내용</div>
+        </details>
+
+        <details style="margin:10px 0;">
+          <summary style="font-weight:900; cursor:pointer;">조례</summary>
+          <div style="padding:10px 0 0 0;">00조례 00조<br/>법규 내용</div>
+        </details>
+
+        <details style="margin:10px 0;">
+          <summary style="font-weight:900; cursor:pointer;">지구단위계획</summary>
+          <div style="padding:10px 0 0 0;">지침 내용</div>
+        </details>
+
+        <div style="margin-top:14px; color:#556; font-size:12px;">
+          - (예시) 나중에 DB/체크리스트 엔진과 연결되면 실제 조문 본문이 들어갑니다.
         </div>
       </div>
     </div>
-
   </div>
 
 <script>
 /* =========================
-   1) 조문 검색
+   조문 검색
 ========================= */
-async function searchArticles() {
+async function search() {
   const q = document.getElementById("keyword").value.trim();
   const lawId = document.getElementById("lawId").value.trim();
   const resultsEl = document.getElementById("results");
@@ -557,7 +425,7 @@ async function searchArticles() {
 
   resultsEl.innerHTML = "검색 중...";
 
-  const res = await fetch(`/api/law/article/search?q=${encodeURIComponent(q)}&lawId=${encodeURIComponent(lawId)}&limit=20`);
+  const res = await fetch(`/api/law/article/search?q=${encodeURIComponent(q)}&lawId=${lawId}&limit=20`);
   const data = await res.json();
 
   if (!data.ok || !data.rows || data.rows.length === 0) {
@@ -581,7 +449,7 @@ async function loadDetail(lawId, articleNo) {
   detailEl.innerHTML = "불러오는 중...";
   detailEl.style.display = "block";
 
-  const res = await fetch(`/api/law/article/get?lawId=${encodeURIComponent(lawId)}&articleNo=${encodeURIComponent(articleNo)}`);
+  const res = await fetch(`/api/law/article/get?lawId=${lawId}&articleNo=${encodeURIComponent(articleNo)}`);
   const data = await res.json();
 
   if (!data.ok || !data.row) {
@@ -590,110 +458,23 @@ async function loadDetail(lawId, articleNo) {
   }
 
   detailEl.innerHTML = `
-    <h3 style="margin:0 0 8px 0;">${data.row.article_no} ${data.row.title || ""}</h3>
-    <div class="tiny" style="margin:0 0 8px 0;">source: ${data.row.source_url || "-"}</div>
-    <hr style="border:0;border-top:1px solid rgba(0,0,0,.08);margin:10px 0;"/>
-    ${escapeHtml(data.row.body || "")}
+    <h3>${data.row.article_no} ${data.row.title || ""}</h3>
+    <hr/>
+    ${escapeHtml(data.row.body)}
   `;
-}
-
-function clearArticles(){
-  document.getElementById("keyword").value = "";
-  document.getElementById("results").innerHTML = "";
-  const detailEl = document.getElementById("detail");
-  detailEl.innerHTML = "";
-  detailEl.style.display = "none";
 }
 
 function escapeHtml(str) {
   return String(str ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+    .replace(/>/g, "&gt;")
 }
 
 /* =========================
-   2) 건축개요 계산 (합계/비율)
-   - 소수점 2자리 반올림
+   법규 트리 (샘플)
 ========================= */
-function toNum(v){
-  const x = Number(String(v ?? "").replace(/,/g,"").trim());
-  return Number.isFinite(x) ? x : 0;
-}
-function round2(n){
-  return Math.round((n + Number.EPSILON) * 100) / 100;
-}
-function fmt2(n){
-  // 2자리까지 표시(불필요한 0도 보이게)
-  return round2(n).toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-function fmt0(n){
-  return Math.round(n).toLocaleString("ko-KR");
-}
-
-function recalcOverview(){
-  const site = toNum(document.getElementById("site_area").value);
-  const bldg = toNum(document.getElementById("bldg_area").value);
-  const gfaA = toNum(document.getElementById("gfa_above").value);
-  const gfaB = toNum(document.getElementById("gfa_below").value);
-
-  const gfaT = gfaA + gfaB;
-
-  // 연면적 합계
-  document.getElementById("gfa_total").value = fmt2(gfaT);
-
-  // 건폐율(계획) = 건축면적/대지면적*100
-  const bcr = (site > 0) ? (bldg / site) * 100 : 0;
-  document.getElementById("bcr_plan").value = fmt2(bcr);
-
-  // 용적률(계획) = 연면적합계/대지면적*100 (현재 UI 단계의 임시 공식)
-  const far = (site > 0) ? (gfaT / site) * 100 : 0;
-  document.getElementById("far_plan").value = fmt2(far);
-
-  // 조경 비율(계획) = 조경계획/대지면적*100
-  const landPlan = toNum(document.getElementById("land_plan").value);
-  const landRate = (site > 0) ? (landPlan / site) * 100 : 0;
-  document.getElementById("land_rate").value = fmt2(landRate);
-}
-
-function resetOverview(){
-  const ids = [
-    "ov_project","ov_owner","ov_site","site_area","ov_zone","ov_road","floors_b","floors_a",
-    "ov_use","ov_struct","bldg_area","bcr_legal","bcr_plan",
-    "gfa_above","gfa_below","gfa_total","parking_area",
-    "far_legal","far_relax","far_plan",
-    "pk_legal","pk_plan","pk_note",
-    "land_legal","land_plan","land_rate",
-    "open_legal","open_plan",
-    "elev_legal","elev_plan"
-  ];
-  ids.forEach(id=>{
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (el.hasAttribute("readonly")) el.value = "";
-    else el.value = "";
-  });
-  recalcOverview();
-}
-
-// 숫자 입력 변화 시 자동 재계산
-document.addEventListener("input", (e)=>{
-  const t = e.target;
-  if (!t) return;
-  if (t.classList.contains("num") || t.classList.contains("int")) {
-    // int는 정수로 정리
-    if (t.classList.contains("int")) {
-      const n = toNum(t.value);
-      t.value = n ? String(Math.floor(n)) : "";
-    }
-    recalcOverview();
-  }
-});
-
-/* =========================
-   3) 법규 트리 샘플
-========================= */
-const TOPICS = [
+const RULE_ITEMS = [
   "건폐율",
   "용적률",
   "주차대수 산정 기준",
@@ -722,63 +503,119 @@ const TOPICS = [
   "단열재의 두께"
 ];
 
-const CATS = ["법", "시행령", "시행규칙", "조례", "지구단위계획"];
-
-function renderTopicList(){
-  const ul = document.getElementById("topicList");
-  ul.innerHTML = "";
-  TOPICS.forEach((t)=>{
-    const li = document.createElement("li");
-    li.innerHTML = `<span>${t}</span><span class="chev">▶</span>`;
-    li.onclick = ()=> selectTopic(t);
-    ul.appendChild(li);
-  });
-}
-
-function selectTopic(topic){
-  document.getElementById("topicTitle").textContent = `[항목] ${topic}`;
-  const wrap = document.getElementById("topicDetail");
-  wrap.innerHTML = "";
-
-  // 샘플: 5개 카테고리 블록 생성
-  CATS.forEach((cat, idx)=>{
-    const block = document.createElement("div");
-    block.className = "lawBlock";
-
-    const head = document.createElement("div");
-    head.className = "lawBlockTitle";
-    head.innerHTML = `<span>${cat}</span><span class="tiny">클릭: 접기/펼치기</span>`;
-
-    const body = document.createElement("div");
-    body.className = "lawBlockBody show";
-    body.innerHTML =
-`- ${topic} 관련 ${cat} (샘플)
-
-${cat} 00조
-법규 내용
-
-(예시) ${topic}에 대한 ${cat} 근거가 여기에 표시됩니다.
-(예시) 나중에 DB/체크리스트 엔진과 연결되면 실제 조문 본문이 들어갑니다.`;
-
-    head.onclick = ()=>{
-      body.classList.toggle("show");
+(function initTree(){
+  const list = document.getElementById("ruleItems");
+  list.innerHTML = "";
+  RULE_ITEMS.forEach((name, idx) => {
+    const div = document.createElement("div");
+    div.className = "tree-item" + (idx === RULE_ITEMS.length - 1 ? " active" : "");
+    div.innerHTML = `<span>${name}</span><span class="chip">▶</span>`;
+    div.onclick = () => {
+      document.querySelectorAll(".tree-item").forEach(el => el.classList.remove("active"));
+      div.classList.add("active");
+      document.getElementById("treeTitle").textContent = `[항목] ${name}`;
+      // 샘플이라 내용은 동일 (나중에 항목별로 바꿀 수 있음)
     };
-
-    block.appendChild(head);
-    block.appendChild(body);
-    wrap.appendChild(block);
+    list.appendChild(div);
   });
+})();
+
+/* =========================
+   대지면적 > 지번/공부상면적 (추가/삭제 + 합계 자동반영)
+========================= */
+function round2(n) {
+  const x = Number(n);
+  if (!Number.isFinite(x)) return 0;
+  return Math.round(x * 100) / 100;
 }
 
-function expandAll(){
-  document.querySelectorAll(".lawBlockBody").forEach(el=>el.classList.add("show"));
-}
-function collapseAll(){
-  document.querySelectorAll(".lawBlockBody").forEach(el=>el.classList.remove("show"));
+function format2(n) {
+  return round2(n).toFixed(2);
 }
 
-renderTopicList();
-recalcOverview();
+function recalcParcelSum() {
+  const tbody = document.getElementById("parcelRows");
+  const inputs = tbody.querySelectorAll("input[data-role='parcelArea']");
+  let sum = 0;
+  inputs.forEach(inp => {
+    const v = Number(inp.value);
+    if (Number.isFinite(v)) sum += v;
+  });
+  sum = round2(sum);
+
+  document.getElementById("parcelSumBadge").textContent = `공부상면적 합계: ${format2(sum)} ㎡`;
+
+  const useSum = document.getElementById("useParcelSum").checked;
+  if (useSum) {
+    document.getElementById("siteArea").value = format2(sum);
+  }
+}
+
+function addParcelRow(prefill = { jibun: "", area: "" }) {
+  const tbody = document.getElementById("parcelRows");
+
+  const tr = document.createElement("tr");
+
+  const td1 = document.createElement("td");
+  const jibun = document.createElement("input");
+  jibun.placeholder = "예: 263-1(대)";
+  jibun.value = prefill.jibun ?? "";
+  jibun.style.width = "100%";
+  td1.appendChild(jibun);
+
+  const td2 = document.createElement("td");
+  const area = document.createElement("input");
+  area.type = "number";
+  area.step = "0.01";
+  area.placeholder = "예: 1323";
+  area.value = prefill.area ?? "";
+  area.setAttribute("data-role", "parcelArea");
+  area.style.width = "180px";
+  area.style.textAlign = "right";
+  area.addEventListener("input", recalcParcelSum);
+  area.addEventListener("blur", () => {
+    // 소수점 2자리 반올림 표시
+    const v = Number(area.value);
+    if (Number.isFinite(v)) area.value = format2(v);
+    recalcParcelSum();
+  });
+  td2.appendChild(area);
+
+  const td3 = document.createElement("td");
+  const del = document.createElement("button");
+  del.type = "button";
+  del.className = "btn-mini btn-danger";
+  del.textContent = "삭제";
+  del.onclick = () => {
+    tr.remove();
+    recalcParcelSum();
+  };
+  td3.appendChild(del);
+
+  tr.appendChild(td1);
+  tr.appendChild(td2);
+  tr.appendChild(td3);
+
+  tbody.appendChild(tr);
+
+  // 펼쳐진 상태에서 바로 합계 반영
+  recalcParcelSum();
+}
+
+(function initParcels(){
+  // 기본 1행
+  addParcelRow();
+  // 체크박스 변경 시 즉시 반영
+  document.getElementById("useParcelSum").addEventListener("change", () => {
+    recalcParcelSum();
+  });
+  // 대지면적 수동 입력 시에도 blur에서 2자리 정리
+  const site = document.getElementById("siteArea");
+  site.addEventListener("blur", () => {
+    const v = Number(site.value);
+    if (Number.isFinite(v)) site.value = format2(v);
+  });
+})();
 </script>
 
 </body>
