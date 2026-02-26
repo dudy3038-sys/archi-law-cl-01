@@ -184,35 +184,6 @@
     .btn-mini:hover{ background:#eef4ff; }
     .btn-danger:hover{ background:#ffecec; }
 
-    /* ===== (추가) 건축개요 계산 필드 ===== */
-    .readonly {
-      background:#f6f7fb;
-      color:#111;
-    }
-    .pair {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .pair .lbl {
-      color:#556;
-      font-weight:800;
-      margin-right:2px;
-    }
-    .badge {
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background:#f3f6ff;
-      border: 1px solid rgba(0,0,0,.08);
-      font-size:12px;
-      font-weight:800;
-      color:#334;
-    }
-
     /* ===== 트리(샘플 자리) ===== */
     .tree-wrap {
       margin-top: 18px;
@@ -233,6 +204,10 @@
       font-weight: 900;
       background:#f3f6ff;
       border-bottom: 1px solid rgba(0,0,0,.06);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:10px;
     }
     .tree-list { padding: 10px; }
     .tree-item {
@@ -244,10 +219,12 @@
       justify-content: space-between;
       gap:10px;
       font-weight: 700;
+      user-select:none;
     }
     .tree-item:hover { background:#eef4ff; }
     .tree-item.active { background:#dfeaff; }
     .tree-right-inner { padding: 16px; }
+
     .chip {
       font-size: 12px;
       padding: 4px 8px;
@@ -256,6 +233,46 @@
       color:#445;
       background:#fff;
       white-space:nowrap;
+    }
+
+    /* ====== (법규 트리 전용) 우측 카드형 접기/펼치기 ====== */
+    .tree-cards { display:flex; flex-direction:column; gap:12px; }
+    .law-card {
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 12px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .law-card summary{
+      list-style:none;
+      cursor:pointer;
+      padding: 12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:10px;
+      user-select:none;
+      font-weight:900;
+      background:#f7f9ff;
+    }
+    .law-card summary::-webkit-details-marker{ display:none; }
+    .law-card .law-body{
+      padding: 14px;
+      border-top: 1px solid rgba(0,0,0,.06);
+      color:#111;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .law-card .hint-right {
+      color:#667;
+      font-size:12px;
+      font-weight:700;
+    }
+    .tree-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
     }
   </style>
 </head>
@@ -279,7 +296,7 @@
        🏗️ 건축 개요 (UI)
   ========================== -->
   <div class="section-title">🏗️ 건축 개요 (UI)</div>
-  <p class="hint">* 지금은 수동 입력 UI 단계입니다. (소수점 2자리 반올림) / <b>일부 항목은 자동 계산</b>됩니다.</p>
+  <p class="hint">* 지금은 수동 입력 UI 단계입니다. (소수점 2자리 반올림)</p>
 
   <div class="card">
     <div class="grid">
@@ -292,7 +309,6 @@
       <div class="row-label">대지위치</div>
       <div class="row-field"><input class="wide" placeholder="예: 서울특별시 ○○구 ○○동 ○○번지" /></div>
 
-      <!-- ✅ 요청대로: 여기에는 '대지면적'만 보이게 -->
       <div class="row-label">대지면적</div>
       <div class="row-field" style="flex-direction:column; align-items:flex-start;">
         <div style="display:flex; align-items:center; gap:10px; width:100%; flex-wrap:wrap;">
@@ -300,10 +316,9 @@
           <span class="unit">㎡</span>
         </div>
 
-        <!-- ✅ 필요시 펼치기/접기 -->
         <details class="parcels" id="parcelsBox">
           <summary>
-            <span>지번 / 공부상면적 </span>
+            <span>지번 / 공부상면적</span>
             <button type="button" class="btn-mini" onclick="addParcelRow(); event.preventDefault();">+ 추가</button>
           </summary>
 
@@ -336,127 +351,6 @@
 
       <div class="row-label">용도</div>
       <div class="row-field"><input class="wide" placeholder="예: 업무시설(공공청사, 사회복지시설)" /></div>
-
-      <!-- =========================================================
-           ✅ (추가) 용도 아래 — 샘플 기반 항목들 (수동입력 + 자동계산)
-           - 자동계산: 연면적(계), 건폐율(계획), 용적률(계획), 조경면적 비율(계획)
-      ========================================================== -->
-
-      <div class="row-label">주구조</div>
-      <div class="row-field">
-        <input id="mainStructure" class="wide" placeholder="예: 철근콘크리트조 / 철골조 / 철골철근콘크리트조 등" />
-      </div>
-
-      <div class="row-label">건축면적</div>
-      <div class="row-field">
-        <input id="bldArea" class="mini" type="number" step="0.01" value="0" />
-        <span class="unit">㎡</span>
-        <span class="badge">대지면적 기준으로 건폐율(계획) 자동 계산</span>
-      </div>
-
-      <div class="row-label">연면적</div>
-      <div class="row-field" style="flex-direction:column; align-items:flex-start;">
-        <div class="pair">
-          <span class="lbl">계</span>
-          <input id="gfaTotal" class="mini readonly" type="number" step="0.01" value="0" readonly />
-          <span class="unit">㎡</span>
-          <span class="badge">지상+지하 자동 합산</span>
-        </div>
-        <div class="pair" style="margin-top:8px;">
-          <span class="lbl">지상층</span>
-          <input id="gfaAbove" class="mini" type="number" step="0.01" value="0" />
-          <span class="unit">㎡</span>
-
-          <span class="lbl" style="margin-left:14px;">지하층</span>
-          <input id="gfaBelow" class="mini" type="number" step="0.01" value="0" />
-          <span class="unit">㎡</span>
-        </div>
-        <div class="pair" style="margin-top:8px;">
-          <span class="lbl">주차장면적</span>
-          <input id="parkingArea" class="mini" type="number" step="0.01" value="0" />
-          <span class="unit">㎡</span>
-        </div>
-      </div>
-
-      <div class="row-label">건폐율</div>
-      <div class="row-field">
-        <span class="lbl">법정</span>
-        <input id="coverageLegal" class="mini" type="number" step="0.01" value="0" style="width:140px;" />
-        <span class="unit">%</span>
-
-        <span class="lbl" style="margin-left:14px;">계획</span>
-        <input id="coveragePlan" class="mini readonly" type="number" step="0.01" value="0" style="width:140px;" readonly />
-        <span class="unit">%</span>
-
-        <span class="badge">계획 = (건축면적 ÷ 대지면적)×100</span>
-      </div>
-
-      <div class="row-label">용적률</div>
-      <div class="row-field">
-        <span class="lbl">법정</span>
-        <input id="farLegal" class="mini" type="number" step="0.01" value="0" style="width:140px;" />
-        <span class="unit">%</span>
-
-        <span class="lbl" style="margin-left:14px;">계획</span>
-        <input id="farPlan" class="mini readonly" type="number" step="0.01" value="0" style="width:140px;" readonly />
-        <span class="unit">%</span>
-
-        <span class="badge">계획 = (연면적계 ÷ 대지면적)×100</span>
-      </div>
-
-      <div class="row-label">주차대수</div>
-      <div class="row-field">
-        <span class="lbl">법정</span>
-        <input id="parkingReq" class="mini" type="number" step="1" value="0" style="width:140px; text-align:right;" />
-        <span class="unit">대</span>
-
-        <span class="lbl" style="margin-left:14px;">계획</span>
-        <input id="parkingPlan" class="mini" type="number" step="1" value="0" style="width:140px; text-align:right;" />
-        <span class="unit">대</span>
-
-        <input id="parkingNote" class="wide" placeholder="예: 공공업무시설/사회복지시설 (1대/200㎡) 등 메모" />
-      </div>
-
-      <div class="row-label">조경면적</div>
-      <div class="row-field" style="flex-direction:column; align-items:flex-start;">
-        <div class="pair">
-          <span class="lbl">법정</span>
-          <input id="landscapeLegal" class="mini" type="number" step="0.01" value="0" />
-          <span class="unit">㎡</span>
-        </div>
-        <div class="pair">
-          <span class="lbl">계획</span>
-          <input id="landscapePlan" class="mini" type="number" step="0.01" value="0" />
-          <span class="unit">㎡</span>
-
-          <span class="lbl" style="margin-left:14px;">(비율)</span>
-          <input id="landscapePct" class="mini readonly" type="number" step="0.01" value="0" style="width:140px;" readonly />
-          <span class="unit">%</span>
-
-          <span class="badge">비율 = (조경(계획) ÷ 대지면적)×100</span>
-        </div>
-      </div>
-
-      <div class="row-label">공개공지</div>
-      <div class="row-field">
-        <span class="lbl">법정</span>
-        <input id="openSpaceLegal" class="mini" type="number" step="0.01" value="0" />
-        <span class="unit">㎡</span>
-
-        <span class="lbl" style="margin-left:14px;">계획</span>
-        <input id="openSpacePlan" class="mini" type="number" step="0.01" value="0" />
-        <span class="unit">㎡</span>
-      </div>
-
-      <div class="row-label">승강설비</div>
-      <div class="row-field">
-        <span class="lbl">계획</span>
-        <input id="elevatorCount" class="mini" type="number" step="1" value="0" style="width:140px; text-align:right;" />
-        <span class="unit">대</span>
-
-        <input id="elevatorNote" class="wide" placeholder="예: 장애인겸용 승용승강기 1대, 20인승 등 메모" />
-      </div>
-
     </div>
   </div>
 
@@ -475,38 +369,57 @@
     </div>
 
     <div class="tree-right">
-      <div class="tree-head" id="treeTitle">[항목] 단열재의 두께</div>
-      <div class="tree-right-inner" id="treeContent">
-        <div class="chip" style="margin-bottom:10px;">클릭: 접기/펼치기</div>
+      <div class="tree-head">
+        <div id="treeTitle">[항목] 건폐율</div>
+        <div class="tree-actions">
+          <button type="button" class="btn-mini" onclick="expandAllLawCards()">전체 펼치기</button>
+          <button type="button" class="btn-mini" onclick="collapseAllLawCards()">전체 접기</button>
+        </div>
+      </div>
 
-        <details open style="margin:10px 0;">
-          <summary style="font-weight:900; cursor:pointer;">법</summary>
-          <div style="padding:10px 0 0 0;">
-            단열재의 두께 관련 법 (샘플)<br/><br/>
-            법 00조<br/>
-            법규 내용
-          </div>
-        </details>
+      <div class="tree-right-inner">
+        <!-- ✅ 우측은 “카드 5개”만: (우측 캡처 형태) -->
+        <div class="tree-cards" id="lawCards">
+          <details class="law-card" data-kind="법">
+            <summary>
+              <span>법</span>
+              <span class="hint-right">클릭: 접기/펼치기</span>
+            </summary>
+            <div class="law-body" data-body></div>
+          </details>
 
-        <details style="margin:10px 0;">
-          <summary style="font-weight:900; cursor:pointer;">시행령</summary>
-          <div style="padding:10px 0 0 0;">시행령 00조<br/>법규 내용</div>
-        </details>
+          <details class="law-card" data-kind="시행령">
+            <summary>
+              <span>시행령</span>
+              <span class="hint-right">클릭: 접기/펼치기</span>
+            </summary>
+            <div class="law-body" data-body></div>
+          </details>
 
-        <details style="margin:10px 0;">
-          <summary style="font-weight:900; cursor:pointer;">시행규칙</summary>
-          <div style="padding:10px 0 0 0;">시행규칙 00조<br/>법규 내용</div>
-        </details>
+          <details class="law-card" data-kind="시행규칙">
+            <summary>
+              <span>시행규칙</span>
+              <span class="hint-right">클릭: 접기/펼치기</span>
+            </summary>
+            <div class="law-body" data-body></div>
+          </details>
 
-        <details style="margin:10px 0;">
-          <summary style="font-weight:900; cursor:pointer;">조례</summary>
-          <div style="padding:10px 0 0 0;">00조례 00조<br/>법규 내용</div>
-        </details>
+          <details class="law-card" data-kind="조례">
+            <summary>
+              <span>조례</span>
+              <span class="hint-right">클릭: 접기/펼치기</span>
+            </summary>
+            <div class="law-body" data-body></div>
+          </details>
 
-        <details style="margin:10px 0;">
-          <summary style="font-weight:900; cursor:pointer;">지구단위계획</summary>
-          <div style="padding:10px 0 0 0;">지침 내용</div>
-        </details>
+          <details class="law-card" data-kind="지구단위계획">
+            <summary>
+              <span>지구단위계획</span>
+              <span class="hint-right">클릭: 접기/펼치기</span>
+            </summary>
+            <div class="law-body" data-body></div>
+          </details>
+        </div>
 
         <div style="margin-top:14px; color:#556; font-size:12px;">
           - (예시) 나중에 DB/체크리스트 엔진과 연결되면 실제 조문 본문이 들어갑니다.
@@ -517,7 +430,7 @@
 
 <script>
 /* =========================
-   조문 검색
+   조문 검색 (그대로)
 ========================= */
 async function search() {
   const q = document.getElementById("keyword").value.trim();
@@ -582,7 +495,7 @@ function escapeHtml(str) {
 }
 
 /* =========================
-   법규 트리 (샘플)
+   법규 트리 (샘플) - 원하는 형태로만 수정
 ========================= */
 const RULE_ITEMS = [
   "건폐율",
@@ -613,27 +526,61 @@ const RULE_ITEMS = [
   "단열재의 두께"
 ];
 
+function setLawCardBodies(itemName){
+  // 샘플 텍스트(나중에 DB 연결)
+  const sample = {
+    "법": `${itemName} 관련 법 (샘플)\n\n법 00조\n법규 내용`,
+    "시행령": `${itemName} 관련 시행령 (샘플)\n\n시행령 00조\n법규 내용`,
+    "시행규칙": `${itemName} 관련 시행규칙 (샘플)\n\n시행규칙 00조\n법규 내용`,
+    "조례": `${itemName} 관련 조례 (샘플)\n\n00조례 00조\n법규 내용`,
+    "지구단위계획": `${itemName} 관련 지구단위계획 (샘플)\n\n지침 내용`
+  };
+
+  document.querySelectorAll("#lawCards .law-card").forEach(card => {
+    const kind = card.getAttribute("data-kind");
+    const body = card.querySelector("[data-body]");
+    body.textContent = sample[kind] || "";
+  });
+}
+
+function collapseAllLawCards(){
+  document.querySelectorAll("#lawCards .law-card").forEach(d => d.open = false);
+}
+function expandAllLawCards(){
+  document.querySelectorAll("#lawCards .law-card").forEach(d => d.open = true);
+}
+
 (function initTree(){
   const list = document.getElementById("ruleItems");
   list.innerHTML = "";
+
   RULE_ITEMS.forEach((name, idx) => {
     const div = document.createElement("div");
-    div.className = "tree-item" + (idx === RULE_ITEMS.length - 1 ? " active" : "");
+    div.className = "tree-item" + (idx === 0 ? " active" : "");
+    // 좌측 화살표는 “그냥 표시(▶)”만: 우측처럼
     div.innerHTML = `<span>${name}</span><span class="chip">▶</span>`;
     div.onclick = () => {
       document.querySelectorAll(".tree-item").forEach(el => el.classList.remove("active"));
       div.classList.add("active");
+
       document.getElementById("treeTitle").textContent = `[항목] ${name}`;
-      // 샘플이라 내용은 동일 (나중에 항목별로 바꿀 수 있음)
+
+      // ✅ 항목 바꾸면 우측 5개 카드는 기본 “접힘” (우측 캡처처럼)
+      collapseAllLawCards();
+      setLawCardBodies(name);
     };
     list.appendChild(div);
   });
-})(); 
+
+  // 초기 표시
+  const first = RULE_ITEMS[0] || "건폐율";
+  document.getElementById("treeTitle").textContent = `[항목] ${first}`;
+  setLawCardBodies(first);
+  collapseAllLawCards();
+})();
 
 /* =========================
-   대지면적 > 지번/공부상면적
-   - 합계는 화면에 표시 X
-   - 합계는 대지면적(siteArea)에 자동 반영
+   대지면적 > 지번/공부상면적 (그대로)
 ========================= */
 function round2(n) {
   const x = Number(n);
@@ -653,12 +600,7 @@ function recalcParcelSumAndApplyToSite() {
     if (Number.isFinite(v)) sum += v;
   });
   sum = round2(sum);
-
-  // ✅ 요청대로: 합계는 '표시'하지 않고, 대지면적에만 자동 반영
   document.getElementById("siteArea").value = format2(sum);
-
-  // ✅ 건축개요 자동계산 갱신
-  recalcBuildingDerived();
 }
 
 function addParcelRow(prefill = { jibun: "", area: "" }) {
@@ -686,7 +628,7 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
   area.addEventListener("input", recalcParcelSumAndApplyToSite);
   area.addEventListener("blur", () => {
     const v = Number(area.value);
-    if (Number.isFinite(v)) area.value = format2(v); // 2자리 반올림 표시
+    if (Number.isFinite(v)) area.value = format2(v);
     recalcParcelSumAndApplyToSite();
   });
 
@@ -713,86 +655,12 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
 }
 
 (function initParcels(){
-  // 기본 1행
   addParcelRow();
-  // 대지면적 blur 반올림
   const site = document.getElementById("siteArea");
   site.addEventListener("blur", () => {
     const v = Number(site.value);
     if (Number.isFinite(v)) site.value = format2(v);
-    recalcBuildingDerived();
   });
-})();
-
-/* =========================
-   ✅ (추가) 건축개요 자동 계산
-   - 연면적(계) = 지상층 + 지하층
-   - 건폐율(계획) = (건축면적 / 대지면적) * 100
-   - 용적률(계획) = (연면적(계) / 대지면적) * 100
-   - 조경면적(계획 비율) = (조경(계획) / 대지면적) * 100
-   * 모두 소수점 2자리 반올림
-========================= */
-function nval(id) {
-  const el = document.getElementById(id);
-  if (!el) return 0;
-  const v = Number(el.value);
-  return Number.isFinite(v) ? v : 0;
-}
-function set2(id, v) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.value = format2(v);
-}
-function percent2(num, den) {
-  if (!Number.isFinite(num) || !Number.isFinite(den) || den <= 0) return 0;
-  return round2((num / den) * 100);
-}
-
-function recalcBuildingDerived() {
-  const site = nval("siteArea");
-  const bld = nval("bldArea");
-
-  const above = nval("gfaAbove");
-  const below = nval("gfaBelow");
-  const total = round2(above + below);
-  set2("gfaTotal", total);
-
-  const cov = percent2(bld, site);
-  set2("coveragePlan", cov);
-
-  const far = percent2(total, site);
-  set2("farPlan", far);
-
-  const lp = nval("landscapePlan");
-  const lpct = percent2(lp, site);
-  set2("landscapePct", lpct);
-}
-
-function bindCalcInput(id, decimals = 2) {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  el.addEventListener("input", recalcBuildingDerived);
-  el.addEventListener("blur", () => {
-    const v = Number(el.value);
-    if (Number.isFinite(v)) {
-      if (decimals === 0) el.value = String(Math.round(v));
-      else el.value = format2(v);
-    }
-    recalcBuildingDerived();
-  });
-}
-
-(function initBuildingCalc(){
-  // 면적/비율 관련
-  ["bldArea","gfaAbove","gfaBelow","parkingArea","landscapeLegal","landscapePlan","openSpaceLegal","openSpacePlan"].forEach(id => bindCalcInput(id, 2));
-  // 법정 퍼센트는 수동이지만 2자리 반올림만 적용
-  ["coverageLegal","farLegal"].forEach(id => bindCalcInput(id, 2));
-  // 대수는 정수 반올림
-  ["parkingReq","parkingPlan","elevatorCount"].forEach(id => bindCalcInput(id, 0));
-
-  // 최초 1회 계산
-  recalcBuildingDerived();
 })();
 </script>
 
