@@ -1,20 +1,20 @@
 import fs from "fs";
 import path from "path";
-import crypto from "crypto";
 import { execSync } from "child_process";
 
 const DB_FILE = path.resolve("./data/law_meta_dump.json");
 const SQL_FILE = path.resolve("./data/law_meta_insert.sql");
+
+// law.go.kr DRF search endpoint
 const BASE_URL = "http://www.law.go.kr/DRF/lawSearch.do";
+
+// env
 const LAW_OC = process.env.LAW_OC;
 const ONLY_MOLIT = process.env.ONLY_MOLIT === "1";
 const MOLIT_ORG = "1613000";
-const DISPLAY = 100;
 
-function makeLawIdFromLawGo(lawGoId, lawName) {
-  if (lawGoId != null && String(lawGoId).trim() !== "") return String(lawGoId);
-  return crypto.createHash("md5").update(String(lawName || "")).digest("hex").slice(0, 12);
-}
+// fetch size (1 page only for now)
+const DISPLAY = 100;
 
 function yyyymmddToISO(yyyymmdd) {
   const s = String(yyyymmdd || "").trim();
@@ -26,20 +26,28 @@ function esc(x) {
   return String(x ?? "").replace(/'/g, "''");
 }
 
+function toAbsLawGoUrl(link) {
+  const s = String(link || "").trim();
+  if (!s) return "";
+  if (s.startsWith("http://") || s.startsWith("https://")) return s;
+  if (s.startsWith("/")) return `http://www.law.go.kr${s}`;
+  return `http://www.law.go.kr/${s}`;
+}
+
 async function fetchText(url) {
   const res = await fetch(url, {
     redirect: "follow",
     headers: {
-      "user-agent": "archi-law-meta-ingestor/1.0",
-      "accept": "application/json,text/plain,*/*"
-    }
+      "user-agent": "archi-law-meta-ingestor/2.0",
+      accept: "application/json,text/plain,*/*",
+    },
   });
   const text = await res.text();
-  return { status: res.status, url: res.url, text, headers: res.headers };
+  return { status: res.status, url: res.url, text };
 }
 
 function pickItems(data) {
-  // 응답 구조는 케이스가 많아서 넓게 커버
+  // 가능한 응답 구조들을 넓게 커버
   return (
     data?.["현행법령목록"] ||
     data?.["eflaw"] ||
@@ -47,27 +55,45 @@ function pickItems(data) {
     data?.["Law"] ||
     data?.["list"] ||
     data?.["items"] ||
-    data?.["LawSearch"]?.["law"] || // 케이스 대비
+    data?.["LawSearch"]?.["law"] ||
     []
   );
 }
 
+/**
+ * v2 rows:
+ * - law_key: 법령ID (예: 001823)
+ * - mst: 버전 식별자 (보통 MST 또는 법령일련번호)
+ * - law_name, ministry
+ * - 시행일, 공포일
+ * - source_url (상세 링크)
+ */
 function normalizeRows(items) {
   return (items || [])
     .map((it) => {
       const lawName = it["법령명한글"] || it["법령명"] || it["lawName"] || "";
-      const lawId = makeLawIdFromLawGo(it["법령ID"] ?? it["법령일련번호"] ?? it["lawId"], lawName);
-      const ministry = it["소관부처명"] || it["소관부처"] || "";
-      const eff = yyyymmddToISO(it["시행일자"] || it["시행일"] || "");
-      const link = it["법령상세링크"] || it["법령상세링크URL"] || it["법령링크"] || "";
+      const lawKey = (it["법령ID"] ?? it["lawId"] ?? "").toString().trim(); // ✅ v2 핵심
+      const mst = (it["MST"] ?? it["법령일련번호"] ?? it["lawSeq"] ?? "").toString().trim(); // ✅ 버전
+      const ministry = (it["소관부처명"] || it["소관부처"] || "").toString().trim();
+
+      const effISO = yyyymmddToISO(it["시행일자"] || it["시행일"] || "");
+      const pubISO = yyyymmddToISO(it["공포일자"] || it["공포일"] || "");
+
+      const link = toAbsLawGoUrl(it["법령상세링크"] || it["법령상세링크URL"] || it["법령링크"] || "");
 
       if (!lawName) return null;
+
+      // law_key 또는 mst가 비면 v2 저장 의미가 없음
+      if (!lawKey || !mst) return null;
+
       return {
-        law_id: String(lawId),
+        law_key: lawKey,
+        mst,
         law_name: String(lawName).trim(),
-        ministry: String(ministry).trim(),
-        시행일: eff,
-        source_url: String(link).trim()
+        ministry,
+        시행일: effISO,
+        공포일: pubISO,
+        source_url: link,
       };
     })
     .filter(Boolean);
@@ -78,20 +104,38 @@ function saveDump(rows) {
   console.log(`✔ dump 저장 완료: ${DB_FILE} (${rows.length}건)`);
 }
 
+/**
+ * v2 insert:
+ * - law: upsert(법령명/부처 갱신)
+ * - law_version: insert ignore(버전 누적)
+ */
 function buildInsertSQL(rows) {
   const lines = [];
+
   for (const r of rows) {
+    // law: 최신 이름/부처로 갱신 (UPSERT)
     lines.push(
-      `INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('${esc(r.law_id)}','${esc(r.law_name)}','${esc(r.ministry)}','${esc(r.시행일)}','${esc(r.source_url)}');`
+      `INSERT INTO law (law_key, law_name, ministry)
+VALUES ('${esc(r.law_key)}','${esc(r.law_name)}','${esc(r.ministry)}')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');`
+    );
+
+    // law_version: 버전(MST) 누적 (이미 있으면 무시)
+    lines.push(
+      `INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('${esc(r.mst)}','${esc(r.law_key)}','${esc(r.시행일)}','${esc(r.공포일)}','${esc(r.source_url)}');`
     );
   }
+
   return lines.join("\n");
 }
 
 async function getLawListFromLawGo() {
   if (!LAW_OC) {
-    throw new Error("환경변수 LAW_OC가 비어있습니다. 예) export LAW_OC=dudy3038");
+    throw new Error("환경변수 LAW_OC가 비어있습니다. 예) LAW_OC=dudy3038 npm run ingest:meta");
   }
 
   const u = new URL(BASE_URL);
@@ -111,25 +155,22 @@ async function getLawListFromLawGo() {
   console.log("🔎 응답 앞부분(200자):");
   console.log(text.slice(0, 200));
 
-  // JSON 파싱 시도
   let data;
   try {
     data = JSON.parse(text);
   } catch (e) {
-    // 여기서 HTML이면 그대로 실패 원인 확정
     throw new Error(`JSON 파싱 실패. 응답이 JSON이 아닙니다. (앞부분: ${text.slice(0, 60)})`);
   }
 
   const items = pickItems(data);
   const rows = normalizeRows(items);
-
-  // 일단 1페이지로만 진단
   return rows;
 }
 
 async function run() {
-  console.log("📡 법령 목록(메타) 수집 시작");
+  console.log("📡 법령 목록(메타) 수집 시작 (v2: law / law_version)");
   console.log(`- ONLY_MOLIT=${ONLY_MOLIT ? "1(국토교통부만)" : "0(전체)"}`);
+  console.log(`- DISPLAY=${DISPLAY} (현재 1페이지만)`);
 
   const rows = await getLawListFromLawGo();
 
@@ -146,10 +187,15 @@ async function run() {
 
   console.log("📦 원격 D1에 INSERT 실행 (--remote)");
   execSync(`npx wrangler d1 execute archi_law_db --file=${SQL_FILE} --remote`, {
-    stdio: "inherit"
+    stdio: "inherit",
   });
 
-  console.log("🎯 DB 반영 완료");
+  console.log("🎯 DB 반영 완료 (v2)");
+
+  // 간단 요약(로컬 덤프 기준)
+  const uniqLaw = new Set(rows.map((r) => r.law_key)).size;
+  const uniqVer = new Set(rows.map((r) => r.mst)).size;
+  console.log(`📌 요약: law_key ${uniqLaw}개, mst ${uniqVer}개 (이번 페이지 기준)`);
 }
 
 run().catch((e) => {
