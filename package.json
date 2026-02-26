@@ -4,10 +4,17 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler pages dev . --compatibility-date=2025-01-01",
+
     "d1:apply": "wrangler d1 execute archi_law_db --file=./db/schema.sql",
     "d1:seed": "wrangler d1 execute archi_law_db --file=./db/seed.sql",
+
     "ingest:meta": "node ./scripts/ingest_meta.js",
-    "ingest:articles": "node ./scripts/ingest_articles.js"
+    "ingest:articles": "node ./scripts/ingest_articles.js",
+
+    "cleanup:retention": "node ./scripts/cleanup_retention.js",
+
+    "db:count": "node -e \"import('child_process').then(({execSync})=>{const cmd=\\\"npx wrangler d1 execute archi_law_db --remote --command=\\\\\\\"SELECT 'law' t, COUNT(*) c FROM law UNION ALL SELECT 'law_version', COUNT(*) FROM law_version UNION ALL SELECT 'law_article', COUNT(*) FROM law_article;\\\\\\\"\\\"; execSync(cmd,{stdio:'inherit'});})\"",
+    "db:latest": "node -e \"import('child_process').then(({execSync})=>{const k=process.env.LAW_KEY||'001823'; const cmd=\\\"npx wrangler d1 execute archi_law_db --remote --command=\\\\\\\"SELECT mst, 시행일, 공포일 FROM law_version WHERE law_key='\\\\\\\"+k+\\\"' ORDER BY 시행일 DESC LIMIT 1;\\\\\\\"\\\"; execSync(cmd,{stdio:'inherit'});})\""
   },
   "dependencies": {
     "node-fetch": "^3.3.2"
