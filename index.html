@@ -120,16 +120,8 @@
       font-weight:600;
       margin-left: 4px;
     }
-    .pill {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(0,0,0,.10);
-      background:#fff;
-      font-size: 12px;
-      color:#334;
-    }
     .mini {
-      width: 120px;
+      width: 180px;
       text-align: right;
     }
     .wide {
@@ -144,6 +136,7 @@
       border-radius: 12px;
       padding: 10px 12px;
       background: #fbfcff;
+      margin-top: 10px;
     }
     details.parcels > summary {
       cursor: pointer;
@@ -156,22 +149,7 @@
       user-select: none;
     }
     details.parcels > summary::-webkit-details-marker { display:none; }
-    .summary-right {
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap: wrap;
-      justify-content:flex-end;
-    }
-    .sum-box {
-      font-size: 12px;
-      color:#223;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background:#eef4ff;
-      border: 1px solid rgba(59,130,246,.18);
-      font-weight: 700;
-    }
+
     .parcels-table {
       width: 100%;
       border-collapse: collapse;
@@ -206,10 +184,6 @@
     .btn-mini:hover{ background:#eef4ff; }
     .btn-danger:hover{ background:#ffecec; }
 
-    .right {
-      margin-left:auto;
-    }
-
     /* ===== 트리(샘플 자리) ===== */
     .tree-wrap {
       margin-top: 18px;
@@ -231,9 +205,7 @@
       background:#f3f6ff;
       border-bottom: 1px solid rgba(0,0,0,.06);
     }
-    .tree-list {
-      padding: 10px;
-    }
+    .tree-list { padding: 10px; }
     .tree-item {
       padding: 12px 12px;
       border-radius: 10px;
@@ -278,7 +250,7 @@
        🏗️ 건축 개요 (UI)
   ========================== -->
   <div class="section-title">🏗️ 건축 개요 (UI)</div>
-  <p class="hint">* 지금은 수동 입력 UI 단계입니다. <b>합계/비율만 자동 계산</b>됩니다. (소수점 2자리 반올림)</p>
+  <p class="hint">* 지금은 수동 입력 UI 단계입니다. (소수점 2자리 반올림)</p>
 
   <div class="card">
     <div class="grid">
@@ -291,27 +263,19 @@
       <div class="row-label">대지위치</div>
       <div class="row-field"><input class="wide" placeholder="예: 서울특별시 ○○구 ○○동 ○○번지" /></div>
 
+      <!-- ✅ 요청대로: 여기에는 '대지면적'만 보이게 -->
       <div class="row-label">대지면적</div>
-      <div class="row-field" style="align-items:flex-start;">
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; width:100%;">
+      <div class="row-field" style="flex-direction:column; align-items:flex-start;">
+        <div style="display:flex; align-items:center; gap:10px; width:100%; flex-wrap:wrap;">
           <input id="siteArea" class="mini" type="number" step="0.01" value="0" />
           <span class="unit">㎡</span>
-
-          <label class="pill" style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-            <input id="useParcelSum" type="checkbox" checked />
-            공부상면적 합계를 대지면적으로 자동 반영
-          </label>
-
-          <span class="right sum-box" id="parcelSumBadge">공부상면적 합계: 0.00 ㎡</span>
         </div>
 
-        <!-- ✅ 접기/펼치기: 지번 + 공부상면적 -->
-        <details class="parcels" id="parcelsBox" open style="margin-top:10px;">
+        <!-- ✅ 필요시 펼치기/접기 -->
+        <details class="parcels" id="parcelsBox">
           <summary>
-            <span>지번 / 공부상면적 입력 (접기/펼치기)</span>
-            <span class="summary-right">
-              <button type="button" class="btn-mini" onclick="addParcelRow(); event.preventDefault();">+ 추가</button>
-            </span>
+            <span>지번 / 공부상면적 입력 (필요 시 펼치기)</span>
+            <button type="button" class="btn-mini" onclick="addParcelRow(); event.preventDefault();">+ 추가</button>
           </summary>
 
           <table class="parcels-table" aria-label="지번과 공부상면적 입력 테이블">
@@ -324,10 +288,6 @@
             </thead>
             <tbody id="parcelRows"></tbody>
           </table>
-
-          <div style="margin-top:10px; font-size:12px; color:#556;">
-            · 지번/공부상면적은 여러 개 입력 가능 · 합계는 자동 계산되어 상단 “공부상면적 합계”와 대지면적에 반영됩니다.
-          </div>
         </details>
       </div>
 
@@ -339,9 +299,9 @@
 
       <div class="row-label">규모</div>
       <div class="row-field">
-        <span>지하</span> <input class="mini" type="number" step="1" value="0" />
+        <span>지하</span> <input class="mini" type="number" step="1" value="0" style="width:120px;" />
         <span class="unit">층</span>
-        <span style="margin-left:10px;">지상</span> <input class="mini" type="number" step="1" value="0" />
+        <span style="margin-left:10px;">지상</span> <input class="mini" type="number" step="1" value="0" style="width:120px;" />
         <span class="unit">층</span>
       </div>
 
@@ -475,32 +435,11 @@ function escapeHtml(str) {
    법규 트리 (샘플)
 ========================= */
 const RULE_ITEMS = [
-  "건폐율",
-  "용적률",
-  "주차대수 산정 기준",
-  "대지안의 공지",
-  "옹벽 등의 공작물에의 준용",
-  "건축물의 높이제한",
-  "일조 등의 확보를 위한 건축물의 높이제한",
-  "대지의 조경",
-  "구조안전의 확인 대상",
-  "직통계단의 설치",
-  "피난계단 설치",
-  "계단 및 복도의 설치기준",
-  "승용 승강기의 설치",
-  "거실의 채광 및 환기",
-  "방화구획",
-  "지하층의 구조 및 설비",
-  "에너지절약계획서 제출 대상 건축물",
-  "녹색건축인증",
-  "에너지효율등급 인증",
-  "신‧재생에너지 설비",
-  "장애인‧노인‧임산부 등의 편의증진 시설",
-  "공중화장실",
-  "건축심의",
-  "경관심의",
-  "건설기술심의",
-  "단열재의 두께"
+  "건폐율","용적률","주차대수 산정 기준","대지안의 공지","옹벽 등의 공작물에의 준용","건축물의 높이제한",
+  "일조 등의 확보를 위한 건축물의 높이제한","대지의 조경","구조안전의 확인 대상","직통계단의 설치","피난계단 설치",
+  "계단 및 복도의 설치기준","승용 승강기의 설치","거실의 채광 및 환기","방화구획","지하층의 구조 및 설비",
+  "에너지절약계획서 제출 대상 건축물","녹색건축인증","에너지효율등급 인증","신‧재생에너지 설비",
+  "장애인‧노인‧임산부 등의 편의증진 시설","공중화장실","건축심의","경관심의","건설기술심의","단열재의 두께"
 ];
 
 (function initTree(){
@@ -514,26 +453,26 @@ const RULE_ITEMS = [
       document.querySelectorAll(".tree-item").forEach(el => el.classList.remove("active"));
       div.classList.add("active");
       document.getElementById("treeTitle").textContent = `[항목] ${name}`;
-      // 샘플이라 내용은 동일 (나중에 항목별로 바꿀 수 있음)
     };
     list.appendChild(div);
   });
 })();
 
 /* =========================
-   대지면적 > 지번/공부상면적 (추가/삭제 + 합계 자동반영)
+   대지면적 > 지번/공부상면적
+   - 합계는 화면에 표시 X
+   - 합계는 대지면적(siteArea)에 자동 반영
 ========================= */
 function round2(n) {
   const x = Number(n);
   if (!Number.isFinite(x)) return 0;
   return Math.round(x * 100) / 100;
 }
-
 function format2(n) {
   return round2(n).toFixed(2);
 }
 
-function recalcParcelSum() {
+function recalcParcelSumAndApplyToSite() {
   const tbody = document.getElementById("parcelRows");
   const inputs = tbody.querySelectorAll("input[data-role='parcelArea']");
   let sum = 0;
@@ -543,12 +482,8 @@ function recalcParcelSum() {
   });
   sum = round2(sum);
 
-  document.getElementById("parcelSumBadge").textContent = `공부상면적 합계: ${format2(sum)} ㎡`;
-
-  const useSum = document.getElementById("useParcelSum").checked;
-  if (useSum) {
-    document.getElementById("siteArea").value = format2(sum);
-  }
+  // ✅ 요청대로: 합계는 '표시'하지 않고, 대지면적에만 자동 반영
+  document.getElementById("siteArea").value = format2(sum);
 }
 
 function addParcelRow(prefill = { jibun: "", area: "" }) {
@@ -572,13 +507,14 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
   area.setAttribute("data-role", "parcelArea");
   area.style.width = "180px";
   area.style.textAlign = "right";
-  area.addEventListener("input", recalcParcelSum);
+
+  area.addEventListener("input", recalcParcelSumAndApplyToSite);
   area.addEventListener("blur", () => {
-    // 소수점 2자리 반올림 표시
     const v = Number(area.value);
-    if (Number.isFinite(v)) area.value = format2(v);
-    recalcParcelSum();
+    if (Number.isFinite(v)) area.value = format2(v); // 2자리 반올림 표시
+    recalcParcelSumAndApplyToSite();
   });
+
   td2.appendChild(area);
 
   const td3 = document.createElement("td");
@@ -588,7 +524,7 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
   del.textContent = "삭제";
   del.onclick = () => {
     tr.remove();
-    recalcParcelSum();
+    recalcParcelSumAndApplyToSite();
   };
   td3.appendChild(del);
 
@@ -598,18 +534,13 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
 
   tbody.appendChild(tr);
 
-  // 펼쳐진 상태에서 바로 합계 반영
-  recalcParcelSum();
+  recalcParcelSumAndApplyToSite();
 }
 
 (function initParcels(){
   // 기본 1행
   addParcelRow();
-  // 체크박스 변경 시 즉시 반영
-  document.getElementById("useParcelSum").addEventListener("change", () => {
-    recalcParcelSum();
-  });
-  // 대지면적 수동 입력 시에도 blur에서 2자리 정리
+  // 대지면적을 사용자가 직접 바꾸고 싶으면, 펼친 입력을 채우면 다시 합계로 덮어씀(요구사항대로 자동합산 우선)
   const site = document.getElementById("siteArea");
   site.addEventListener("blur", () => {
     const v = Number(site.value);
