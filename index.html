@@ -184,6 +184,21 @@
     .btn-mini:hover{ background:#eef4ff; }
     .btn-danger:hover{ background:#ffecec; }
 
+    /* ===== 건축개요 추가 UI용 뱃지(트리 .chip과 충돌 방지 위해 별도) ===== */
+    .pill {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.10);
+      color:#445;
+      background:#f5f8ff;
+      white-space:nowrap;
+      font-weight: 700;
+    }
+    .readonly {
+      background:#f7f9fc;
+    }
+
     /* =========================================================
        ✅ 법규 트리: 이 아래는 전부 #ruleTree 스코프 안에서만 적용
        (건축개요/조문검색 절대 영향 X)
@@ -195,7 +210,7 @@
       gap: 16px;
       align-items: start;
     }
-    #ruleTree .tree-left, 
+    #ruleTree .tree-left,
     #ruleTree .tree-right {
       background:#fff;
       border-radius: 14px;
@@ -355,6 +370,120 @@
 
       <div class="row-label">용도</div>
       <div class="row-field"><input class="wide" placeholder="예: 업무시설(공공청사, 사회복지시설)" /></div>
+
+      <!-- ✅ 여기부터 추가: 스샷 형태의 건축개요 상세 항목 -->
+      <div class="row-label">주구조</div>
+      <div class="row-field">
+        <input id="mainStructure" class="wide" placeholder="예: 철근콘크리트조 / 철골조 / 철골철근콘크리트조 등" />
+      </div>
+
+      <div class="row-label">건축면적</div>
+      <div class="row-field">
+        <input id="bAreaPlan" class="mini" type="number" step="0.01" value="0" />
+        <span class="unit">㎡</span>
+        <span class="pill">대지면적 기준으로 건폐율(계획) 자동 계산</span>
+      </div>
+
+      <div class="row-label">연면적</div>
+      <div class="row-field">
+        <span style="font-weight:800; color:#445;">계</span>
+        <input id="faTotal" class="mini readonly" type="number" step="0.01" value="0" readonly />
+        <span class="unit">㎡</span>
+        <span class="pill">지상+지하 자동 합산</span>
+
+        <div style="flex-basis:100%; height:0;"></div>
+
+        <span style="margin-left:0;">지상층</span>
+        <input id="faAbove" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
+        <span class="unit">㎡</span>
+
+        <span style="margin-left:10px;">지하층</span>
+        <input id="faBelow" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
+        <span class="unit">㎡</span>
+
+        <div style="flex-basis:100%; height:0;"></div>
+
+        <span style="margin-left:0;">주차장면적</span>
+        <input id="parkingArea" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
+        <span class="unit">㎡</span>
+      </div>
+
+      <div class="row-label">건폐율</div>
+      <div class="row-field">
+        <span>법정</span>
+        <input id="covLegal" class="mini" type="number" step="0.01" value="0" style="width:140px;" />
+        <span class="unit">%</span>
+
+        <span style="margin-left:10px;">계획</span>
+        <input id="covPlan" class="mini readonly" type="number" step="0.01" value="0" style="width:140px;" readonly />
+        <span class="unit">%</span>
+
+        <span class="pill">계획 = (건축면적 ÷ 대지면적)×100</span>
+      </div>
+
+      <div class="row-label">용적률</div>
+      <div class="row-field">
+        <span>법정</span>
+        <input id="farLegal" class="mini" type="number" step="0.01" value="0" style="width:140px;" />
+        <span class="unit">%</span>
+
+        <span style="margin-left:10px;">계획</span>
+        <input id="farPlan" class="mini readonly" type="number" step="0.01" value="0" style="width:140px;" readonly />
+        <span class="unit">%</span>
+
+        <span class="pill">계획 = (연면적계 ÷ 대지면적)×100</span>
+      </div>
+
+      <div class="row-label">주차대수</div>
+      <div class="row-field">
+        <span>법정</span>
+        <input id="parkLegal" class="mini" type="number" step="1" value="0" style="width:140px;" />
+        <span class="unit">대</span>
+
+        <span style="margin-left:10px;">계획</span>
+        <input id="parkPlan" class="mini" type="number" step="1" value="0" style="width:140px;" />
+        <span class="unit">대</span>
+
+        <input id="parkMemo" class="wide" placeholder="예: 공공업무시설/사회복지시설 (1대/200㎡) 등 메모" />
+      </div>
+
+      <div class="row-label">조경면적</div>
+      <div class="row-field">
+        <span>법정</span>
+        <input id="landLegal" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
+        <span class="unit">㎡</span>
+
+        <span style="margin-left:10px;">계획</span>
+        <input id="landPlan" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
+        <span class="unit">㎡</span>
+
+        <span style="margin-left:10px;">(비율)</span>
+        <input id="landRatio" class="mini readonly" type="number" step="0.01" value="0" style="width:140px;" readonly />
+        <span class="unit">%</span>
+
+        <span class="pill">비율 = (조경(계획) ÷ 대지면적)×100</span>
+      </div>
+
+      <div class="row-label">공개공지</div>
+      <div class="row-field">
+        <span>법정</span>
+        <input id="openLegal" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
+        <span class="unit">㎡</span>
+
+        <span style="margin-left:10px;">계획</span>
+        <input id="openPlan" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
+        <span class="unit">㎡</span>
+      </div>
+
+      <div class="row-label">승강설비</div>
+      <div class="row-field">
+        <span>계획</span>
+        <input id="elevPlan" class="mini" type="number" step="1" value="0" style="width:140px;" />
+        <span class="unit">대</span>
+
+        <input id="elevMemo" class="wide" placeholder="예: 장애인겸용 승용승강기 1대, 20인승 등 메모" />
+      </div>
+      <!-- ✅ 추가 끝 -->
     </div>
   </div>
 
@@ -501,8 +630,7 @@ function escapeHtml(str) {
 }
 
 /* =========================
-   ✅ 법규 트리 (샘플)
-   - 전부 #ruleTree 내부만 조작하도록 스코프 고정
+   ✅ 법규 트리 (샘플) - 그대로
 ========================= */
 const RULE_ITEMS = [
   "건폐율",
@@ -575,14 +703,12 @@ function expandAllLawCards(){
       div.classList.add("active");
 
       title.textContent = `[항목] ${name}`;
-      // 항목 변경 시: 우측 카드 기본은 “접힘”
       collapseAllLawCards();
       setLawCardBodies(name);
     };
     list.appendChild(div);
   });
 
-  // 초기 표시
   const first = RULE_ITEMS[0] || "건폐율";
   title.textContent = `[항목] ${first}`;
   setLawCardBodies(first);
@@ -611,6 +737,7 @@ function recalcParcelSumAndApplyToSite() {
   });
   sum = round2(sum);
   document.getElementById("siteArea").value = format2(sum);
+  recalcBuildingOverview(); // ✅ 추가: 대지면적 변하면 연산도 갱신
 }
 
 function addParcelRow(prefill = { jibun: "", area: "" }) {
@@ -667,10 +794,74 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
 (function initParcels(){
   addParcelRow();
   const site = document.getElementById("siteArea");
+  site.addEventListener("input", recalcBuildingOverview);
   site.addEventListener("blur", () => {
     const v = Number(site.value);
     if (Number.isFinite(v)) site.value = format2(v);
+    recalcBuildingOverview();
   });
+})();
+
+/* =========================
+   ✅ 건축개요 자동연산 (추가)
+   - 연면적계 = 지상 + 지하
+   - 건폐율(계획) = 건축면적 / 대지면적 * 100
+   - 용적률(계획) = 연면적계 / 대지면적 * 100
+   - 조경비율 = 조경(계획) / 대지면적 * 100
+   - 전부 소수점 2자리 반올림
+========================= */
+function num(id){
+  const el = document.getElementById(id);
+  if (!el) return 0;
+  const v = Number(el.value);
+  return Number.isFinite(v) ? v : 0;
+}
+function set2(id, value){
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.value = format2(value);
+}
+function recalcBuildingOverview(){
+  const site = num("siteArea");
+  const bArea = num("bAreaPlan");
+
+  const above = num("faAbove");
+  const below = num("faBelow");
+  const total = round2(above + below);
+  set2("faTotal", total);
+
+  const cov = site > 0 ? round2((bArea / site) * 100) : 0;
+  set2("covPlan", cov);
+
+  const far = site > 0 ? round2((total / site) * 100) : 0;
+  set2("farPlan", far);
+
+  const landPlan = num("landPlan");
+  const landRatio = site > 0 ? round2((landPlan / site) * 100) : 0;
+  set2("landRatio", landRatio);
+}
+
+// 이벤트 연결(입력할 때마다 자동 계산)
+(function bindBuildingOverview(){
+  const ids = [
+    "bAreaPlan",
+    "faAbove","faBelow",
+    "landPlan",
+    "siteArea"
+  ];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", recalcBuildingOverview);
+    el.addEventListener("blur", () => {
+      const v = Number(el.value);
+      if (Number.isFinite(v)) el.value = format2(v);
+      recalcBuildingOverview();
+    });
+  });
+
+  // 초기 1회
+  recalcBuildingOverview();
 })();
 </script>
 
