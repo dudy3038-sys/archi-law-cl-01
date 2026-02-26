@@ -58,6 +58,136 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       white-space: pre-wrap;
     }
+
+    /* =========================
+       트리 UI (개발 테스트용)
+    ========================= */
+    .tree-wrap{
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .tree-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin: 0 0 14px 0;
+      font-size: 22px;
+    }
+    .tree-sub{
+      color: #6b7280;
+      margin: 0 0 18px 0;
+      font-size: 13px;
+    }
+
+    .tree-grid{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
+      align-items:start;
+    }
+
+    .tree-list{
+      background:#fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      overflow:hidden;
+    }
+    .tree-list-header{
+      padding: 12px 14px;
+      background:#f3f6ff;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      font-weight: 700;
+    }
+    .tree-item{
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .tree-item:hover{ background:#f8fafc; }
+    .tree-item.active{ background:#eef4ff; }
+    .tree-item .label{
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .tree-item .chev{
+      opacity: .6;
+      font-size: 12px;
+    }
+
+    .tree-panel{
+      background:#fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      padding: 14px;
+      min-height: 220px;
+    }
+
+    .tree-panel-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      margin-bottom: 12px;
+    }
+    .tree-panel-header .h{
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .tree-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .mini-btn{
+      border: 1px solid rgba(0,0,0,0.12);
+      background:#fff;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .mini-btn:hover{ background:#f8fafc; }
+
+    .node{
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 10px;
+      overflow:hidden;
+      margin-bottom: 12px;
+    }
+    .node-head{
+      background:#f9fafb;
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .node-title{
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .node-body{
+      padding: 12px;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 13px;
+      display:none;
+    }
+    .node.open .node-body{ display:block; }
+    .node.open .node-head{ background:#eef4ff; }
+
+    .muted{
+      color:#6b7280;
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
@@ -73,6 +203,41 @@
   <div class="results" id="results"></div>
 
   <div class="detail" id="detail" style="display:none;"></div>
+
+  <!-- =========================
+       트리 UI 섹션
+  ========================= -->
+  <div class="tree-wrap">
+    <h2 class="tree-title">📚 법규 트리 (샘플)</h2>
+    <p class="tree-sub">
+      * 지금은 UI 구조만 보여주는 테스트 화면입니다. (법/시행령/시행규칙/조례/지구단위계획 트리)
+    </p>
+
+    <div class="tree-grid">
+      <!-- 왼쪽: 항목 리스트 -->
+      <div class="tree-list" id="treeList">
+        <div class="tree-list-header">[항목]</div>
+        <!-- JS로 채움 -->
+      </div>
+
+      <!-- 오른쪽: 트리 패널 -->
+      <div class="tree-panel">
+        <div class="tree-panel-header">
+          <div class="h" id="treePanelTitle">항목을 선택하세요</div>
+          <div class="tree-actions">
+            <button class="mini-btn" type="button" id="btnOpenAll">전체 펼치기</button>
+            <button class="mini-btn" type="button" id="btnCloseAll">전체 접기</button>
+          </div>
+        </div>
+
+        <div class="muted" id="treeHint">
+          왼쪽 [항목]에서 하나를 클릭하면, 아래에 “법/시행령/시행규칙/조례/지구단위계획” 트리가 나타납니다.
+        </div>
+
+        <div id="treeNodes" style="margin-top:12px;"></div>
+      </div>
+    </div>
+  </div>
 
 <script>
 async function search() {
@@ -129,6 +294,127 @@ async function loadDetail(lawId, articleNo) {
     ${data.row.body}
   `;
 }
+
+/* =========================
+   트리 UI (샘플/더미 데이터)
+========================= */
+
+const ITEMS = [
+  "건폐율",
+  "용적률",
+  "주차대수 산정 기준",
+  "대지안의 공지",
+  "옹벽 등의 공작물에의 준용",
+  "건축물의 높이제한",
+  "일조 등의 확보를 위한 건축물의 높이제한",
+  "대지의 조경",
+  "구조안전의 확인 대상",
+  "직통계단의 설치",
+  "피난계단 설치",
+  "계단 및 복도의 설치기준",
+  "승용 승강기의 설치",
+  "거실의 채광 및 환기",
+  "방화구획",
+  "지하층의 구조 및 설비",
+  "에너지절약계획서 제출 대상 건축물",
+  "녹색건축인증",
+  "에너지효율등급 인증",
+  "신‧재생에너지 설비",
+  "장애인‧노인‧임산부 등의 편의증진 시설",
+  "공중화장실",
+  "건축심의",
+  "경관심의",
+  "건설기술심의",
+  "단열재의 두께"
+];
+
+const CATS = ["법", "시행령", "시행규칙", "조례", "지구단위계획"];
+
+const treeListEl = document.getElementById("treeList");
+const treeNodesEl = document.getElementById("treeNodes");
+const treePanelTitleEl = document.getElementById("treePanelTitle");
+const treeHintEl = document.getElementById("treeHint");
+
+let activeItem = "";
+
+function renderItemList() {
+  const frag = document.createDocumentFragment();
+  ITEMS.forEach((name) => {
+    const row = document.createElement("div");
+    row.className = "tree-item";
+    row.dataset.item = name;
+    row.innerHTML = `<span class="label">${escapeHtml(name)}</span><span class="chev">▶</span>`;
+    row.addEventListener("click", () => selectItem(name));
+    frag.appendChild(row);
+  });
+  treeListEl.appendChild(frag);
+}
+
+function selectItem(name) {
+  activeItem = name;
+
+  // active 표시
+  [...treeListEl.querySelectorAll(".tree-item")].forEach((el) => {
+    el.classList.toggle("active", el.dataset.item === name);
+  });
+
+  treePanelTitleEl.textContent = `[항목] ${name}`;
+  treeHintEl.style.display = "none";
+
+  // 트리 노드 그리기
+  treeNodesEl.innerHTML = "";
+  CATS.forEach((cat) => {
+    const node = document.createElement("div");
+    node.className = "node open"; // 기본 펼침(개발 테스트용이라)
+    node.dataset.cat = cat;
+
+    const head = document.createElement("div");
+    head.className = "node-head";
+    head.innerHTML = `<div class="node-title">${escapeHtml(cat)}</div><div class="muted">클릭: 접기/펼치기</div>`;
+    head.addEventListener("click", () => node.classList.toggle("open"));
+
+    const body = document.createElement("div");
+    body.className = "node-body";
+    body.innerHTML = buildDummyText(name, cat);
+
+    node.appendChild(head);
+    node.appendChild(body);
+    treeNodesEl.appendChild(node);
+  });
+}
+
+function buildDummyText(itemName, cat) {
+  // 샘플 이미지 느낌: "00법 00조" 형태 + 내용 박스
+  // 지금은 더미 문장. 나중에 DB 연결 시 이 부분을 실제 조문으로 교체하면 됨.
+  const header = `${itemName} 관련 ${cat} (샘플)`;
+  const lines = [
+    `${cat} 00조`,
+    "법규 내용",
+    "",
+    `- (예시) ${itemName}에 대한 ${cat} 근거가 여기에 표시됩니다.`,
+    "- (예시) 나중에 DB/체크리스트 엔진과 연결되면 실제 조문 본문이 들어갑니다."
+  ];
+  return `<strong>${escapeHtml(header)}</strong>\n\n${escapeHtml(lines.join("\n"))}`;
+}
+
+function escapeHtml(str) {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// 전체 펼치기/접기
+document.getElementById("btnOpenAll").addEventListener("click", () => {
+  [...treeNodesEl.querySelectorAll(".node")].forEach(n => n.classList.add("open"));
+});
+document.getElementById("btnCloseAll").addEventListener("click", () => {
+  [...treeNodesEl.querySelectorAll(".node")].forEach(n => n.classList.remove("open"));
+});
+
+renderItemList();
 </script>
 
 </body>
