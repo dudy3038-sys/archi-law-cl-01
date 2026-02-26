@@ -1,702 +1,902 @@
 [
   {
-    "law_id": "010719",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
-    "ministry": "문화체육관광부",
-    "시행일": "2023-08-08",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=253527&type=HTML&mobileYn=&efYd=20230808"
+    "law_key": "014877",
+    "mst": "270935",
+    "law_name": "12ㆍ29여객기참사 피해구제 및 지원 등을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2025-06-30",
+    "공포일": "2025-04-29",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=270935&type=HTML&mobileYn=&efYd=20250630"
   },
   {
-    "law_id": "010719",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
-    "ministry": "문화체육관광부",
-    "시행일": "2021-05-18",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=232157&type=HTML&mobileYn=&efYd=20210518"
-  },
-  {
-    "law_id": "010719",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
-    "ministry": "문화체육관광부",
-    "시행일": "2019-03-25",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=206034&type=HTML&mobileYn=&efYd=20190325"
-  },
-  {
-    "law_id": "010719",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
-    "ministry": "문화체육관광부",
-    "시행일": "2016-06-30",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180715&type=HTML&mobileYn=&efYd=20160630"
-  },
-  {
-    "law_id": "010719",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
-    "ministry": "문화체육관광부",
-    "시행일": "2013-08-23",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=140323&type=HTML&mobileYn=&efYd=20130823"
-  },
-  {
-    "law_id": "010719",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률",
-    "ministry": "문화체육관광부",
-    "시행일": "2013-05-22",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=140323&type=HTML&mobileYn=&efYd=20130522"
-  },
-  {
-    "law_id": "010719",
-    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률",
-    "ministry": "문화체육관광부",
-    "시행일": "2010-01-25",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=102121&type=HTML&mobileYn=&efYd=20100125"
-  },
-  {
-    "law_id": "010719",
-    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률",
-    "ministry": "문화체육관광부",
-    "시행일": "2008-06-29",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=86330&type=HTML&mobileYn=&efYd=20080629"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2025-10-01",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=277805&type=HTML&mobileYn=&efYd=20251001"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2024-11-12",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=266351&type=HTML&mobileYn=&efYd=20241112"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2024-07-30",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=264477&type=HTML&mobileYn=&efYd=20240730"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2023-06-05",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=249727&type=HTML&mobileYn=&efYd=20230605"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2021-09-29",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=235703&type=HTML&mobileYn=&efYd=20210929"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2019-07-02",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=209597&type=HTML&mobileYn=&efYd=20190702"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2016-06-30",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=183817&type=HTML&mobileYn=&efYd=20160630"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2015-12-31",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=178674&type=HTML&mobileYn=&efYd=20151231"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2015-01-06",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=166590&type=HTML&mobileYn=&efYd=20150106"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2013-08-23",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=143184&type=HTML&mobileYn=&efYd=20130823"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2013-03-23",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=135518&type=HTML&mobileYn=&efYd=20130323"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2012-05-23",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=125535&type=HTML&mobileYn=&efYd=20120523"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2012-01-06",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=121427&type=HTML&mobileYn=&efYd=20120106"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2011-11-11",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=118667&type=HTML&mobileYn=&efYd=20111111"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2010-05-05",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=104835&type=HTML&mobileYn=&efYd=20100505"
-  },
-  {
-    "law_id": "010831",
-    "law_name": "10·27법난 피해자의 명예회복 등에 관한 법률 시행령",
-    "ministry": "문화체육관광부",
-    "시행일": "2008-09-09",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=88753&type=HTML&mobileYn=&efYd=20080909"
-  },
-  {
-    "law_id": "014656",
-    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법",
-    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
-    "시행일": "2026-05-11",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=283303&type=HTML&mobileYn=&efYd=20260511"
-  },
-  {
-    "law_id": "014656",
-    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법",
-    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
+    "law_key": "014899",
+    "mst": "281237",
+    "law_name": "12ㆍ29여객기참사 피해구제 및 지원 등을 위한 특별법 시행령",
+    "ministry": "국토교통부",
     "시행일": "2026-01-02",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=277295&type=HTML&mobileYn=&efYd=20260102"
+    "공포일": "2025-12-30",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=281237&type=HTML&mobileYn=&efYd=20260102"
   },
   {
-    "law_id": "014656",
-    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법",
-    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
-    "시행일": "2024-05-21",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=262693&type=HTML&mobileYn=&efYd=20240521"
+    "law_key": "014899",
+    "mst": "272537",
+    "law_name": "12ㆍ29여객기참사 피해구제 및 지원 등을 위한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2025-06-30",
+    "공포일": "2025-06-25",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=272537&type=HTML&mobileYn=&efYd=20250630"
   },
   {
-    "law_id": "014808",
-    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법 시행령",
-    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
-    "시행일": "2026-01-02",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=281503&type=HTML&mobileYn=&efYd=20260102"
-  },
-  {
-    "law_id": "014808",
-    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법 시행령",
-    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
-    "시행일": "2025-10-01",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=277693&type=HTML&mobileYn=&efYd=20251001"
-  },
-  {
-    "law_id": "014808",
-    "law_name": "10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법 시행령",
-    "ministry": "10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부",
-    "시행일": "2025-01-14",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=268201&type=HTML&mobileYn=&efYd=20250114"
-  },
-  {
-    "law_id": "014565",
-    "law_name": "112신고의 운영 및 처리에 관한 법률",
-    "ministry": "경찰청",
-    "시행일": "2024-07-03",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=257787&type=HTML&mobileYn=&efYd=20240703"
-  },
-  {
-    "law_id": "014679",
-    "law_name": "112신고의 운영 및 처리에 관한 법률 시행령",
-    "ministry": "경찰청",
-    "시행일": "2024-07-03",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263521&type=HTML&mobileYn=&efYd=20240703"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2025-06-04",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=266637&type=HTML&mobileYn=&efYd=20250604"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2024-07-03",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=257789&type=HTML&mobileYn=&efYd=20240703"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2024-02-17",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=253949&type=HTML&mobileYn=&efYd=20240217"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2022-01-20",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236231&type=HTML&mobileYn=&efYd=20220120"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2022-01-06",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228097&type=HTML&mobileYn=&efYd=20220106"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2021-10-21",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222449&type=HTML&mobileYn=&efYd=20211021"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2021-07-06",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228097&type=HTML&mobileYn=&efYd=20210706"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2021-01-21",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222449&type=HTML&mobileYn=&efYd=20210121"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2018-06-27",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=200188&type=HTML&mobileYn=&efYd=20180627"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2017-07-26",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=195264&type=HTML&mobileYn=&efYd=20170726"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2017-01-28",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180485&type=HTML&mobileYn=&efYd=20170128"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2016-03-16",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=177211&type=HTML&mobileYn=&efYd=20160316"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2014-11-19",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=162385&type=HTML&mobileYn=&efYd=20141119"
-  },
-  {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
+    "law_key": "011726",
+    "mst": "137096",
+    "law_name": "2015세계물포럼 지원 특별법",
+    "ministry": "국토교통부",
     "시행일": "2013-03-23",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=138422&type=HTML&mobileYn=&efYd=20130323"
+    "공포일": "2013-03-23",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=137096&type=HTML&mobileYn=&efYd=20130323"
   },
   {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2012-07-01",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=124074&type=HTML&mobileYn=&efYd=20120701"
+    "law_key": "011726",
+    "mst": "130863",
+    "law_name": "2015세계물포럼 지원 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2013-03-19",
+    "공포일": "2012-12-18",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=130863&type=HTML&mobileYn=&efYd=20130319"
   },
   {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2012-06-22",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=124074&type=HTML&mobileYn=&efYd=20120622"
+    "law_key": "011726",
+    "mst": "130863",
+    "law_name": "2015세계물포럼 지원 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2012-12-18",
+    "공포일": "2012-12-18",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=130863&type=HTML&mobileYn=&efYd=20121218"
   },
   {
-    "law_id": "011349",
-    "law_name": "119구조ㆍ구급에 관한 법률",
-    "ministry": "소방청",
-    "시행일": "2011-09-09",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=110950&type=HTML&mobileYn=&efYd=20110909"
+    "law_key": "011776",
+    "mst": "184614",
+    "law_name": "2015세계물포럼 지원 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2016-07-07",
+    "공포일": "2016-07-06",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=184614&type=HTML&mobileYn=&efYd=20160707"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2025-06-04",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=271545&type=HTML&mobileYn=&efYd=20250604"
+    "law_key": "011776",
+    "mst": "133096",
+    "law_name": "2015세계물포럼 지원 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2013-03-19",
+    "공포일": "2013-03-18",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=133096&type=HTML&mobileYn=&efYd=20130319"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2025-01-01",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265713&type=HTML&mobileYn=&efYd=20250101"
+    "law_key": "014518",
+    "mst": "255405",
+    "law_name": "가덕도신공항건설공단법",
+    "ministry": "국토교통부",
+    "시행일": "2024-04-25",
+    "공포일": "2023-10-24",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=255405&type=HTML&mobileYn=&efYd=20240425"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2024-12-27",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=267477&type=HTML&mobileYn=&efYd=20241227"
+    "law_key": "014647",
+    "mst": "262103",
+    "law_name": "가덕도신공항건설공단법 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2024-04-25",
+    "공포일": "2024-04-25",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=262103&type=HTML&mobileYn=&efYd=20240425"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2024-10-04",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265713&type=HTML&mobileYn=&efYd=20241004"
+    "law_key": "014641",
+    "mst": "261795",
+    "law_name": "가덕도신공항건설공단법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2024-04-25",
+    "공포일": "2024-04-16",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=261795&type=HTML&mobileYn=&efYd=20240425"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2024-08-14",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=264957&type=HTML&mobileYn=&efYd=20240814"
+    "law_key": "014035",
+    "mst": "280063",
+    "law_name": "가덕도신공항 건설을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2026-03-03",
+    "공포일": "2025-12-02",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=280063&type=HTML&mobileYn=&efYd=20260303"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2024-04-23",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=261953&type=HTML&mobileYn=&efYd=20240423"
+    "law_key": "014035",
+    "mst": "276917",
+    "law_name": "가덕도신공항 건설을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2026-01-02",
+    "공포일": "2025-10-01",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=276917&type=HTML&mobileYn=&efYd=20260102"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2023-03-31",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=249483&type=HTML&mobileYn=&efYd=20230331"
+    "law_key": "014035",
+    "mst": "258303",
+    "law_name": "가덕도신공항 건설을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2024-01-09",
+    "공포일": "2024-01-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=258303&type=HTML&mobileYn=&efYd=20240109"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2023-01-02",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=247423&type=HTML&mobileYn=&efYd=20230102"
+    "law_key": "014035",
+    "mst": "257375",
+    "law_name": "가덕도신공항 건설을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2023-12-26",
+    "공포일": "2023-12-26",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=257375&type=HTML&mobileYn=&efYd=20231226"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2022-07-21",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=243963&type=HTML&mobileYn=&efYd=20220721"
+    "law_key": "014035",
+    "mst": "250945",
+    "law_name": "가덕도신공항 건설을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2023-11-17",
+    "공포일": "2023-05-16",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=250945&type=HTML&mobileYn=&efYd=20231117"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2022-03-30",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=241659&type=HTML&mobileYn=&efYd=20220330"
+    "law_key": "014035",
+    "mst": "246645",
+    "law_name": "가덕도신공항 건설을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2023-06-28",
+    "공포일": "2022-12-27",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=246645&type=HTML&mobileYn=&efYd=20230628"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2022-01-06",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=239313&type=HTML&mobileYn=&efYd=20220106"
+    "law_key": "014035",
+    "mst": "250009",
+    "law_name": "가덕도신공항 건설을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2023-04-18",
+    "공포일": "2023-04-18",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=250009&type=HTML&mobileYn=&efYd=20230418"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2021-07-13",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=233917&type=HTML&mobileYn=&efYd=20210713"
+    "law_key": "014035",
+    "mst": "236979",
+    "law_name": "가덕도신공항 건설을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2022-12-01",
+    "공포일": "2021-11-30",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236979&type=HTML&mobileYn=&efYd=20221201"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2021-07-06",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=233753&type=HTML&mobileYn=&efYd=20210706"
+    "law_key": "014035",
+    "mst": "230203",
+    "law_name": "가덕도신공항 건설을 위한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2021-09-17",
+    "공포일": "2021-03-16",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=230203&type=HTML&mobileYn=&efYd=20210917"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2021-01-21",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228889&type=HTML&mobileYn=&efYd=20210121"
+    "law_key": "014155",
+    "mst": "235695",
+    "law_name": "가덕도신공항 건설을 위한 특별법 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2021-09-17",
+    "공포일": "2021-09-17",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=235695&type=HTML&mobileYn=&efYd=20210917"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2020-08-05",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=220681&type=HTML&mobileYn=&efYd=20200805"
+    "law_key": "014145",
+    "mst": "281239",
+    "law_name": "가덕도신공항 건설을 위한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2026-01-02",
+    "공포일": "2025-12-30",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=281239&type=HTML&mobileYn=&efYd=20260102"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2019-11-02",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=210086&type=HTML&mobileYn=&efYd=20191102"
+    "law_key": "014145",
+    "mst": "256475",
+    "law_name": "가덕도신공항 건설을 위한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2023-12-12",
+    "공포일": "2023-12-12",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=256475&type=HTML&mobileYn=&efYd=20231212"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2018-12-27",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=206223&type=HTML&mobileYn=&efYd=20181227"
+    "law_key": "014145",
+    "mst": "255957",
+    "law_name": "가덕도신공항 건설을 위한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2023-11-17",
+    "공포일": "2023-11-07",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=255957&type=HTML&mobileYn=&efYd=20231117"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2017-07-26",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=196225&type=HTML&mobileYn=&efYd=20170726"
+    "law_key": "014145",
+    "mst": "235431",
+    "law_name": "가덕도신공항 건설을 위한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2021-09-17",
+    "공포일": "2021-09-14",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=235431&type=HTML&mobileYn=&efYd=20210917"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2017-02-10",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191722&type=HTML&mobileYn=&efYd=20170210"
+    "law_key": "012071",
+    "mst": "276919",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2026-01-02",
+    "공포일": "2025-10-01",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=276919&type=HTML&mobileYn=&efYd=20260102"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2017-01-28",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191460&type=HTML&mobileYn=&efYd=20170128"
+    "law_key": "012071",
+    "mst": "258089",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2024-07-10",
+    "공포일": "2024-01-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=258089&type=HTML&mobileYn=&efYd=20240710"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2017-01-26",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191460&type=HTML&mobileYn=&efYd=20170126"
+    "law_key": "012071",
+    "mst": "258305",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2024-01-09",
+    "공포일": "2024-01-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=258305&type=HTML&mobileYn=&efYd=20240109"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
+    "law_key": "012071",
+    "mst": "246647",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2023-06-28",
+    "공포일": "2022-12-27",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=246647&type=HTML&mobileYn=&efYd=20230628"
+  },
+  {
+    "law_key": "012071",
+    "mst": "243069",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2022-12-11",
+    "공포일": "2022-06-10",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=243069&type=HTML&mobileYn=&efYd=20221211"
+  },
+  {
+    "law_key": "012071",
+    "mst": "236981",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2022-12-01",
+    "공포일": "2021-11-30",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236981&type=HTML&mobileYn=&efYd=20221201"
+  },
+  {
+    "law_key": "012071",
+    "mst": "228491",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2022-01-13",
+    "공포일": "2021-01-12",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228491&type=HTML&mobileYn=&efYd=20220113"
+  },
+  {
+    "law_key": "012071",
+    "mst": "222507",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2021-04-21",
+    "공포일": "2020-10-20",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222507&type=HTML&mobileYn=&efYd=20210421"
+  },
+  {
+    "law_key": "012071",
+    "mst": "219187",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2020-06-09",
+    "공포일": "2020-06-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=219187&type=HTML&mobileYn=&efYd=20200609"
+  },
+  {
+    "law_key": "012071",
+    "mst": "208471",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2019-05-24",
+    "공포일": "2019-04-23",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=208471&type=HTML&mobileYn=&efYd=20190524"
+  },
+  {
+    "law_key": "012071",
+    "mst": "205835",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2019-03-19",
+    "공포일": "2018-12-18",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=205835&type=HTML&mobileYn=&efYd=20190319"
+  },
+  {
+    "law_key": "012071",
+    "mst": "202661",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2019-03-14",
+    "공포일": "2018-03-13",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=202661&type=HTML&mobileYn=&efYd=20190314"
+  },
+  {
+    "law_key": "012071",
+    "mst": "191046",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2018-01-18",
+    "공포일": "2017-01-17",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191046&type=HTML&mobileYn=&efYd=20180118"
+  },
+  {
+    "law_key": "012071",
+    "mst": "200200",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2017-12-26",
+    "공포일": "2017-12-26",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=200200&type=HTML&mobileYn=&efYd=20171226"
+  },
+  {
+    "law_key": "012071",
+    "mst": "179597",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2017-01-20",
+    "공포일": "2016-01-19",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=179597&type=HTML&mobileYn=&efYd=20170120"
+  },
+  {
+    "law_key": "012071",
+    "mst": "178180",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2016-06-30",
+    "공포일": "2015-12-29",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=178180&type=HTML&mobileYn=&efYd=20160630"
+  },
+  {
+    "law_key": "012071",
+    "mst": "155143",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법",
+    "ministry": "국토교통부",
+    "시행일": "2014-12-04",
+    "공포일": "2014-06-03",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=155143&type=HTML&mobileYn=&efYd=20141204"
+  },
+  {
+    "law_key": "012188",
+    "mst": "282021",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2025-12-26",
+    "공포일": "2025-12-26",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=282021&type=HTML&mobileYn=&efYd=20251226"
+  },
+  {
+    "law_key": "012188",
+    "mst": "263891",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2024-07-10",
+    "공포일": "2024-07-10",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263891&type=HTML&mobileYn=&efYd=20240710"
+  },
+  {
+    "law_key": "012188",
+    "mst": "246055",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2022-12-11",
+    "공포일": "2022-12-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=246055&type=HTML&mobileYn=&efYd=20221211"
+  },
+  {
+    "law_key": "012188",
+    "mst": "234955",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2021-08-27",
+    "공포일": "2021-08-27",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=234955&type=HTML&mobileYn=&efYd=20210827"
+  },
+  {
+    "law_key": "012188",
+    "mst": "231841",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2021-04-21",
+    "공포일": "2021-04-21",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=231841&type=HTML&mobileYn=&efYd=20210421"
+  },
+  {
+    "law_key": "012188",
+    "mst": "211013",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2019-10-14",
+    "공포일": "2019-10-14",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=211013&type=HTML&mobileYn=&efYd=20191014"
+  },
+  {
+    "law_key": "012188",
+    "mst": "180568",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙",
+    "ministry": "국토교통부",
     "시행일": "2016-01-27",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180539&type=HTML&mobileYn=&efYd=20160127"
+    "공포일": "2016-01-27",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180568&type=HTML&mobileYn=&efYd=20160127"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2014-11-19",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=163971&type=HTML&mobileYn=&efYd=20141119"
+    "law_key": "012188",
+    "mst": "165188",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2014-12-10",
+    "공포일": "2014-12-10",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=165188&type=HTML&mobileYn=&efYd=20141210"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2014-07-15",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=156982&type=HTML&mobileYn=&efYd=20140715"
+    "law_key": "012179",
+    "mst": "281241",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2026-01-02",
+    "공포일": "2025-12-30",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=281241&type=HTML&mobileYn=&efYd=20260102"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2013-09-17",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=144131&type=HTML&mobileYn=&efYd=20130917"
+    "law_key": "012179",
+    "mst": "272901",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2025-07-22",
+    "공포일": "2025-07-22",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=272901&type=HTML&mobileYn=&efYd=20250722"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2012-07-01",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126344&type=HTML&mobileYn=&efYd=20120701"
+    "law_key": "012179",
+    "mst": "263857",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2024-07-10",
+    "공포일": "2024-07-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263857&type=HTML&mobileYn=&efYd=20240710"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조·구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2012-06-22",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126344&type=HTML&mobileYn=&efYd=20120622"
+    "law_key": "012179",
+    "mst": "262243",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2024-05-17",
+    "공포일": "2024-05-07",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=262243&type=HTML&mobileYn=&efYd=20240517"
   },
   {
-    "law_id": "011457",
-    "law_name": "119구조·구급에 관한 법률 시행규칙",
-    "ministry": "소방청",
-    "시행일": "2011-09-09",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=116823&type=HTML&mobileYn=&efYd=20110909"
+    "law_key": "012179",
+    "mst": "245751",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2022-12-11",
+    "공포일": "2022-12-06",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=245751&type=HTML&mobileYn=&efYd=20221211"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2025-10-02",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=273763&type=HTML&mobileYn=&efYd=20251002"
+    "law_key": "012179",
+    "mst": "231641",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2021-04-21",
+    "공포일": "2021-04-20",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=231641&type=HTML&mobileYn=&efYd=20210421"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2024-07-03",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263525&type=HTML&mobileYn=&efYd=20240703"
+    "law_key": "012179",
+    "mst": "228859",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2021-01-26",
+    "공포일": "2021-01-26",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228859&type=HTML&mobileYn=&efYd=20210126"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2024-04-23",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=261847&type=HTML&mobileYn=&efYd=20240423"
+    "law_key": "012179",
+    "mst": "227121",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2021-01-05",
+    "공포일": "2021-01-05",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=227121&type=HTML&mobileYn=&efYd=20210105"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2022-01-06",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236155&type=HTML&mobileYn=&efYd=20220106"
+    "law_key": "012179",
+    "mst": "223947",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2020-12-10",
+    "공포일": "2020-12-08",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=223947&type=HTML&mobileYn=&efYd=20201210"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2021-10-21",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236155&type=HTML&mobileYn=&efYd=20211021"
+    "law_key": "012179",
+    "mst": "208081",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2019-03-19",
+    "공포일": "2019-03-19",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=208081&type=HTML&mobileYn=&efYd=20190319"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2021-07-06",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=233717&type=HTML&mobileYn=&efYd=20210706"
+    "law_key": "012179",
+    "mst": "204685",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2018-12-29",
+    "공포일": "2018-09-28",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=204685&type=HTML&mobileYn=&efYd=20181229"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2021-01-21",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228807&type=HTML&mobileYn=&efYd=20210121"
+    "law_key": "012179",
+    "mst": "192816",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2017-03-30",
+    "공포일": "2017-03-27",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=192816&type=HTML&mobileYn=&efYd=20170330"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2020-07-14",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=220037&type=HTML&mobileYn=&efYd=20200714"
+    "law_key": "012179",
+    "mst": "184297",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2016-06-30",
+    "공포일": "2016-06-30",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=184297&type=HTML&mobileYn=&efYd=20160630"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2020-04-01",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=215419&type=HTML&mobileYn=&efYd=20200401"
+    "law_key": "012179",
+    "mst": "180057",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2016-01-25",
+    "공포일": "2016-01-22",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180057&type=HTML&mobileYn=&efYd=20160125"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2017-07-26",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=195947&type=HTML&mobileYn=&efYd=20170726"
+    "law_key": "012179",
+    "mst": "164542",
+    "law_name": "간선급행버스체계의 건설 및 운영에 관한 특별법 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2014-12-04",
+    "공포일": "2014-12-03",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=164542&type=HTML&mobileYn=&efYd=20141204"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2017-01-28",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191386&type=HTML&mobileYn=&efYd=20170128"
+    "law_key": "012481",
+    "mst": "250715",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2023-08-10",
+    "공포일": "2023-05-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=250715&type=HTML&mobileYn=&efYd=20230810"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2016-10-25",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=187304&type=HTML&mobileYn=&efYd=20161025"
+    "law_key": "012481",
+    "mst": "234029",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2022-07-21",
+    "공포일": "2021-07-20",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=234029&type=HTML&mobileYn=&efYd=20220721"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2016-09-05",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=186139&type=HTML&mobileYn=&efYd=20160905"
+    "law_key": "012481",
+    "mst": "234029",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2022-01-21",
+    "공포일": "2021-07-20",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=234029&type=HTML&mobileYn=&efYd=20220121"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2016-03-16",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=181703&type=HTML&mobileYn=&efYd=20160316"
+    "law_key": "012481",
+    "mst": "219355",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2020-12-10",
+    "공포일": "2020-06-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=219355&type=HTML&mobileYn=&efYd=20201210"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2015-12-31",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=178732&type=HTML&mobileYn=&efYd=20151231"
+    "law_key": "012481",
+    "mst": "217305",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2020-07-08",
+    "공포일": "2020-04-07",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=217305&type=HTML&mobileYn=&efYd=20200708"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2014-11-19",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=163582&type=HTML&mobileYn=&efYd=20141119"
+    "law_key": "012481",
+    "mst": "219189",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2020-06-09",
+    "공포일": "2020-06-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=219189&type=HTML&mobileYn=&efYd=20200609"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2014-07-15",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=156663&type=HTML&mobileYn=&efYd=20140715"
+    "law_key": "012481",
+    "mst": "210180",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2020-02-21",
+    "공포일": "2019-08-20",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=210180&type=HTML&mobileYn=&efYd=20200221"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2014-07-08",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=156542&type=HTML&mobileYn=&efYd=20140708"
+    "law_key": "012481",
+    "mst": "198543",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2018-11-01",
+    "공포일": "2017-10-31",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=198543&type=HTML&mobileYn=&efYd=20181101"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2013-12-17",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=148005&type=HTML&mobileYn=&efYd=20131217"
+    "law_key": "012481",
+    "mst": "199154",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2018-05-29",
+    "공포일": "2017-11-28",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=199154&type=HTML&mobileYn=&efYd=20180529"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2013-03-23",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=135570&type=HTML&mobileYn=&efYd=20130323"
+    "law_key": "012481",
+    "mst": "202782",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2018-03-20",
+    "공포일": "2018-03-20",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=202782&type=HTML&mobileYn=&efYd=20180320"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2012-09-01",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=128294&type=HTML&mobileYn=&efYd=20120901"
+    "law_key": "012481",
+    "mst": "181858",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2016-09-01",
+    "공포일": "2016-03-22",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=181858&type=HTML&mobileYn=&efYd=20160901"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2012-07-01",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126322&type=HTML&mobileYn=&efYd=20120701"
+    "law_key": "012481",
+    "mst": "179795",
+    "law_name": "감정평가 및 감정평가사에 관한 법률",
+    "ministry": "국토교통부",
+    "시행일": "2016-09-01",
+    "공포일": "2016-01-19",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=179795&type=HTML&mobileYn=&efYd=20160901"
   },
   {
-    "law_id": "011452",
-    "law_name": "119구조ㆍ구급에 관한 법률 시행령",
-    "ministry": "소방청",
-    "시행일": "2012-06-22",
-    "source_url": "/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126322&type=HTML&mobileYn=&efYd=20120622"
+    "law_key": "012655",
+    "mst": "265653",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2024-09-26",
+    "공포일": "2024-09-26",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265653&type=HTML&mobileYn=&efYd=20240926"
+  },
+  {
+    "law_key": "012655",
+    "mst": "256837",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2023-12-08",
+    "공포일": "2023-12-08",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=256837&type=HTML&mobileYn=&efYd=20231208"
+  },
+  {
+    "law_key": "012655",
+    "mst": "241617",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2022-03-30",
+    "공포일": "2022-03-30",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=241617&type=HTML&mobileYn=&efYd=20220330"
+  },
+  {
+    "law_key": "012655",
+    "mst": "239827",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2022-01-21",
+    "공포일": "2022-01-21",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=239827&type=HTML&mobileYn=&efYd=20220121"
+  },
+  {
+    "law_key": "012655",
+    "mst": "234957",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2021-08-27",
+    "공포일": "2021-08-27",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=234957&type=HTML&mobileYn=&efYd=20210827"
+  },
+  {
+    "law_key": "012655",
+    "mst": "224141",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2020-12-10",
+    "공포일": "2020-12-11",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=224141&type=HTML&mobileYn=&efYd=20201210"
+  },
+  {
+    "law_key": "012655",
+    "mst": "214851",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2020-02-21",
+    "공포일": "2020-02-21",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=214851&type=HTML&mobileYn=&efYd=20200221"
+  },
+  {
+    "law_key": "012655",
+    "mst": "202142",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2018-02-09",
+    "공포일": "2018-02-09",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=202142&type=HTML&mobileYn=&efYd=20180209"
+  },
+  {
+    "law_key": "012655",
+    "mst": "190703",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2016-12-30",
+    "공포일": "2016-12-30",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=190703&type=HTML&mobileYn=&efYd=20161230"
+  },
+  {
+    "law_key": "012655",
+    "mst": "186094",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행규칙",
+    "ministry": "국토교통부",
+    "시행일": "2016-09-01",
+    "공포일": "2016-08-31",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=186094&type=HTML&mobileYn=&efYd=20160901"
+  },
+  {
+    "law_key": "012651",
+    "mst": "265547",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2024-09-26",
+    "공포일": "2024-09-26",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265547&type=HTML&mobileYn=&efYd=20240926"
+  },
+  {
+    "law_key": "012651",
+    "mst": "264999",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2024-08-20",
+    "공포일": "2024-08-20",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=264999&type=HTML&mobileYn=&efYd=20240820"
+  },
+  {
+    "law_key": "012651",
+    "mst": "239579",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2022-01-21",
+    "공포일": "2022-01-21",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=239579&type=HTML&mobileYn=&efYd=20220121"
+  },
+  {
+    "law_key": "012651",
+    "mst": "227123",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2021-01-05",
+    "공포일": "2021-01-05",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=227123&type=HTML&mobileYn=&efYd=20210105"
+  },
+  {
+    "law_key": "012651",
+    "mst": "223877",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2020-12-10",
+    "공포일": "2020-12-08",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=223877&type=HTML&mobileYn=&efYd=20201210"
+  },
+  {
+    "law_key": "012651",
+    "mst": "222913",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2020-11-24",
+    "공포일": "2020-11-24",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222913&type=HTML&mobileYn=&efYd=20201124"
+  },
+  {
+    "law_key": "012651",
+    "mst": "221151",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2020-08-28",
+    "공포일": "2020-08-26",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=221151&type=HTML&mobileYn=&efYd=20200828"
+  },
+  {
+    "law_key": "012651",
+    "mst": "214661",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2020-02-21",
+    "공포일": "2020-02-18",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=214661&type=HTML&mobileYn=&efYd=20200221"
+  },
+  {
+    "law_key": "012651",
+    "mst": "205070",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2018-11-01",
+    "공포일": "2018-10-30",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=205070&type=HTML&mobileYn=&efYd=20181101"
+  },
+  {
+    "law_key": "012651",
+    "mst": "204935",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2018-10-23",
+    "공포일": "2018-10-23",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=204935&type=HTML&mobileYn=&efYd=20181023"
+  },
+  {
+    "law_key": "012651",
+    "mst": "185871",
+    "law_name": "감정평가 및 감정평가사에 관한 법률 시행령",
+    "ministry": "국토교통부",
+    "시행일": "2016-09-01",
+    "공포일": "2016-08-31",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=185871&type=HTML&mobileYn=&efYd=20160901"
+  },
+  {
+    "law_key": "006140",
+    "mst": "254883",
+    "law_name": "감정평가에 관한 규칙",
+    "ministry": "국토교통부",
+    "시행일": "2023-09-14",
+    "공포일": "2023-09-14",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=254883&type=HTML&mobileYn=&efYd=20230914"
+  },
+  {
+    "law_key": "006140",
+    "mst": "239765",
+    "law_name": "감정평가에 관한 규칙",
+    "ministry": "국토교통부",
+    "시행일": "2022-01-21",
+    "공포일": "2022-01-21",
+    "source_url": "http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=239765&type=HTML&mobileYn=&efYd=20220121"
   }
 ]

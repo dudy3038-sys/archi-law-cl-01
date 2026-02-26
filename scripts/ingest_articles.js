@@ -5,11 +5,14 @@ import { execSync } from "child_process";
 const OUT_DIR = path.resolve("./data");
 const DUMP_FILE = path.resolve("./data/law_article_dump.json");
 const SQL_FILE = path.resolve("./data/law_article_insert.sql");
+const RAW_FILE = path.resolve("./data/law_article_raw_response.txt");
 
 const LAW_OC = process.env.LAW_OC;
-const LAW_ID = process.env.LAW_ID; // 우리가 넘기는 값(대부분 MST)
-const LIMIT = Number(process.env.LIMIT || 200);
+const MST = String(process.env.LAW_ID || "").trim(); // ✅ 우리가 넘기는 값 = MST로 사용
+const LAW_KEY_ENV = String(process.env.LAW_KEY || "").trim(); // ✅ 선택: 법령ID(001823 등)
+const LIMIT = Number(process.env.LIMIT || 0); // 0이면 제한 없음
 const DRY_RUN = process.env.DRY_RUN === "1";
+const DEBUG_RAW = process.env.DEBUG_RAW === "1";
 
 const BASE_URL = "http://www.law.go.kr/DRF/lawService.do";
 
@@ -32,7 +35,7 @@ async function fetchText(url) {
   const res = await fetch(url, {
     redirect: "follow",
     headers: {
-      "user-agent": "archi-law-article-ingestor/1.0",
+      "user-agent": "archi-law-article-ingestor/2.0",
       accept: "application/json,text/plain,*/*",
     },
   });
@@ -48,9 +51,7 @@ function safeJsonParse(text) {
   }
 }
 
-// ===== 조문 찾기: 응답 구조가 다양해서 "조문" 배열을 최대한 안전하게 찾는다 =====
 function getLawServiceRoot(data) {
-  // 대표 키 후보들
   return (
     data?.LawService ||
     data?.lawService ||
@@ -63,8 +64,6 @@ function getLawServiceRoot(data) {
 function findArticlesArray(data) {
   const root = getLawServiceRoot(data);
 
-  // 가장 흔한 구조 후보:
-  // root.조문.조문단위 또는 root.조문 or root["조문"]
   const candidates = [
     root?.조문?.조문단위,
     root?.조문,
@@ -78,7 +77,7 @@ function findArticlesArray(data) {
     if (Array.isArray(c)) return c;
   }
 
-  // 그래도 못 찾으면 재귀로 "조문번호/조문내용" 포함 객체들을 모은다
+  // fallback: 재귀로 조문 객체 모으기
   const out = [];
   const walk = (node) => {
     if (Array.isArray(node)) {
@@ -87,7 +86,6 @@ function findArticlesArray(data) {
     }
     if (!node || typeof node !== "object") return;
 
-    // 조문 객체로 추정
     if (
       ("조문번호" in node || "조문번호문자열" in node) &&
       ("조문내용" in node || "조문내용HTML" in node || "내용" in node)
@@ -102,7 +100,7 @@ function findArticlesArray(data) {
   return out;
 }
 
-function normalizeArticles(raw, lawIdKey, sourceUrl) {
+function normalizeArticles(raw, lawKey, mst, sourceUrl) {
   const rows = [];
   for (const it of raw || []) {
     const no = it["조문번호"] || it["조문번호문자열"] || it["조문"] || "";
@@ -116,7 +114,8 @@ function normalizeArticles(raw, lawIdKey, sourceUrl) {
     if (!body) continue;
 
     rows.push({
-      law_id: String(lawIdKey),
+      law_key: String(lawKey),
+      mst: String(mst),
       article_no,
       title,
       body,
@@ -124,66 +123,87 @@ function normalizeArticles(raw, lawIdKey, sourceUrl) {
     });
   }
 
-  // 중복 제거
+  // 중복 제거 (law_key+mst+article_no)
   const map = new Map();
-  for (const r of rows) map.set(`${r.law_id}__${r.article_no}`, r);
+  for (const r of rows) map.set(`${r.law_key}__${r.mst}__${r.article_no}`, r);
   return Array.from(map.values());
+}
+
+// ✅ mst로 law_key를 DB에서 찾아내기 (LAW_KEY 안 줘도 동작)
+function resolveLawKeyFromDB(envLawKey, mst) {
+  if (envLawKey) return envLawKey;
+
+  const cmd =
+    `npx wrangler d1 execute archi_law_db --remote --command=` +
+    `"SELECT law_key FROM law_version WHERE mst='${escSql(mst)}' LIMIT 1;"`;
+
+  const out = execSync(cmd, { encoding: "utf-8" });
+
+  // wrangler 출력은 JSON 형태로 나오므로, law_key 문자열만 대충 추출
+  // (정확 파싱보다 안전하게: "law_key":"001823" 패턴 찾기)
+  const m = out.match(/"law_key"\s*:\s*"([^"]+)"/);
+  if (!m) {
+    throw new Error(
+      `mst=${mst}에 대한 law_key를 DB에서 찾지 못했습니다. (먼저 ingest:meta로 law_version을 채워야 합니다)`
+    );
+  }
+  return m[1];
 }
 
 function buildInsertSQL(rows) {
   return rows
     .map((r) => {
-      return `INSERT OR IGNORE INTO law_article (law_id, article_no, title, body, source_url)
-VALUES ('${escSql(r.law_id)}','${escSql(r.article_no)}','${escSql(r.title)}','${escSql(
-        r.body
-      )}','${escSql(r.source_url)}');`;
+      return `INSERT OR IGNORE INTO law_article (law_key, mst, article_no, title, body, source_url)
+VALUES ('${escSql(r.law_key)}','${escSql(r.mst)}','${escSql(r.article_no)}','${escSql(
+        r.title
+      )}','${escSql(r.body)}','${escSql(r.source_url)}');`;
     })
     .join("\n");
 }
 
-async function requestWith(paramKey) {
+async function requestLawService(mst) {
   const u = new URL(BASE_URL);
   u.searchParams.set("OC", LAW_OC);
   u.searchParams.set("target", "eflaw");
   u.searchParams.set("type", "JSON");
-  u.searchParams.set(paramKey, LAW_ID); // ✅ ID 또는 MST
+  u.searchParams.set("MST", mst); // ✅ MST로 고정
   const sourceUrl = u.toString();
 
-  console.log(`- 요청(${paramKey})`, sourceUrl);
-
+  console.log(`- 요청(MST) ${sourceUrl}`);
   const { status, url, text } = await fetchText(sourceUrl);
-  const data = safeJsonParse(text);
 
-  if (!data) {
-    console.log(`  ⚠️ JSON 아님(status=${status}). 앞부분: ${text.slice(0, 80)}`);
-    return { ok: false, paramKey, status, url, text, data: null, sourceUrl };
+  if (DEBUG_RAW) {
+    fs.writeFileSync(RAW_FILE, text, "utf-8");
+    console.log(`🧪 DEBUG_RAW=1 → raw 저장: ${RAW_FILE}`);
   }
 
-  const rawArticles = findArticlesArray(data);
-  let rows = normalizeArticles(rawArticles, LAW_ID, sourceUrl);
-  if (Number.isFinite(LIMIT) && LIMIT > 0) rows = rows.slice(0, LIMIT);
+  const data = safeJsonParse(text);
+  if (!data) {
+    throw new Error(
+      `법제처 응답이 JSON이 아닙니다(status=${status}). 앞부분: ${text.slice(0, 120)}`
+    );
+  }
 
-  return { ok: true, paramKey, rows, data, sourceUrl };
+  return { data, sourceUrl };
 }
 
 async function run() {
   ensureOutDir();
 
   if (!LAW_OC) throw new Error("LAW_OC가 비어있습니다. 예) LAW_OC=dudy3038");
-  if (!LAW_ID) throw new Error("LAW_ID가 비어있습니다. 예) LAW_ID=276925");
+  if (!MST) throw new Error("LAW_ID(MST)가 비어있습니다. 예) LAW_ID=276925");
 
-  console.log("📡 조문 원문 수집 시작");
-  console.log(`- LAW_ID=${LAW_ID} LIMIT=${LIMIT}`);
+  // ✅ LAW_KEY는 없으면 DB에서 mst로 찾아온다
+  const lawKey = resolveLawKeyFromDB(LAW_KEY_ENV, MST);
 
-  // ✅ 1) MST 우선 시도 → 2) ID로 재시도
-  const r1 = await requestWith("MST");
-  let rows = r1.ok ? r1.rows : [];
+  console.log("📡 조문 원문 수집 시작 (v2: law_key + mst)");
+  console.log(`- law_key=${lawKey} mst=${MST} LIMIT=${LIMIT || "no-limit"}`);
 
-  if (rows.length === 0) {
-    console.log("… MST로 0건 → ID로 재시도");
-    const r2 = await requestWith("ID");
-    rows = r2.ok ? r2.rows : [];
-  }
+  const { data, sourceUrl } = await requestLawService(MST);
+  const rawArticles = findArticlesArray(data);
+
+  let rows = normalizeArticles(rawArticles, lawKey, MST, sourceUrl);
+  if (Number.isFinite(LIMIT) && LIMIT > 0) rows = rows.slice(0, LIMIT);
 
   console.log(`✔ 최종 조문 추출: ${rows.length}건`);
 

@@ -1,200 +1,800 @@
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010719','10ㆍ27법난 피해자의 명예회복 등에 관한 법률','문화체육관광부','2023-08-08','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=253527&type=HTML&mobileYn=&efYd=20230808');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010719','10ㆍ27법난 피해자의 명예회복 등에 관한 법률','문화체육관광부','2021-05-18','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=232157&type=HTML&mobileYn=&efYd=20210518');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010719','10ㆍ27법난 피해자의 명예회복 등에 관한 법률','문화체육관광부','2019-03-25','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=206034&type=HTML&mobileYn=&efYd=20190325');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010719','10ㆍ27법난 피해자의 명예회복 등에 관한 법률','문화체육관광부','2016-06-30','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180715&type=HTML&mobileYn=&efYd=20160630');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010719','10ㆍ27법난 피해자의 명예회복 등에 관한 법률','문화체육관광부','2013-08-23','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=140323&type=HTML&mobileYn=&efYd=20130823');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010719','10ㆍ27법난 피해자의 명예회복 등에 관한 법률','문화체육관광부','2013-05-22','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=140323&type=HTML&mobileYn=&efYd=20130522');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010719','10·27법난 피해자의 명예회복 등에 관한 법률','문화체육관광부','2010-01-25','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=102121&type=HTML&mobileYn=&efYd=20100125');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010719','10·27법난 피해자의 명예회복 등에 관한 법률','문화체육관광부','2008-06-29','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=86330&type=HTML&mobileYn=&efYd=20080629');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2025-10-01','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=277805&type=HTML&mobileYn=&efYd=20251001');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2024-11-12','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=266351&type=HTML&mobileYn=&efYd=20241112');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2024-07-30','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=264477&type=HTML&mobileYn=&efYd=20240730');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2023-06-05','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=249727&type=HTML&mobileYn=&efYd=20230605');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2021-09-29','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=235703&type=HTML&mobileYn=&efYd=20210929');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2019-07-02','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=209597&type=HTML&mobileYn=&efYd=20190702');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2016-06-30','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=183817&type=HTML&mobileYn=&efYd=20160630');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2015-12-31','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=178674&type=HTML&mobileYn=&efYd=20151231');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2015-01-06','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=166590&type=HTML&mobileYn=&efYd=20150106');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2013-08-23','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=143184&type=HTML&mobileYn=&efYd=20130823');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10ㆍ27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2013-03-23','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=135518&type=HTML&mobileYn=&efYd=20130323');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10·27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2012-05-23','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=125535&type=HTML&mobileYn=&efYd=20120523');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10·27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2012-01-06','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=121427&type=HTML&mobileYn=&efYd=20120106');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10·27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2011-11-11','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=118667&type=HTML&mobileYn=&efYd=20111111');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10·27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2010-05-05','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=104835&type=HTML&mobileYn=&efYd=20100505');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('010831','10·27법난 피해자의 명예회복 등에 관한 법률 시행령','문화체육관광부','2008-09-09','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=88753&type=HTML&mobileYn=&efYd=20080909');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('014656','10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법','10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부','2026-05-11','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=283303&type=HTML&mobileYn=&efYd=20260511');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('014656','10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법','10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부','2026-01-02','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=277295&type=HTML&mobileYn=&efYd=20260102');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('014656','10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법','10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부','2024-05-21','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=262693&type=HTML&mobileYn=&efYd=20240521');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('014808','10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법 시행령','10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부','2026-01-02','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=281503&type=HTML&mobileYn=&efYd=20260102');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('014808','10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법 시행령','10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부','2025-10-01','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=277693&type=HTML&mobileYn=&efYd=20251001');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('014808','10ㆍ29이태원참사 피해자 권리보장과 진상규명 및 재발방지를 위한 특별법 시행령','10·29이태원참사진상규명과재발방지를위한특별조사위원회,행정안전부','2025-01-14','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=268201&type=HTML&mobileYn=&efYd=20250114');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('014565','112신고의 운영 및 처리에 관한 법률','경찰청','2024-07-03','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=257787&type=HTML&mobileYn=&efYd=20240703');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('014679','112신고의 운영 및 처리에 관한 법률 시행령','경찰청','2024-07-03','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263521&type=HTML&mobileYn=&efYd=20240703');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2025-06-04','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=266637&type=HTML&mobileYn=&efYd=20250604');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2024-07-03','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=257789&type=HTML&mobileYn=&efYd=20240703');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2024-02-17','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=253949&type=HTML&mobileYn=&efYd=20240217');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2022-01-20','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236231&type=HTML&mobileYn=&efYd=20220120');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2022-01-06','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228097&type=HTML&mobileYn=&efYd=20220106');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2021-10-21','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222449&type=HTML&mobileYn=&efYd=20211021');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2021-07-06','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228097&type=HTML&mobileYn=&efYd=20210706');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2021-01-21','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222449&type=HTML&mobileYn=&efYd=20210121');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2018-06-27','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=200188&type=HTML&mobileYn=&efYd=20180627');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2017-07-26','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=195264&type=HTML&mobileYn=&efYd=20170726');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2017-01-28','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180485&type=HTML&mobileYn=&efYd=20170128');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2016-03-16','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=177211&type=HTML&mobileYn=&efYd=20160316');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2014-11-19','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=162385&type=HTML&mobileYn=&efYd=20141119');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2013-03-23','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=138422&type=HTML&mobileYn=&efYd=20130323');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2012-07-01','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=124074&type=HTML&mobileYn=&efYd=20120701');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2012-06-22','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=124074&type=HTML&mobileYn=&efYd=20120622');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011349','119구조ㆍ구급에 관한 법률','소방청','2011-09-09','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=110950&type=HTML&mobileYn=&efYd=20110909');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2025-06-04','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=271545&type=HTML&mobileYn=&efYd=20250604');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2025-01-01','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265713&type=HTML&mobileYn=&efYd=20250101');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2024-12-27','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=267477&type=HTML&mobileYn=&efYd=20241227');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2024-10-04','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265713&type=HTML&mobileYn=&efYd=20241004');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2024-08-14','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=264957&type=HTML&mobileYn=&efYd=20240814');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2024-04-23','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=261953&type=HTML&mobileYn=&efYd=20240423');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2023-03-31','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=249483&type=HTML&mobileYn=&efYd=20230331');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2023-01-02','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=247423&type=HTML&mobileYn=&efYd=20230102');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2022-07-21','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=243963&type=HTML&mobileYn=&efYd=20220721');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2022-03-30','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=241659&type=HTML&mobileYn=&efYd=20220330');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2022-01-06','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=239313&type=HTML&mobileYn=&efYd=20220106');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2021-07-13','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=233917&type=HTML&mobileYn=&efYd=20210713');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2021-07-06','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=233753&type=HTML&mobileYn=&efYd=20210706');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2021-01-21','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228889&type=HTML&mobileYn=&efYd=20210121');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2020-08-05','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=220681&type=HTML&mobileYn=&efYd=20200805');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2019-11-02','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=210086&type=HTML&mobileYn=&efYd=20191102');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2018-12-27','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=206223&type=HTML&mobileYn=&efYd=20181227');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2017-07-26','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=196225&type=HTML&mobileYn=&efYd=20170726');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2017-02-10','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191722&type=HTML&mobileYn=&efYd=20170210');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2017-01-28','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191460&type=HTML&mobileYn=&efYd=20170128');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2017-01-26','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191460&type=HTML&mobileYn=&efYd=20170126');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2016-01-27','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180539&type=HTML&mobileYn=&efYd=20160127');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2014-11-19','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=163971&type=HTML&mobileYn=&efYd=20141119');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2014-07-15','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=156982&type=HTML&mobileYn=&efYd=20140715');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2013-09-17','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=144131&type=HTML&mobileYn=&efYd=20130917');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조ㆍ구급에 관한 법률 시행규칙','소방청','2012-07-01','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126344&type=HTML&mobileYn=&efYd=20120701');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조·구급에 관한 법률 시행규칙','소방청','2012-06-22','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126344&type=HTML&mobileYn=&efYd=20120622');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011457','119구조·구급에 관한 법률 시행규칙','소방청','2011-09-09','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=116823&type=HTML&mobileYn=&efYd=20110909');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2025-10-02','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=273763&type=HTML&mobileYn=&efYd=20251002');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2024-07-03','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263525&type=HTML&mobileYn=&efYd=20240703');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2024-04-23','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=261847&type=HTML&mobileYn=&efYd=20240423');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2022-01-06','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236155&type=HTML&mobileYn=&efYd=20220106');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2021-10-21','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236155&type=HTML&mobileYn=&efYd=20211021');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2021-07-06','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=233717&type=HTML&mobileYn=&efYd=20210706');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2021-01-21','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228807&type=HTML&mobileYn=&efYd=20210121');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2020-07-14','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=220037&type=HTML&mobileYn=&efYd=20200714');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2020-04-01','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=215419&type=HTML&mobileYn=&efYd=20200401');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2017-07-26','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=195947&type=HTML&mobileYn=&efYd=20170726');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2017-01-28','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191386&type=HTML&mobileYn=&efYd=20170128');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2016-10-25','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=187304&type=HTML&mobileYn=&efYd=20161025');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2016-09-05','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=186139&type=HTML&mobileYn=&efYd=20160905');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2016-03-16','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=181703&type=HTML&mobileYn=&efYd=20160316');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2015-12-31','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=178732&type=HTML&mobileYn=&efYd=20151231');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2014-11-19','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=163582&type=HTML&mobileYn=&efYd=20141119');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2014-07-15','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=156663&type=HTML&mobileYn=&efYd=20140715');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2014-07-08','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=156542&type=HTML&mobileYn=&efYd=20140708');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2013-12-17','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=148005&type=HTML&mobileYn=&efYd=20131217');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2013-03-23','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=135570&type=HTML&mobileYn=&efYd=20130323');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2012-09-01','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=128294&type=HTML&mobileYn=&efYd=20120901');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2012-07-01','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126322&type=HTML&mobileYn=&efYd=20120701');
-INSERT OR IGNORE INTO law_meta (law_id, law_name, ministry, 시행일, source_url)
-VALUES ('011452','119구조ㆍ구급에 관한 법률 시행령','소방청','2012-06-22','/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=126322&type=HTML&mobileYn=&efYd=20120622');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014877','12ㆍ29여객기참사 피해구제 및 지원 등을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('270935','014877','2025-06-30','2025-04-29','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=270935&type=HTML&mobileYn=&efYd=20250630');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014899','12ㆍ29여객기참사 피해구제 및 지원 등을 위한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('281237','014899','2026-01-02','2025-12-30','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=281237&type=HTML&mobileYn=&efYd=20260102');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014899','12ㆍ29여객기참사 피해구제 및 지원 등을 위한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('272537','014899','2025-06-30','2025-06-25','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=272537&type=HTML&mobileYn=&efYd=20250630');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('011726','2015세계물포럼 지원 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('137096','011726','2013-03-23','2013-03-23','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=137096&type=HTML&mobileYn=&efYd=20130323');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('011726','2015세계물포럼 지원 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('130863','011726','2013-03-19','2012-12-18','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=130863&type=HTML&mobileYn=&efYd=20130319');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('011726','2015세계물포럼 지원 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('130863','011726','2012-12-18','2012-12-18','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=130863&type=HTML&mobileYn=&efYd=20121218');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('011776','2015세계물포럼 지원 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('184614','011776','2016-07-07','2016-07-06','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=184614&type=HTML&mobileYn=&efYd=20160707');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('011776','2015세계물포럼 지원 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('133096','011776','2013-03-19','2013-03-18','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=133096&type=HTML&mobileYn=&efYd=20130319');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014518','가덕도신공항건설공단법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('255405','014518','2024-04-25','2023-10-24','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=255405&type=HTML&mobileYn=&efYd=20240425');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014647','가덕도신공항건설공단법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('262103','014647','2024-04-25','2024-04-25','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=262103&type=HTML&mobileYn=&efYd=20240425');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014641','가덕도신공항건설공단법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('261795','014641','2024-04-25','2024-04-16','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=261795&type=HTML&mobileYn=&efYd=20240425');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014035','가덕도신공항 건설을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('280063','014035','2026-03-03','2025-12-02','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=280063&type=HTML&mobileYn=&efYd=20260303');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014035','가덕도신공항 건설을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('276917','014035','2026-01-02','2025-10-01','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=276917&type=HTML&mobileYn=&efYd=20260102');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014035','가덕도신공항 건설을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('258303','014035','2024-01-09','2024-01-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=258303&type=HTML&mobileYn=&efYd=20240109');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014035','가덕도신공항 건설을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('257375','014035','2023-12-26','2023-12-26','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=257375&type=HTML&mobileYn=&efYd=20231226');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014035','가덕도신공항 건설을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('250945','014035','2023-11-17','2023-05-16','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=250945&type=HTML&mobileYn=&efYd=20231117');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014035','가덕도신공항 건설을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('246645','014035','2023-06-28','2022-12-27','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=246645&type=HTML&mobileYn=&efYd=20230628');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014035','가덕도신공항 건설을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('250009','014035','2023-04-18','2023-04-18','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=250009&type=HTML&mobileYn=&efYd=20230418');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014035','가덕도신공항 건설을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('236979','014035','2022-12-01','2021-11-30','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236979&type=HTML&mobileYn=&efYd=20221201');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014035','가덕도신공항 건설을 위한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('230203','014035','2021-09-17','2021-03-16','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=230203&type=HTML&mobileYn=&efYd=20210917');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014155','가덕도신공항 건설을 위한 특별법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('235695','014155','2021-09-17','2021-09-17','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=235695&type=HTML&mobileYn=&efYd=20210917');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014145','가덕도신공항 건설을 위한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('281239','014145','2026-01-02','2025-12-30','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=281239&type=HTML&mobileYn=&efYd=20260102');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014145','가덕도신공항 건설을 위한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('256475','014145','2023-12-12','2023-12-12','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=256475&type=HTML&mobileYn=&efYd=20231212');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014145','가덕도신공항 건설을 위한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('255957','014145','2023-11-17','2023-11-07','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=255957&type=HTML&mobileYn=&efYd=20231117');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('014145','가덕도신공항 건설을 위한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('235431','014145','2021-09-17','2021-09-14','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=235431&type=HTML&mobileYn=&efYd=20210917');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('276919','012071','2026-01-02','2025-10-01','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=276919&type=HTML&mobileYn=&efYd=20260102');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('258089','012071','2024-07-10','2024-01-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=258089&type=HTML&mobileYn=&efYd=20240710');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('258305','012071','2024-01-09','2024-01-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=258305&type=HTML&mobileYn=&efYd=20240109');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('246647','012071','2023-06-28','2022-12-27','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=246647&type=HTML&mobileYn=&efYd=20230628');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('243069','012071','2022-12-11','2022-06-10','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=243069&type=HTML&mobileYn=&efYd=20221211');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('236981','012071','2022-12-01','2021-11-30','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=236981&type=HTML&mobileYn=&efYd=20221201');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('228491','012071','2022-01-13','2021-01-12','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228491&type=HTML&mobileYn=&efYd=20220113');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('222507','012071','2021-04-21','2020-10-20','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222507&type=HTML&mobileYn=&efYd=20210421');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('219187','012071','2020-06-09','2020-06-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=219187&type=HTML&mobileYn=&efYd=20200609');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('208471','012071','2019-05-24','2019-04-23','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=208471&type=HTML&mobileYn=&efYd=20190524');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('205835','012071','2019-03-19','2018-12-18','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=205835&type=HTML&mobileYn=&efYd=20190319');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('202661','012071','2019-03-14','2018-03-13','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=202661&type=HTML&mobileYn=&efYd=20190314');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('191046','012071','2018-01-18','2017-01-17','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=191046&type=HTML&mobileYn=&efYd=20180118');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('200200','012071','2017-12-26','2017-12-26','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=200200&type=HTML&mobileYn=&efYd=20171226');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('179597','012071','2017-01-20','2016-01-19','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=179597&type=HTML&mobileYn=&efYd=20170120');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('178180','012071','2016-06-30','2015-12-29','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=178180&type=HTML&mobileYn=&efYd=20160630');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012071','간선급행버스체계의 건설 및 운영에 관한 특별법','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('155143','012071','2014-12-04','2014-06-03','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=155143&type=HTML&mobileYn=&efYd=20141204');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012188','간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('282021','012188','2025-12-26','2025-12-26','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=282021&type=HTML&mobileYn=&efYd=20251226');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012188','간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('263891','012188','2024-07-10','2024-07-10','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263891&type=HTML&mobileYn=&efYd=20240710');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012188','간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('246055','012188','2022-12-11','2022-12-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=246055&type=HTML&mobileYn=&efYd=20221211');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012188','간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('234955','012188','2021-08-27','2021-08-27','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=234955&type=HTML&mobileYn=&efYd=20210827');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012188','간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('231841','012188','2021-04-21','2021-04-21','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=231841&type=HTML&mobileYn=&efYd=20210421');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012188','간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('211013','012188','2019-10-14','2019-10-14','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=211013&type=HTML&mobileYn=&efYd=20191014');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012188','간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('180568','012188','2016-01-27','2016-01-27','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180568&type=HTML&mobileYn=&efYd=20160127');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012188','간선급행버스체계의 건설 및 운영에 관한 특별법 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('165188','012188','2014-12-10','2014-12-10','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=165188&type=HTML&mobileYn=&efYd=20141210');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('281241','012179','2026-01-02','2025-12-30','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=281241&type=HTML&mobileYn=&efYd=20260102');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('272901','012179','2025-07-22','2025-07-22','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=272901&type=HTML&mobileYn=&efYd=20250722');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('263857','012179','2024-07-10','2024-07-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=263857&type=HTML&mobileYn=&efYd=20240710');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('262243','012179','2024-05-17','2024-05-07','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=262243&type=HTML&mobileYn=&efYd=20240517');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('245751','012179','2022-12-11','2022-12-06','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=245751&type=HTML&mobileYn=&efYd=20221211');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('231641','012179','2021-04-21','2021-04-20','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=231641&type=HTML&mobileYn=&efYd=20210421');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('228859','012179','2021-01-26','2021-01-26','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=228859&type=HTML&mobileYn=&efYd=20210126');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('227121','012179','2021-01-05','2021-01-05','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=227121&type=HTML&mobileYn=&efYd=20210105');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('223947','012179','2020-12-10','2020-12-08','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=223947&type=HTML&mobileYn=&efYd=20201210');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('208081','012179','2019-03-19','2019-03-19','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=208081&type=HTML&mobileYn=&efYd=20190319');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('204685','012179','2018-12-29','2018-09-28','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=204685&type=HTML&mobileYn=&efYd=20181229');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('192816','012179','2017-03-30','2017-03-27','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=192816&type=HTML&mobileYn=&efYd=20170330');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('184297','012179','2016-06-30','2016-06-30','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=184297&type=HTML&mobileYn=&efYd=20160630');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('180057','012179','2016-01-25','2016-01-22','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=180057&type=HTML&mobileYn=&efYd=20160125');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012179','간선급행버스체계의 건설 및 운영에 관한 특별법 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('164542','012179','2014-12-04','2014-12-03','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=164542&type=HTML&mobileYn=&efYd=20141204');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('250715','012481','2023-08-10','2023-05-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=250715&type=HTML&mobileYn=&efYd=20230810');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('234029','012481','2022-07-21','2021-07-20','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=234029&type=HTML&mobileYn=&efYd=20220721');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('234029','012481','2022-01-21','2021-07-20','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=234029&type=HTML&mobileYn=&efYd=20220121');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('219355','012481','2020-12-10','2020-06-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=219355&type=HTML&mobileYn=&efYd=20201210');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('217305','012481','2020-07-08','2020-04-07','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=217305&type=HTML&mobileYn=&efYd=20200708');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('219189','012481','2020-06-09','2020-06-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=219189&type=HTML&mobileYn=&efYd=20200609');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('210180','012481','2020-02-21','2019-08-20','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=210180&type=HTML&mobileYn=&efYd=20200221');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('198543','012481','2018-11-01','2017-10-31','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=198543&type=HTML&mobileYn=&efYd=20181101');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('199154','012481','2018-05-29','2017-11-28','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=199154&type=HTML&mobileYn=&efYd=20180529');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('202782','012481','2018-03-20','2018-03-20','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=202782&type=HTML&mobileYn=&efYd=20180320');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('181858','012481','2016-09-01','2016-03-22','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=181858&type=HTML&mobileYn=&efYd=20160901');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012481','감정평가 및 감정평가사에 관한 법률','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('179795','012481','2016-09-01','2016-01-19','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=179795&type=HTML&mobileYn=&efYd=20160901');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('265653','012655','2024-09-26','2024-09-26','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265653&type=HTML&mobileYn=&efYd=20240926');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('256837','012655','2023-12-08','2023-12-08','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=256837&type=HTML&mobileYn=&efYd=20231208');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('241617','012655','2022-03-30','2022-03-30','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=241617&type=HTML&mobileYn=&efYd=20220330');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('239827','012655','2022-01-21','2022-01-21','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=239827&type=HTML&mobileYn=&efYd=20220121');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('234957','012655','2021-08-27','2021-08-27','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=234957&type=HTML&mobileYn=&efYd=20210827');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('224141','012655','2020-12-10','2020-12-11','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=224141&type=HTML&mobileYn=&efYd=20201210');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('214851','012655','2020-02-21','2020-02-21','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=214851&type=HTML&mobileYn=&efYd=20200221');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('202142','012655','2018-02-09','2018-02-09','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=202142&type=HTML&mobileYn=&efYd=20180209');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('190703','012655','2016-12-30','2016-12-30','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=190703&type=HTML&mobileYn=&efYd=20161230');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012655','감정평가 및 감정평가사에 관한 법률 시행규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('186094','012655','2016-09-01','2016-08-31','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=186094&type=HTML&mobileYn=&efYd=20160901');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('265547','012651','2024-09-26','2024-09-26','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=265547&type=HTML&mobileYn=&efYd=20240926');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('264999','012651','2024-08-20','2024-08-20','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=264999&type=HTML&mobileYn=&efYd=20240820');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('239579','012651','2022-01-21','2022-01-21','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=239579&type=HTML&mobileYn=&efYd=20220121');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('227123','012651','2021-01-05','2021-01-05','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=227123&type=HTML&mobileYn=&efYd=20210105');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('223877','012651','2020-12-10','2020-12-08','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=223877&type=HTML&mobileYn=&efYd=20201210');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('222913','012651','2020-11-24','2020-11-24','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=222913&type=HTML&mobileYn=&efYd=20201124');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('221151','012651','2020-08-28','2020-08-26','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=221151&type=HTML&mobileYn=&efYd=20200828');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('214661','012651','2020-02-21','2020-02-18','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=214661&type=HTML&mobileYn=&efYd=20200221');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('205070','012651','2018-11-01','2018-10-30','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=205070&type=HTML&mobileYn=&efYd=20181101');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('204935','012651','2018-10-23','2018-10-23','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=204935&type=HTML&mobileYn=&efYd=20181023');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('012651','감정평가 및 감정평가사에 관한 법률 시행령','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('185871','012651','2016-09-01','2016-08-31','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=185871&type=HTML&mobileYn=&efYd=20160901');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('006140','감정평가에 관한 규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('254883','006140','2023-09-14','2023-09-14','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=254883&type=HTML&mobileYn=&efYd=20230914');
+INSERT INTO law (law_key, law_name, ministry)
+VALUES ('006140','감정평가에 관한 규칙','국토교통부')
+ON CONFLICT(law_key) DO UPDATE SET
+  law_name=excluded.law_name,
+  ministry=excluded.ministry,
+  updated_at=datetime('now');
+INSERT OR IGNORE INTO law_version (mst, law_key, 시행일, 공포일, source_url)
+VALUES ('239765','006140','2022-01-21','2022-01-21','http://www.law.go.kr/DRF/lawService.do?OC=dudy3038&target=eflaw&MST=239765&type=HTML&mobileYn=&efYd=20220121');
