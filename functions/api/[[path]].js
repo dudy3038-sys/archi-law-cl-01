@@ -1,6 +1,7 @@
+// functions/api/[[path]].js (FULL REPLACE)
 import { json } from "../../src/lib/response.js";
 import { searchLawMeta } from "../../src/server/lawMeta.js";
-import { searchLawArticle, getLawArticle } from "../../src/server/lawArticle.js";
+import { searchLawArticle, getLawArticle, getRuleTopicTree } from "../../src/server/lawArticle.js";
 import { buildChecklist } from "../../src/server/checklist.js";
 
 export async function onRequest(context) {
@@ -13,6 +14,22 @@ export async function onRequest(context) {
     // GET /api/health
     if (request.method === "GET" && path === "health") {
       return json({ ok: true });
+    }
+
+    // ✅ NEW: GET /api/rules/tree?topic=coverage
+    // - 지금 단계에서는 "법/시행령/시행규칙"만 반환(조례/지구단위계획 제외)
+    // - topic: rule_topic.topic_key
+    if (request.method === "GET" && path === "rules/tree") {
+      const topic = url.searchParams.get("topic") || "";
+      const onDate = url.searchParams.get("onDate") || ""; // optional: YYYY-MM-DD
+      if (!topic) {
+        return json({ ok: false, error: "MISSING_PARAMS", need: ["topic"] }, 400);
+      }
+      const tree = await getRuleTopicTree(env.DB, topic, { onDate });
+      if (!tree) {
+        return json({ ok: false, error: "NOT_FOUND", topic }, 404);
+      }
+      return json({ ok: true, topic, tree });
     }
 
     // GET /api/law/meta/search?q=건축

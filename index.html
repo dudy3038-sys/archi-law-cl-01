@@ -371,7 +371,6 @@
       <div class="row-label">용도</div>
       <div class="row-field"><input class="wide" placeholder="예: 업무시설(공공청사, 사회복지시설)" /></div>
 
-      <!-- ✅ 여기부터 추가: 스샷 형태의 건축개요 상세 항목 -->
       <div class="row-label">주구조</div>
       <div class="row-field">
         <input id="mainStructure" class="wide" placeholder="예: 철근콘크리트조 / 철골조 / 철골철근콘크리트조 등" />
@@ -483,19 +482,17 @@
 
         <input id="elevMemo" class="wide" placeholder="예: 장애인겸용 승용승강기 1대, 20인승 등 메모" />
       </div>
-      <!-- ✅ 추가 끝 -->
     </div>
   </div>
 
   <hr class="sep"/>
 
   <!-- =========================
-       🌳 법규 트리 (샘플)
-       ✅ 스코프 분리: ruleTree 내부만 조작/스타일 적용
+       🌳 법규 트리 (DB 자동 채움)
   ========================== -->
   <section id="ruleTree">
-    <div class="section-title">🌳 법규 트리 (샘플)</div>
-    <p class="hint">* 지금은 UI 구조만 보여주는 테스트 화면입니다. (법/시행령/시행규칙/조례/지구단위계획 트리)</p>
+    <div class="section-title">🌳 법규 트리</div>
+    <p class="hint">* 지금은 <b>법/시행령/시행규칙</b>만 DB에서 자동 채움합니다. (조례/지구단위계획은 나중)</p>
 
     <div class="tree-wrap">
       <div class="tree-left">
@@ -505,7 +502,7 @@
 
       <div class="tree-right">
         <div class="tree-head">
-          <div id="treeTitle">[항목] 건폐율</div>
+          <div id="treeTitle">[항목] -</div>
           <div class="tree-actions">
             <button type="button" class="btn-mini" onclick="expandAllLawCards()">전체 펼치기</button>
             <button type="button" class="btn-mini" onclick="collapseAllLawCards()">전체 접기</button>
@@ -538,25 +535,26 @@
               <div class="law-body" data-body></div>
             </details>
 
+            <!-- 나중 -->
             <details class="law-card" data-kind="조례">
               <summary>
                 <span>조례</span>
-                <span class="hint-right">클릭: 접기/펼치기</span>
+                <span class="hint-right">지금 단계: 준비중</span>
               </summary>
-              <div class="law-body" data-body></div>
+              <div class="law-body" data-body>준비중(나중 단계에서 연결)</div>
             </details>
 
             <details class="law-card" data-kind="지구단위계획">
               <summary>
                 <span>지구단위계획</span>
-                <span class="hint-right">클릭: 접기/펼치기</span>
+                <span class="hint-right">지금 단계: 준비중</span>
               </summary>
-              <div class="law-body" data-body></div>
+              <div class="law-body" data-body>준비중(나중 단계에서 연결)</div>
             </details>
           </div>
 
           <div style="margin-top:14px; color:#556; font-size:12px;">
-            - (예시) 나중에 DB/체크리스트 엔진과 연결되면 실제 조문 본문이 들어갑니다.
+            - DB 연결 확인용: 먼저 <b>건폐율/용적률/주차</b> 3개 항목만 동작합니다.
           </div>
         </div>
       </div>
@@ -630,8 +628,11 @@ function escapeHtml(str) {
 }
 
 /* =========================
-   ✅ 법규 트리 (샘플) - 그대로
+   ✅ 법규 트리 (DB 자동 채움)
+   - 현재 단계: 법/시행령/시행규칙만
 ========================= */
+
+// 좌측 표시 목록(기존 유지)
 const RULE_ITEMS = [
   "건폐율",
   "용적률",
@@ -661,22 +662,12 @@ const RULE_ITEMS = [
   "단열재의 두께"
 ];
 
-function setLawCardBodies(itemName){
-  const root = document.getElementById("ruleTree");
-  const sample = {
-    "법": `${itemName} 관련 법 (샘플)\n\n법 00조\n법규 내용`,
-    "시행령": `${itemName} 관련 시행령 (샘플)\n\n시행령 00조\n법규 내용`,
-    "시행규칙": `${itemName} 관련 시행규칙 (샘플)\n\n시행규칙 00조\n법규 내용`,
-    "조례": `${itemName} 관련 조례 (샘플)\n\n00조례 00조\n법규 내용`,
-    "지구단위계획": `${itemName} 관련 지구단위계획 (샘플)\n\n지침 내용`
-  };
-
-  root.querySelectorAll("#lawCards .law-card").forEach(card => {
-    const kind = card.getAttribute("data-kind");
-    const body = card.querySelector("[data-body]");
-    body.textContent = sample[kind] || "";
-  });
-}
+// ✅ 지금 단계에서 동작하는 항목만 topic_key 매핑
+const TOPIC_MAP = {
+  "건폐율": "coverage",
+  "용적률": "far",
+  "주차대수 산정 기준": "parking"
+};
 
 function collapseAllLawCards(){
   const root = document.getElementById("ruleTree");
@@ -685,6 +676,77 @@ function collapseAllLawCards(){
 function expandAllLawCards(){
   const root = document.getElementById("ruleTree");
   root.querySelectorAll("#lawCards .law-card").forEach(d => d.open = true);
+}
+
+function setCardBody(kind, text){
+  const root = document.getElementById("ruleTree");
+  const card = root.querySelector(`#lawCards .law-card[data-kind="${kind}"]`);
+  if (!card) return;
+  const body = card.querySelector("[data-body]");
+  if (!body) return;
+  body.textContent = text || "";
+}
+
+function formatRefs(items = []){
+  if (!items.length) return "연결된 근거 조문이 없습니다.";
+  return items.map((x, i) => {
+    const head = [
+      `${i+1}. ${x.law_name || ""}`.trim(),
+      x.article_no ? ` ${x.article_no}` : "",
+      x.title ? ` (${x.title})` : ""
+    ].join("");
+    const meta = x.mst ? `\n[mst: ${x.mst}]` : "";
+    const note = x.note ? `\n※ ${x.note}` : "";
+    const body = x.body ? `\n\n${x.body}` : "\n\n(본문 없음)";
+    return `${head}${meta}${note}${body}`;
+  }).join("\n\n--------------------------------\n\n");
+}
+
+async function loadRuleFromDB(itemName){
+  const topicKey = TOPIC_MAP[itemName];
+
+  // 조례/지구단위계획은 지금 단계에서 무조건 준비중
+  setCardBody("조례", "준비중(나중 단계에서 연결)");
+  setCardBody("지구단위계획", "준비중(나중 단계에서 연결)");
+
+  if (!topicKey) {
+    setCardBody("법", "준비중: 이 항목은 아직 DB 매핑(topic_key)이 없습니다.");
+    setCardBody("시행령", "준비중");
+    setCardBody("시행규칙", "준비중");
+    return;
+  }
+
+  setCardBody("법", "불러오는 중...");
+  setCardBody("시행령", "불러오는 중...");
+  setCardBody("시행규칙", "불러오는 중...");
+
+  try {
+    const res = await fetch(`/api/rules/tree?topic=${encodeURIComponent(topicKey)}`);
+    const data = await res.json();
+
+    if (!data.ok || !data.tree) {
+      const msg = `불러오기 실패: ${data?.error || "UNKNOWN"}`;
+      setCardBody("법", msg);
+      setCardBody("시행령", msg);
+      setCardBody("시행규칙", msg);
+      return;
+    }
+
+    // 현재는 topic당 root 1개 노드만 쓰는 구조(확장 가능)
+    const node = (data.tree.nodes || [])[0];
+    const refs = node?.refs || {};
+
+    // 서버에서 bucket 키: law / enforcement_decree / enforcement_rule
+    setCardBody("법", formatRefs(refs.law || []));
+    setCardBody("시행령", formatRefs(refs.enforcement_decree || []));
+    setCardBody("시행규칙", formatRefs(refs.enforcement_rule || []));
+
+  } catch (e) {
+    const msg = `불러오기 오류: ${String(e?.message || e)}`;
+    setCardBody("법", msg);
+    setCardBody("시행령", msg);
+    setCardBody("시행규칙", msg);
+  }
 }
 
 (function initTree(){
@@ -698,21 +760,21 @@ function expandAllLawCards(){
     const div = document.createElement("div");
     div.className = "tree-item" + (idx === 0 ? " active" : "");
     div.innerHTML = `<span>${name}</span><span class="chip">▶</span>`;
-    div.onclick = () => {
+    div.onclick = async () => {
       root.querySelectorAll(".tree-item").forEach(el => el.classList.remove("active"));
       div.classList.add("active");
 
       title.textContent = `[항목] ${name}`;
       collapseAllLawCards();
-      setLawCardBodies(name);
+      await loadRuleFromDB(name);
     };
     list.appendChild(div);
   });
 
   const first = RULE_ITEMS[0] || "건폐율";
   title.textContent = `[항목] ${first}`;
-  setLawCardBodies(first);
   collapseAllLawCards();
+  loadRuleFromDB(first);
 })();
 
 /* =========================
@@ -737,7 +799,7 @@ function recalcParcelSumAndApplyToSite() {
   });
   sum = round2(sum);
   document.getElementById("siteArea").value = format2(sum);
-  recalcBuildingOverview(); // ✅ 추가: 대지면적 변하면 연산도 갱신
+  recalcBuildingOverview();
 }
 
 function addParcelRow(prefill = { jibun: "", area: "" }) {
@@ -803,12 +865,7 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
 })();
 
 /* =========================
-   ✅ 건축개요 자동연산 (추가)
-   - 연면적계 = 지상 + 지하
-   - 건폐율(계획) = 건축면적 / 대지면적 * 100
-   - 용적률(계획) = 연면적계 / 대지면적 * 100
-   - 조경비율 = 조경(계획) / 대지면적 * 100
-   - 전부 소수점 2자리 반올림
+   ✅ 건축개요 자동연산 (그대로)
 ========================= */
 function num(id){
   const el = document.getElementById(id);
@@ -841,7 +898,6 @@ function recalcBuildingOverview(){
   set2("landRatio", landRatio);
 }
 
-// 이벤트 연결(입력할 때마다 자동 계산)
 (function bindBuildingOverview(){
   const ids = [
     "bAreaPlan",
@@ -860,7 +916,6 @@ function recalcBuildingOverview(){
     });
   });
 
-  // 초기 1회
   recalcBuildingOverview();
 })();
 </script>
