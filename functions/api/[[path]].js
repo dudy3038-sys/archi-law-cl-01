@@ -132,6 +132,51 @@ function normalizeParkingPayload(body) {
   return { jurisdiction: { sido, sigungu }, usageAreas, primaryUse };
 }
 
+// =========================================================
+// ✅ 크롤러 실행 유틸 (동적 import + 함수명 자동 탐색)
+// =========================================================
+async function runParkingCrawlerIndex({ limit, debug }) {
+  const mod = await import("../../src/crawler/parkingCrawler.js");
+
+  // 흔히 쓸 법한 export 이름 후보들
+  const candidates = [
+    "crawlParkingOrdinanceIndex",
+    "crawlParkingIndex",
+    "crawlIndex",
+    "runParkingCrawler",
+    "run",
+    "main",
+    "default",
+  ];
+
+  let fn = null;
+  for (const name of candidates) {
+    if (name === "default" && typeof mod?.default === "function") { fn = mod.default; break; }
+    if (typeof mod?.[name] === "function") { fn = mod[name]; break; }
+  }
+
+  if (!fn) {
+    const keys = Object.keys(mod || {});
+    throw new Error(
+      `PARKING_CRAWLER_EXPORT_NOT_FOUND: expected one of [${candidates.join(", ")}], got exports=[${keys.join(", ")}]`
+    );
+  }
+
+  // limit/debug를 받는 크롤러일 수도, 아닐 수도 있어서 "최대한 안전 호출"
+  // - 인자 0개로도 호출해보고
+  // - 실패하면 옵션 인자로 한번 더 시도
+  try {
+    return await fn();
+  } catch (e1) {
+    try {
+      return await fn({ limit, debug });
+    } catch (e2) {
+      // 두 에러 중 더 의미있는 걸 던짐
+      throw new Error(`PARKING_CRAWLER_CALL_FAILED: ${String(e2?.message || e2)}`);
+    }
+  }
+}
+
 export async function onRequest(context) {
   const { request, env, params } = context;
   const url = new URL(request.url);
@@ -142,6 +187,48 @@ export async function onRequest(context) {
     // GET /api/health
     if (request.method === "GET" && path === "health") {
       return json({ ok: true });
+    }
+
+    // =========================================================
+    // ✅ NEW: 크롤러(주차 조례 인덱스) 실행
+    // GET  /api/crawler/parking/index?limit=30&debug=1
+    // POST /api/crawler/parking/index { "limit": 30, "debug": true }
+    // =========================================================
+    if (
+      (request.method === "GET" || request.method === "POST") &&
+      path === "crawler/parking/index"
+    ) {
+      let body = {};
+      if (request.method === "POST") {
+        body = await request.json().catch(() => ({}));
+      }
+
+      const limitQ = Number(url.searchParams.get("limit"));
+      const debugQ = url.searchParams.get("debug");
+
+      const limit = Number.isFinite(limitQ)
+        ? Math.max(1, Math.min(500, limitQ))
+        : Number.isFinite(Number(body?.limit))
+        ? Math.max(1, Math.min(500, Number(body.limit)))
+        : 100;
+
+      const debug =
+        (debugQ && debugQ !== "0") ||
+        body?.debug === true ||
+        body?.debug === "true";
+
+      const startedAt = Date.now();
+      const result = await runParkingCrawlerIndex({ limit, debug });
+      const ms = Date.now() - startedAt;
+
+      return json({
+        ok: true,
+        ran: "crawler/parking/index",
+        limit,
+        debug,
+        took_ms: ms,
+        result,
+      });
     }
 
     // GET /api/rules/tree?topic=coverage
@@ -290,8 +377,6 @@ export async function onRequest(context) {
       ) / 100;
 
       // ✅ 테스트 더미 산정 (지자체 DB 붙이면 교체)
-      // - 지금 단계 목표: "법정 값이 UI에 반영되는지" 확인
-      // - 규칙: ceil(totalArea_m2 / 1000), 최소 1대
       const legalCount = Math.max(1, Math.ceil(totalArea / 1000));
       const formula = `TEST MODE(WIRED_ONLY): ceil(totalArea_m2 / 1000), 최소 1대 (총면적=${totalArea}㎡)`;
 
@@ -307,7 +392,7 @@ export async function onRequest(context) {
         legalCount,
         formula,
 
-        // ✅ (기존/향후 호환용) 남겨둠
+        // ✅ (기존/향후 호환용)
         legalParking: legalCount,
         message:
           "현재는 조례/부설주차장 설치기준 DB가 없어 테스트 산정값을 반환합니다. 다음 단계에서 지자체 기준 DB 연결 후 실제 산정으로 교체됩니다.",
