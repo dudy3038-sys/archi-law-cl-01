@@ -199,6 +199,71 @@
       background:#f7f9fc;
     }
 
+    /* ✅ 지자체 자동표시 패널 */
+    .juris-box{
+      width: 100%;
+      border: 1px solid rgba(0,0,0,.10);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fbfcff;
+      margin-top: 10px;
+    }
+    .juris-head{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:10px;
+      margin-bottom: 10px;
+    }
+    .juris-title{
+      font-weight: 900;
+      font-size: 13px;
+      color:#223;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .juris-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .juris-item{
+      background:#fff;
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: 12px;
+      padding: 10px;
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+    .juris-item label{
+      font-size: 12px;
+      font-weight: 900;
+      color:#334;
+    }
+    .juris-item input{
+      width: 100%;
+    }
+    .juris-help{
+      margin-top: 8px;
+      font-size: 12px;
+      color:#556;
+      line-height: 1.4;
+    }
+    .juris-toggle{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      font-weight: 800;
+      color:#334;
+      user-select:none;
+    }
+    .juris-toggle input{ width:auto; }
+
     /* ===== ✅ 주차(수원시) STEP 패널 ===== */
     details.parking-steps {
       width: 100%;
@@ -409,7 +474,50 @@
       <div class="row-field"><input class="wide" placeholder="예: ○○구청 / ○○공사 / 개인" /></div>
 
       <div class="row-label">대지위치</div>
-      <div class="row-field"><input class="wide" placeholder="예: 서울특별시 ○○구 ○○동 ○○번지" /></div>
+      <div class="row-field" style="flex-direction:column; align-items:flex-start;">
+        <!-- ✅ 주소 입력(이 값으로 지자체 자동표시) -->
+        <input id="siteAddr" class="wide" placeholder="예: 경기도 수원시 팔달구 ○○로 123 (○○동)" />
+
+        <!-- ✅ NEW: 지자체 자동표시(오류 최소화) -->
+        <div class="juris-box" id="jurisBox">
+          <div class="juris-head">
+            <div class="juris-title">
+              <span>지자체(시/군/구/법정동/행정동) 자동표시</span>
+              <span class="pill">주소 기반</span>
+              <span class="pill">기본: 읽기전용</span>
+            </div>
+
+            <label class="juris-toggle" title="자동 추출이 틀린 경우에만 켜서 직접 수정하세요.">
+              <input type="checkbox" id="jurisOverride" />
+              직접 수정
+            </label>
+          </div>
+
+          <div class="juris-grid">
+            <div class="juris-item">
+              <label for="jurisSido">시·도</label>
+              <input id="jurisSido" class="readonly" placeholder="예: 경기도" readonly />
+            </div>
+            <div class="juris-item">
+              <label for="jurisSigungu">시·군·구</label>
+              <input id="jurisSigungu" class="readonly" placeholder="예: 수원시 팔달구" readonly />
+            </div>
+            <div class="juris-item">
+              <label for="jurisAdminDong">행정동(읍·면·동)</label>
+              <input id="jurisAdminDong" class="readonly" placeholder="예: 인계동" readonly />
+            </div>
+            <div class="juris-item">
+              <label for="jurisLegalDong">법정동</label>
+              <input id="jurisLegalDong" class="readonly" placeholder="예: 인계동(법정)" readonly />
+            </div>
+          </div>
+
+          <div class="juris-help">
+            - 목적: <b>주차/조례/트리 매칭</b>에서 주소 오타·표기 차이로 생기는 오류를 줄이기 위해 “표준화된 지자체 값”을 따로 고정합니다.<br/>
+            - 다음 단계(public/script.js)에서: 주소 입력 시 자동 추출 → 위 칸 자동 채움 → 주차 계산/조례 선택에 그대로 연결합니다.
+          </div>
+        </div>
+      </div>
 
       <div class="row-label">대지면적</div>
       <div class="row-field" style="flex-direction:column; align-items:flex-start;">
@@ -545,11 +653,11 @@
             <div class="step-box">
               <div class="step-title">
                 <span>STEP 1 · 지자체</span>
-                <span class="pill">고정</span>
+                <span class="pill">자동표시 연동</span>
               </div>
-              <p class="step-desc">지금 단계는 <b>경기도 수원시</b> 기준만 먼저 완성합니다.</p>
+              <p class="step-desc">대지위치에서 자동표시된 <b>시·군·구</b> 값을 우선 사용합니다. (초기 단계는 수원시만 완성)</p>
               <div class="step-row">
-                <input id="parkCity" class="wide readonly" value="경기도 수원시" readonly />
+                <input id="parkCity" class="wide readonly" value="(자동 표시 대기중)" readonly />
               </div>
               <div class="parking-warn">※ “수원시 조례 기준” 표 데이터는 다음 단계에서 DB로 넣고 바로 교체됩니다.</div>
             </div>
@@ -578,7 +686,7 @@
                 <span>STEP 3 · 면적/세대수 입력</span>
                 <span class="pill">필수</span>
               </div>
-              <p class="step-desc">용도에 따라 기준값이 달라질 수 있어요. 우선은 <b>연면적(㎡)</b>을 기본으로 받습니다. (세대수/객실수 등은 다음 단계에서 추가)</p>
+              <p class="step-desc">우선은 <b>연면적(㎡)</b>을 기본으로 받습니다. (세대수/객실수 등은 다음 단계에서 추가)</p>
               <div class="step-row">
                 <span>연면적</span>
                 <input id="parkBasisArea" class="mini" type="number" step="0.01" value="0" />
@@ -935,56 +1043,6 @@ async function loadRuleFromDB(itemName){
 })();
 
 /* =========================
-   ✅ (새) 수원시 주차 STEP UI - 이벤트만 연결(로직은 public/script.js에서 구현)
-   - ⚠️ 주의: 이 페이지의 initParkingSteps는 "임시 안내"만 했던 과거 코드.
-   - 이제 public/script.js가 실제 계산을 담당하므로, 충돌 방지를 위해 이 블록은 비활성화.
-========================= */
-/*
-(function initParkingSteps(){
-  const $ = (id) => document.getElementById(id);
-
-  // 연면적(계) 자동연동 버튼: faTotal → parkBasisArea
-  const btnUseFaTotal = $("parkUseFaTotalBtn");
-  if (btnUseFaTotal) {
-    btnUseFaTotal.addEventListener("click", () => {
-      const faTotal = Number($("faTotal")?.value || 0);
-      $("parkBasisArea").value = Number.isFinite(faTotal) ? faTotal : 0;
-    });
-  }
-
-  // 임시 동작: 계산 버튼 누르면 “아직 로직 없음” 표시
-  const btnCalc = $("parkCalcBtn");
-  if (btnCalc) {
-    btnCalc.addEventListener("click", () => {
-      const city = $("parkCity")?.value || "경기도 수원시";
-      const use = $("parkUse")?.value || "";
-      const area = Number($("parkBasisArea")?.value || 0);
-
-      const msg = [
-        `[${city}] 주차 자동계산 준비중`,
-        `- 용도: ${use || "(미선택)"}`,
-        `- 연면적: ${Number.isFinite(area) ? area : 0} ㎡`,
-        ``,
-        `다음 단계에서: public/script.js에 “수원시 조례 기준” 계산 로직을 넣고`,
-        `→ parkLegal / parkMemo 자동 채움까지 완성합니다.`
-      ].join("\n");
-
-      $("parkResultBox").textContent = msg;
-    });
-  }
-
-  const btnReset = $("parkResetBtn");
-  if (btnReset) {
-    btnReset.addEventListener("click", () => {
-      $("parkUse").value = "";
-      $("parkBasisArea").value = 0;
-      $("parkResultBox").textContent = "대기중…";
-    });
-  }
-})();
-*/
-
-/* =========================
    대지면적 > 지번/공부상면적 (그대로)
 ========================= */
 function round2(n) {
@@ -1127,7 +1185,7 @@ function recalcBuildingOverview(){
 })();
 </script>
 
-<!-- ✅ NEW: 외부 스크립트 로드 (수원시 주차 자동계산 실제 로직) -->
+<!-- ✅ 외부 스크립트 로드: 지자체 자동표시 + 주차 자동계산 로직 -->
 <script src="/script.js"></script>
 
 </body>

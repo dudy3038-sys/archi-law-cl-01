@@ -1,13 +1,14 @@
-// public/script.js (NEW FILE)
-// 목적: "수원시 기준" 주차 자동계산(초기 버전)
-// - 기존 index.html 인라인 스크립트와 충돌 방지 (전역 함수/변수 최소화)
-// - STEP UI 요소(parkUse, parkBasisArea, parkCalcBtn, parkResetBtn, parkUseFaTotalBtn)
-// - 결과를 parkLegal(법정), parkMemo(메모), parkResultBox(상세)에 반영
+// public/script.js (FULL REPLACE)
+// 목적:
+// 1) "지자체(시/군/구/법정동/행정동) 자동표시" 자동 채움 + 직접수정 토글
+// 2) parkCity(주차 STEP 1) 를 지자체 자동표시와 연동
+// 3) "수원시 기준" 주차 자동계산(초기 버전)
+//    - 현재는 수원시만 계산 지원, 그 외 지역은 "지원 준비중" 안내로 오류 최소화
 //
 // ⚠️ 주의:
-// - 이 버전은 "수원시 조례 기준"을 완전 데이터화하기 전, 실무용 SaaS를 향한 1차 베이스.
-// - 다음 단계에서: 조례 표(용도별 산정식/기준단위/예외/완화/장애인/전기차 등)를 DB로 넣고,
-//   이 파일은 "표 기반 엔진"으로 교체한다.
+// - 지자체 자동표시는 1차: "주소 문자열 파싱(클라)" 기반
+// - 다음 단계에서: 서버(/api/reverse or 행정구역 API)로 "표준 행정구역 코드 기반" 확정치로 교체 권장
+// - 주차 산정 규칙은 임시(엔진 검증용). 반드시 수원시 조례표로 교체해야 함.
 
 (() => {
     const $ = (id) => document.getElementById(id);
@@ -18,7 +19,6 @@
       return Number.isFinite(x) ? x : 0;
     }
     function ceilToInt(x) {
-      // 실무에선 대체로 올림(소수점 자리 발생 시)
       return Math.ceil(n(x));
     }
     function fmtNum(x) {
@@ -26,15 +26,213 @@
       return v.toLocaleString("ko-KR");
     }
   
-    // ---------- “수원시 조례 기준” 임시 규칙(초기) ----------
-    // 여기 값들은 너가 가진 수원시 조례표를 확인해서 반드시 교체해야 함.
-    // 지금은 "엔진/흐름"을 고정시키는 게 목표라, 대표적인 형태(면적당 1대)를 우선 제공.
+    function setText(id, text) {
+      const el = $(id);
+      if (el) el.textContent = text ?? "";
+    }
+    function setValue(id, value) {
+      const el = $(id);
+      if (el) el.value = value ?? "";
+    }
+    function setReadonly(id, isReadonly) {
+      const el = $(id);
+      if (!el) return;
+      if (isReadonly) {
+        el.setAttribute("readonly", "readonly");
+        el.classList.add("readonly");
+      } else {
+        el.removeAttribute("readonly");
+        el.classList.remove("readonly");
+      }
+    }
+  
+    // =========================================================
+    // 1) 지자체 자동표시(클라 1차 파싱)
+    // =========================================================
+    // 기대 형태 예:
+    // - "경기도 수원시 팔달구 인계동 ..."
+    // - "서울특별시 강남구 역삼동 ..."
+    // - "부산광역시 해운대구 우동 ..."
     //
-    // shape:
-    //  - key: parkUse 값
-    //  - basis: "area" | "unit" (현재는 area만 사용)
-    //  - per: 1대당 기준면적(㎡)  -> 법정대수 = ceil(연면적 / per)
-    //  - note: 메모/근거 표시(임시)
+    // ✅ 목표: “오류 최소화”
+    // - 완벽한 행정동/법정동 분리는 DB/코드 기반이 필요함(다음 단계)
+    // - 지금은 "행정동/법정동 동일 값으로 임시 채움" + 수동 수정 토글 제공
+    function parseJurisFromAddr(addrRaw) {
+      const addr = String(addrRaw || "").trim();
+      if (!addr) return null;
+  
+      // 시·도 후보(1차)
+      const SIDO_LIST = [
+        "서울특별시",
+        "부산광역시",
+        "대구광역시",
+        "인천광역시",
+        "광주광역시",
+        "대전광역시",
+        "울산광역시",
+        "세종특별자치시",
+        "경기도",
+        "강원특별자치도",
+        "충청북도",
+        "충청남도",
+        "전북특별자치도",
+        "전라남도",
+        "경상북도",
+        "경상남도",
+        "제주특별자치도",
+      ];
+  
+      let sido = "";
+      for (const s of SIDO_LIST) {
+        if (addr.startsWith(s)) {
+          sido = s;
+          break;
+        }
+      }
+  
+      // 시도 없으면, “서울/부산/경기” 같은 약칭이 앞에 오는 케이스 최소 대응
+      // (정확도 낮아서 강제하지 않고 힌트 수준으로만)
+      if (!sido) {
+        const shortMap = {
+          서울: "서울특별시",
+          부산: "부산광역시",
+          대구: "대구광역시",
+          인천: "인천광역시",
+          광주: "광주광역시",
+          대전: "대전광역시",
+          울산: "울산광역시",
+          세종: "세종특별자치시",
+          경기: "경기도",
+          강원: "강원특별자치도",
+          충북: "충청북도",
+          충남: "충청남도",
+          전북: "전북특별자치도",
+          전남: "전라남도",
+          경북: "경상북도",
+          경남: "경상남도",
+          제주: "제주특별자치도",
+        };
+        const first = addr.split(/\s+/)[0] || "";
+        if (shortMap[first]) sido = shortMap[first];
+      }
+  
+      // 토큰 분해
+      const tokens = addr.split(/\s+/).filter(Boolean);
+  
+      // 시·군·구: "OO시", "OO군", "OO구" 토큰을 최대 2개까지 결합(예: 수원시 팔달구)
+      const sggTokens = [];
+      for (const t of tokens) {
+        if (/(시|군|구)$/.test(t)) {
+          // 시도 토큰(서울특별시 등)은 제외
+          if (t === sido) continue;
+          sggTokens.push(t);
+          if (sggTokens.length >= 2) break;
+        }
+      }
+      const sigungu = sggTokens.join(" ").trim();
+  
+      // 동/읍/면/리: 뒤쪽에서 첫 발견을 사용
+      let dong = "";
+      for (const t of tokens) {
+        if (/(동|읍|면|리)$/.test(t)) {
+          // 괄호나 번지류 제외 간단 처리
+          dong = t.replace(/[(),]/g, "");
+          break;
+        }
+      }
+  
+      // 임시: 행정동/법정동 동일 채움(다음 단계에서 DB로 분리)
+      const adminDong = dong;
+      const legalDong = dong;
+  
+      // 최소라도 하나는 있어야 의미 있음
+      if (!sido && !sigungu && !dong) return null;
+  
+      return { sido, sigungu, adminDong, legalDong };
+    }
+  
+    function applyJurisToUI(j) {
+      // 읽기전용 칸 채우기
+      setValue("jurisSido", j?.sido || "");
+      setValue("jurisSigungu", j?.sigungu || "");
+      setValue("jurisAdminDong", j?.adminDong || "");
+      setValue("jurisLegalDong", j?.legalDong || "");
+  
+      // 주차 STEP 1(parkCity) 연동: 시·군·구 우선, 없으면 시·도
+      const cityText = (j?.sigungu || j?.sido || "").trim();
+      if ($("parkCity")) {
+        $("parkCity").value = cityText ? cityText : "(자동 표시 대기중)";
+      }
+    }
+  
+    function syncJurisReadonlyByOverride() {
+      const override = $("jurisOverride")?.checked || false;
+      // override 체크하면 직접 수정 가능(=readonly 해제)
+      setReadonly("jurisSido", !override);
+      setReadonly("jurisSigungu", !override);
+      setReadonly("jurisAdminDong", !override);
+      setReadonly("jurisLegalDong", !override);
+    }
+  
+    function bindJurisUI() {
+      const addrEl = $("siteAddr");
+      const overrideEl = $("jurisOverride");
+  
+      // 해당 UI 없으면 종료
+      if (!addrEl || !overrideEl) return;
+  
+      // 초기 readonly 상태 적용
+      syncJurisReadonlyByOverride();
+  
+      // override 토글
+      overrideEl.addEventListener("change", () => {
+        syncJurisReadonlyByOverride();
+  
+        // 수동모드 ON이면 안내, OFF면 주소로 재파싱
+        if (overrideEl.checked) {
+          setText(
+            "parkResultBox",
+            "지자체 직접 수정 모드입니다. 값 수정 후 '주차대수 자동계산'을 눌러 반영하세요."
+          );
+        } else {
+          const parsed = parseJurisFromAddr(addrEl.value);
+          if (parsed) applyJurisToUI(parsed);
+        }
+      });
+  
+      // 주소 입력시 자동 파싱(디바운스)
+      let t = null;
+      addrEl.addEventListener("input", () => {
+        if (overrideEl.checked) return; // 직접 수정 모드일 때는 자동 덮어쓰기 금지
+        clearTimeout(t);
+        t = setTimeout(() => {
+          const parsed = parseJurisFromAddr(addrEl.value);
+          if (parsed) applyJurisToUI(parsed);
+          else applyJurisToUI({ sido: "", sigungu: "", adminDong: "", legalDong: "" });
+        }, 250);
+      });
+  
+      // 시작 시 한 번 반영(기본값/브라우저 자동완성 대응)
+      const initParsed = parseJurisFromAddr(addrEl.value);
+      if (initParsed) applyJurisToUI(initParsed);
+      else applyJurisToUI({ sido: "", sigungu: "", adminDong: "", legalDong: "" });
+  
+      // 수동 수정 값이 parkCity에 반영되도록: 지자체 칸 변경 시에도 parkCity 업데이트
+      const ids = ["jurisSido", "jurisSigungu", "jurisAdminDong", "jurisLegalDong"];
+      ids.forEach((id) => {
+        const el = $(id);
+        if (!el) return;
+        el.addEventListener("input", () => {
+          const cityText = (String($("jurisSigungu")?.value || "") || "").trim() || (String($("jurisSido")?.value || "") || "").trim();
+          if ($("parkCity")) $("parkCity").value = cityText ? cityText : "(자동 표시 대기중)";
+        });
+      });
+    }
+  
+    // =========================================================
+    // 2) 수원시 주차 계산(초기 엔진)
+    // =========================================================
+    // 여기 값들은 수원시 조례표 확인 후 반드시 교체해야 함.
     const SUWON_PARKING_RULES = {
       office: {
         basis: "area",
@@ -68,7 +266,13 @@
       },
     };
   
-    // ---------- 핵심 계산 ----------
+    function isSuwonCityText(cityText) {
+      const t = String(cityText || "").replace(/\s+/g, " ").trim();
+      if (!t) return false;
+      // "경기도 수원시", "수원시 팔달구" 등 폭넓게 허용
+      return t.includes("수원시");
+    }
+  
     function calcSuwonParking({ useKey, area }) {
       const rule = SUWON_PARKING_RULES[useKey];
       if (!rule) {
@@ -92,7 +296,6 @@
         };
       }
   
-      // area 기반
       const per = n(rule.per);
       if (per <= 0) {
         return {
@@ -116,28 +319,16 @@
         `- 올림 → 법정: ${fmtNum(legal)} 대`,
         "",
         "※ 현재 값은 임시(엔진 검증용)입니다.",
-        "   다음 단계에서 '수원시 주차 조례표'를 DB로 넣고, 이 계산을 표 기반으로 완성합니다.",
+        "   다음 단계에서 '수원시 주차 조례표'를 DB로 넣고, 계산을 표 기반으로 완성합니다.",
       ].join("\n");
   
-      const memo = `${rule.note} | 계산: ceil(연면적 ${fmtNum(a)}㎡ ÷ ${fmtNum(per)}㎡/대) = ${fmtNum(
-        legal
-      )}대`;
+      const memo = `${rule.note} | 계산: ceil(연면적 ${fmtNum(a)}㎡ ÷ ${fmtNum(per)}㎡/대) = ${fmtNum(legal)}대`;
   
       return { ok: true, legal, memo, detail };
     }
   
-    // ---------- UI 반영 ----------
-    function setText(id, text) {
-      const el = $(id);
-      if (el) el.textContent = text ?? "";
-    }
-    function setValue(id, value) {
-      const el = $(id);
-      if (el) el.value = value;
-    }
-  
     function bindParkingUI() {
-      const city = $("parkCity");
+      const cityEl = $("parkCity");
       const useSel = $("parkUse");
       const basisArea = $("parkBasisArea");
   
@@ -149,11 +340,11 @@
       const outMemo = $("parkMemo");
       const outBox = $("parkResultBox");
   
-      // 이 페이지에 STEP UI가 없으면 그냥 종료
+      // 이 페이지에 STEP UI가 없으면 종료
       if (!useSel || !basisArea || !btnCalc || !outLegal || !outMemo || !outBox) return;
   
-      // city는 현재 고정
-      if (city) city.value = "경기도 수원시";
+      // 시작 시 parkCity가 비어있으면(지자체 자동표시 미동작 환경 대비) 기본 표시
+      if (cityEl && !String(cityEl.value || "").trim()) cityEl.value = "(자동 표시 대기중)";
   
       // 연면적(계) 자동연동
       if (btnUseFaTotal) {
@@ -166,8 +357,26 @@
   
       // 계산 실행
       btnCalc.addEventListener("click", () => {
+        const cityText = String(cityEl?.value || "");
         const useKey = String(useSel.value || "");
         const area = n(basisArea.value);
+  
+        // ✅ 오류 최소화: 수원시만 계산 지원
+        if (!isSuwonCityText(cityText)) {
+          outLegal.value = "0";
+          outMemo.value = "현재는 '수원시'만 주차 자동계산을 지원합니다.";
+          outBox.textContent = [
+            "[주차 자동계산] 지원 준비중",
+            `- 현재 지자체: ${cityText || "(미확정)"}`,
+            "",
+            "✅ 해결:",
+            "1) 대지위치(주소)를 정확히 입력해 '지자체 자동표시'가 수원시로 잡히는지 확인",
+            "2) 자동표시가 틀리면 '직접 수정'을 켜서 시·군·구에 '수원시'를 포함하도록 수정",
+            "",
+            "※ 다음 단계에서: 지자체별(조례) DB를 넣고, 선택/자동매칭으로 확장합니다.",
+          ].join("\n");
+          return;
+        }
   
         const r = calcSuwonParking({ useKey, area });
   
@@ -205,6 +414,7 @@
   
     // ---------- 부팅 ----------
     function boot() {
+      bindJurisUI();
       bindParkingUI();
     }
   
