@@ -12,7 +12,6 @@
       background: #f7f9fc;
       color:#0b1220;
     }
-
     h1 { margin-bottom: 20px; }
 
     .search-box {
@@ -20,6 +19,7 @@
       gap: 10px;
       margin-bottom: 20px;
       align-items:center;
+      flex-wrap: wrap;
     }
 
     input, textarea, select {
@@ -128,6 +128,18 @@
       width: min(720px, 100%);
       flex: 1 1 520px;
     }
+    .readonly { background:#f7f9fc; }
+
+    .pill {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.10);
+      color:#445;
+      background:#f5f8ff;
+      white-space:nowrap;
+      font-weight: 700;
+    }
 
     /* 접기/펼치기(대지면적 하단) */
     details.parcels {
@@ -150,7 +162,7 @@
     }
     details.parcels > summary::-webkit-details-marker { display:none; }
 
-    .parcels-table {
+    .parcels-table, .mini-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
@@ -159,19 +171,17 @@
       overflow:hidden;
       border: 1px solid rgba(0,0,0,.06);
     }
-    .parcels-table th, .parcels-table td {
+    .parcels-table th, .parcels-table td,
+    .mini-table th, .mini-table td {
       padding: 10px 10px;
       border-bottom: 1px solid rgba(0,0,0,.06);
       text-align:left;
       font-size: 13px;
+      vertical-align: top;
     }
-    .parcels-table th {
+    .parcels-table th, .mini-table th {
       background:#f7f9ff;
       font-weight: 800;
-    }
-    .parcels-table td:last-child, .parcels-table th:last-child {
-      width: 88px;
-      text-align:center;
     }
     .btn-mini {
       padding: 8px 10px;
@@ -184,152 +194,130 @@
     .btn-mini:hover{ background:#eef4ff; }
     .btn-danger:hover{ background:#ffecec; }
 
-    /* ===== 건축개요 추가 UI용 뱃지(트리 .chip과 충돌 방지 위해 별도) ===== */
-    .pill {
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(0,0,0,.10);
-      color:#445;
-      background:#f5f8ff;
-      white-space:nowrap;
-      font-weight: 700;
-    }
-    .readonly {
-      background:#f7f9fc;
-    }
-
-    /* ✅ 지자체 자동표시 패널 */
-    .juris-box{
+    /* ===== 지자체 자동표시(배너) ===== */
+    .banner {
       width: 100%;
-      border: 1px solid rgba(0,0,0,.10);
+      border: 1px solid rgba(0,0,0,.08);
       border-radius: 12px;
-      padding: 10px 12px;
-      background: #fbfcff;
-      margin-top: 10px;
+      background:#fbfcff;
+      padding: 12px;
     }
-    .juris-head{
+    .banner-head {
       display:flex;
       align-items:center;
       justify-content: space-between;
       gap:10px;
       margin-bottom: 10px;
+      flex-wrap: wrap;
     }
-    .juris-title{
+    .banner-title {
       font-weight: 900;
-      font-size: 13px;
       color:#223;
       display:flex;
       align-items:center;
       gap:8px;
-      flex-wrap:wrap;
     }
-    .juris-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .juris-item{
-      background:#fff;
-      border: 1px solid rgba(0,0,0,.06);
-      border-radius: 12px;
-      padding: 10px;
-      display:flex;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 0;
-    }
-    .juris-item label{
-      font-size: 12px;
-      font-weight: 900;
-      color:#334;
-    }
-    .juris-item input{
-      width: 100%;
-    }
-    .juris-help{
-      margin-top: 8px;
-      font-size: 12px;
-      color:#556;
-      line-height: 1.4;
-    }
-    .juris-toggle{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size: 12px;
-      font-weight: 800;
-      color:#334;
-      user-select:none;
-    }
-    .juris-toggle input{ width:auto; }
-
-    /* ===== ✅ 주차(수원시) STEP 패널 ===== */
-    details.parking-steps {
-      width: 100%;
-      border: 1px solid rgba(0,0,0,.10);
-      border-radius: 12px;
-      padding: 10px 12px;
-      background: #fbfcff;
-      margin-top: 10px;
-    }
-    details.parking-steps > summary{
-      cursor: pointer;
-      list-style: none;
-      user-select: none;
-      font-weight: 900;
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap:10px;
-    }
-    details.parking-steps > summary::-webkit-details-marker{ display:none; }
-
-    .steps-grid{
-      margin-top: 10px;
+    .banner-grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       align-items: start;
     }
-    .step-box{
+    @media (max-width: 960px){
+      .banner-grid{ grid-template-columns: 1fr; }
+    }
+    .banner .field{
       background:#fff;
       border: 1px solid rgba(0,0,0,.06);
       border-radius: 12px;
-      padding: 12px;
+      padding: 10px;
     }
-    .step-title{
-      font-weight: 900;
-      margin: 0 0 8px;
-      font-size: 13px;
-      color:#223;
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap:8px;
-    }
-    .step-desc{
-      margin: 0 0 10px;
-      font-size: 12px;
+    .banner .field label{
+      display:block;
+      font-size:12px;
+      font-weight:800;
       color:#556;
+      margin-bottom: 6px;
+    }
+    .banner .field input,
+    .banner .field select{
+      width: 100%;
+    }
+    .banner .note{
+      margin-top: 8px;
+      font-size: 12px;
+      color:#667;
       line-height: 1.4;
     }
-    .step-row{
+
+    /* ===== 용도(칩 + 추가/삭제) ===== */
+    .chips {
+      display:flex;
+      gap:8px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .chip {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.12);
+      background:#fff;
+      font-size: 13px;
+      font-weight: 800;
+      color:#223;
+    }
+    .chip .x {
+      border:0;
+      background:transparent;
+      cursor:pointer;
+      font-weight: 900;
+      color:#888;
+      padding: 0 4px;
+    }
+    .chip .x:hover{ color:#111; }
+
+    /* ===== 연면적: 용도별/층별 테이블 ===== */
+    .table-actions{
       display:flex;
       gap:8px;
       align-items:center;
       flex-wrap: wrap;
+      width: 100%;
+      margin-top: 8px;
     }
-    .step-row input.mini { width: 160px; }
-    .step-row select { width: min(420px, 100%); flex: 1 1 320px; }
-    .parking-actions{
-      margin-top: 10px;
+    .sum-pill{
+      margin-left:auto;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.10);
+      background:#fff;
+      font-weight: 900;
+      color:#223;
+      white-space: nowrap;
+    }
+    .right { text-align:right; }
+    .muted { color:#667; font-size:12px; font-weight:700; }
+
+    /* ===== 주차: 결과 박스만 ===== */
+    .parking-box{
+      width:100%;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 12px;
+      padding: 12px;
+      background:#fbfcff;
+    }
+    .parking-box .row{
       display:flex;
       gap:8px;
       align-items:center;
       flex-wrap: wrap;
+      margin-top: 8px;
     }
-    .parking-result{
+    .parking-detail{
       margin-top: 10px;
       padding: 10px 12px;
       border-radius: 12px;
@@ -339,12 +327,6 @@
       font-size: 13px;
       white-space: pre-wrap;
       min-height: 44px;
-    }
-    .parking-warn{
-      color:#8a4b00;
-      font-weight: 800;
-      font-size: 12px;
-      margin-top: 6px;
     }
 
     /* =========================================================
@@ -392,7 +374,7 @@
     #ruleTree .tree-item.active { background:#dfeaff; }
     #ruleTree .tree-right-inner { padding: 16px; }
 
-    #ruleTree .chip {
+    #ruleTree .chip2 {
       font-size: 12px;
       padding: 4px 8px;
       border-radius: 999px;
@@ -402,7 +384,6 @@
       white-space:nowrap;
     }
 
-    /* 우측 카드형 접기/펼치기 */
     #ruleTree .tree-cards { display:flex; flex-direction:column; gap:12px; }
     #ruleTree .law-card {
       border: 1px solid rgba(0,0,0,.08);
@@ -454,7 +435,6 @@
   </div>
 
   <div class="results" id="results"></div>
-
   <div class="detail" id="detail" style="display:none;"></div>
 
   <hr class="sep"/>
@@ -473,48 +453,46 @@
       <div class="row-label">건축주</div>
       <div class="row-field"><input class="wide" placeholder="예: ○○구청 / ○○공사 / 개인" /></div>
 
+      <!-- ✅ 큰 프레임 제거: 대지위치는 1줄 입력만 -->
       <div class="row-label">대지위치</div>
       <div class="row-field" style="flex-direction:column; align-items:flex-start;">
-        <!-- ✅ 주소 입력(이 값으로 지자체 자동표시) -->
-        <input id="siteAddr" class="wide" placeholder="예: 경기도 수원시 팔달구 ○○로 123 (○○동)" />
+        <input id="siteAddress" class="wide" placeholder="예: 경기도 수원시 팔달구 ○○로 123 (상세주소는 수동 입력)" />
 
-        <!-- ✅ NEW: 지자체 자동표시(오류 최소화) -->
-        <div class="juris-box" id="jurisBox">
-          <div class="juris-head">
-            <div class="juris-title">
-              <span>지자체(시/군/구/법정동/행정동) 자동표시</span>
-              <span class="pill">주소 기반</span>
-              <span class="pill">기본: 읽기전용</span>
-            </div>
-
-            <label class="juris-toggle" title="자동 추출이 틀린 경우에만 켜서 직접 수정하세요.">
-              <input type="checkbox" id="jurisOverride" />
-              직접 수정
-            </label>
+        <!-- ✅ 지자체 자동표시(오류 최소화) -->
+        <div class="banner" style="margin-top:10px;">
+          <div class="banner-head">
+            <div class="banner-title">지자체(시/군/구/법정동/행정동) 자동표시</div>
+            <span class="pill">오류 최소화용</span>
           </div>
 
-          <div class="juris-grid">
-            <div class="juris-item">
-              <label for="jurisSido">시·도</label>
-              <input id="jurisSido" class="readonly" placeholder="예: 경기도" readonly />
+          <div class="banner-grid">
+            <div class="field">
+              <label>시/도 (선택)</label>
+              <select id="jSido"></select>
             </div>
-            <div class="juris-item">
-              <label for="jurisSigungu">시·군·구</label>
-              <input id="jurisSigungu" class="readonly" placeholder="예: 수원시 팔달구" readonly />
+
+            <div class="field">
+              <label>시/군/구 (선택)</label>
+              <select id="jSigungu">
+                <option value="">시/군/구 선택…</option>
+              </select>
+              <div class="note">※ 시/군/구 목록은 1차 버전으로 “자주 쓰는 값 + 수동 입력(다음 단계)”로 확장됩니다.</div>
             </div>
-            <div class="juris-item">
-              <label for="jurisAdminDong">행정동(읍·면·동)</label>
-              <input id="jurisAdminDong" class="readonly" placeholder="예: 인계동" readonly />
+
+            <div class="field">
+              <label>행정동 (수동)</label>
+              <input id="jAdminDong" placeholder="예: 인계동" />
             </div>
-            <div class="juris-item">
-              <label for="jurisLegalDong">법정동</label>
-              <input id="jurisLegalDong" class="readonly" placeholder="예: 인계동(법정)" readonly />
+
+            <div class="field">
+              <label>법정동 (수동)</label>
+              <input id="jLegalDong" placeholder="예: 인계동(법정)" />
             </div>
           </div>
 
-          <div class="juris-help">
-            - 목적: <b>주차/조례/트리 매칭</b>에서 주소 오타·표기 차이로 생기는 오류를 줄이기 위해 “표준화된 지자체 값”을 따로 고정합니다.<br/>
-            - 다음 단계(public/script.js)에서: 주소 입력 시 자동 추출 → 위 칸 자동 채움 → 주차 계산/조례 선택에 그대로 연결합니다.
+          <div class="note">
+            - 목적: 주차/조례/지구단위계획 연결 시 주소 텍스트로 인한 “오타/표기차” 오류를 줄이기 위함.<br/>
+            - 다음 단계에서: 주소 입력 → 자동표시(시/도/시군구 추천)까지 연결합니다.
           </div>
         </div>
       </div>
@@ -536,8 +514,8 @@
             <thead>
               <tr>
                 <th>지번</th>
-                <th>공부상면적(㎡)</th>
-                <th>삭제</th>
+                <th class="right">공부상면적(㎡)</th>
+                <th style="width:88px; text-align:center;">삭제</th>
               </tr>
             </thead>
             <tbody id="parcelRows"></tbody>
@@ -559,8 +537,38 @@
         <span class="unit">층</span>
       </div>
 
+      <!-- ✅ 용도: 배너 + 추가/삭제 가능 -->
       <div class="row-label">용도</div>
-      <div class="row-field"><input class="wide" placeholder="예: 업무시설(공공청사, 사회복지시설)" /></div>
+      <div class="row-field" style="flex-direction:column; align-items:flex-start;">
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; width:100%;">
+          <select id="usePicker" style="width:min(420px,100%);">
+            <option value="">용도 선택…</option>
+            <option value="업무시설">업무시설</option>
+            <option value="근린생활시설">근린생활시설</option>
+            <option value="공동주택">공동주택</option>
+            <option value="판매/영업시설">판매/영업시설</option>
+            <option value="사회복지시설">사회복지시설</option>
+            <option value="문화/집회시설">문화/집회시설</option>
+            <option value="교육연구시설">교육연구시설</option>
+            <option value="기타">기타</option>
+          </select>
+          <button type="button" class="btn-mini" id="useAddBtn">+ 용도 추가</button>
+
+          <span class="pill">복합용도 지원</span>
+
+          <span class="sum-pill" title="주용도는 주차/조례 계산의 기본값으로 사용">주용도: <b id="primaryUseLabel">미선택</b></span>
+        </div>
+
+        <div class="chips" id="useChips"></div>
+
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; width:100%; margin-top:8px;">
+          <span class="muted">※ 주용도 지정:</span>
+          <select id="primaryUse" style="width:min(360px,100%);">
+            <option value="">주용도 선택…</option>
+          </select>
+          <span class="muted">(주차 자동계산은 “주용도 + 연면적(계)” 기준으로 먼저 동작)</span>
+        </div>
+      </div>
 
       <div class="row-label">주구조</div>
       <div class="row-field">
@@ -574,28 +582,97 @@
         <span class="pill">대지면적 기준으로 건폐율(계획) 자동 계산</span>
       </div>
 
+      <!-- ✅ 연면적: 용도별/층별 표 추가 -->
       <div class="row-label">연면적</div>
-      <div class="row-field">
-        <span style="font-weight:800; color:#445;">계</span>
-        <input id="faTotal" class="mini readonly" type="number" step="0.01" value="0" readonly />
-        <span class="unit">㎡</span>
-        <span class="pill">지상+지하 자동 합산</span>
+      <div class="row-field" style="flex-direction:column; align-items:flex-start;">
+        <!-- 요약 -->
+        <div style="display:flex; align-items:center; gap:10px; width:100%; flex-wrap:wrap;">
+          <span style="font-weight:900; color:#223;">계</span>
+          <input id="faTotal" class="mini readonly" type="number" step="0.01" value="0" readonly />
+          <span class="unit">㎡</span>
+          <span class="pill">용도별/층별 합계 자동 반영</span>
 
-        <div style="flex-basis:100%; height:0;"></div>
+          <div style="flex-basis:100%; height:0;"></div>
 
-        <span style="margin-left:0;">지상층</span>
-        <input id="faAbove" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
-        <span class="unit">㎡</span>
+          <span>지상층 합계</span>
+          <input id="faAbove" class="mini readonly" type="number" step="0.01" value="0" readonly style="width:160px;" />
+          <span class="unit">㎡</span>
 
-        <span style="margin-left:10px;">지하층</span>
-        <input id="faBelow" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
-        <span class="unit">㎡</span>
+          <span style="margin-left:10px;">지하층 합계</span>
+          <input id="faBelow" class="mini readonly" type="number" step="0.01" value="0" readonly style="width:160px;" />
+          <span class="unit">㎡</span>
 
-        <div style="flex-basis:100%; height:0;"></div>
+          <div style="flex-basis:100%; height:0;"></div>
 
-        <span style="margin-left:0;">주차장면적</span>
-        <input id="parkingArea" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
-        <span class="unit">㎡</span>
+          <span style="margin-left:0;">주차장면적</span>
+          <input id="parkingArea" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
+          <span class="unit">㎡</span>
+        </div>
+
+        <!-- 용도별면적개요 -->
+        <details open style="width:100%; margin-top:10px;">
+          <summary style="cursor:pointer; font-weight:900;">■ 용도별면적개요</summary>
+
+          <table class="mini-table" aria-label="용도별면적개요">
+            <thead>
+              <tr>
+                <th style="width:220px;">구분(용도)</th>
+                <th class="right" style="width:200px;">면적(㎡)</th>
+                <th>비고</th>
+                <th style="width:88px; text-align:center;">삭제</th>
+              </tr>
+            </thead>
+            <tbody id="useAreaRows"></tbody>
+            <tfoot>
+              <tr>
+                <th>소계</th>
+                <th class="right" id="useAreaSum">0.00</th>
+                <th class="muted">용도별 면적 합계</th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div class="table-actions">
+            <button type="button" class="btn-mini" id="useAreaAddBtn">+ 행 추가</button>
+            <span class="muted">면적은 소수점 2자리 반올림</span>
+          </div>
+        </details>
+
+        <!-- 층별면적개요 -->
+        <details open style="width:100%; margin-top:10px;">
+          <summary style="cursor:pointer; font-weight:900;">■ 층별면적개요</summary>
+
+          <table class="mini-table" aria-label="층별면적개요">
+            <thead>
+              <tr>
+                <th style="width:180px;">구분(층)</th>
+                <th class="right" style="width:200px;">면적(㎡)</th>
+                <th>주용도(수동)</th>
+                <th style="width:220px;">구조(수동)</th>
+                <th style="width:88px; text-align:center;">삭제</th>
+              </tr>
+            </thead>
+            <tbody id="floorRows"></tbody>
+            <tfoot>
+              <tr>
+                <th>합계</th>
+                <th class="right" id="floorSum">0.00</th>
+                <th class="muted">지상/지하 자동 구분 합산</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div class="table-actions">
+            <button type="button" class="btn-mini" id="floorAddAboveBtn">+ 지상층 추가</button>
+            <button type="button" class="btn-mini" id="floorAddBelowBtn">+ 지하층 추가</button>
+            <button type="button" class="btn-mini" id="floorAddRooftopBtn">+ 옥탑 추가</button>
+            <span class="muted">예: 지상1층~ / 지하1층~ / 옥탑</span>
+          </div>
+        </details>
+
       </div>
 
       <div class="row-label">건폐율</div>
@@ -624,91 +701,39 @@
         <span class="pill">계획 = (연면적계 ÷ 대지면적)×100</span>
       </div>
 
+      <!-- ✅ 주차: STEP 삭제, 결과만 -->
       <div class="row-label">주차대수</div>
       <div class="row-field" style="flex-direction:column; align-items:flex-start;">
         <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%;">
           <span>법정</span>
-          <input id="parkLegal" class="mini" type="number" step="1" value="0" style="width:140px;" />
+          <input id="parkLegal" class="mini readonly" type="number" step="1" value="0" style="width:140px;" readonly />
           <span class="unit">대</span>
 
           <span style="margin-left:10px;">계획</span>
           <input id="parkPlan" class="mini" type="number" step="1" value="0" style="width:140px;" />
           <span class="unit">대</span>
 
-          <span class="pill">수원시 기준 자동계산(아래 STEP)</span>
+          <span class="pill">자동계산은 하단 버튼</span>
         </div>
 
         <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%;">
-          <input id="parkMemo" class="wide" placeholder="예: (자동계산 시) 기준식/근거/메모가 여기에 채워집니다." />
+          <input id="parkMemo" class="wide readonly" placeholder="예: (자동계산) 기준식/근거/메모가 자동으로 채워집니다." readonly />
         </div>
 
-        <!-- ✅ STEP 1~4: 수원시 주차 자동계산 UI -->
-        <details class="parking-steps" id="parkingSteps" open>
-          <summary>
-            <span>STEP 1~4 · 수원시 주차대수 자동계산</span>
-            <span class="pill">현재: 수원시 고정</span>
-          </summary>
-
-          <div class="steps-grid">
-            <div class="step-box">
-              <div class="step-title">
-                <span>STEP 1 · 지자체</span>
-                <span class="pill">자동표시 연동</span>
-              </div>
-              <p class="step-desc">대지위치에서 자동표시된 <b>시·군·구</b> 값을 우선 사용합니다. (초기 단계는 수원시만 완성)</p>
-              <div class="step-row">
-                <input id="parkCity" class="wide readonly" value="(자동 표시 대기중)" readonly />
-              </div>
-              <div class="parking-warn">※ “수원시 조례 기준” 표 데이터는 다음 단계에서 DB로 넣고 바로 교체됩니다.</div>
-            </div>
-
-            <div class="step-box">
-              <div class="step-title">
-                <span>STEP 2 · 용도 선택</span>
-                <span class="pill">필수</span>
-              </div>
-              <p class="step-desc">주차 산정 용도를 선택하세요. (초기값은 임시 분류이며, 다음 단계에서 “조례 기준”으로 정교화)</p>
-              <div class="step-row">
-                <select id="parkUse">
-                  <option value="">용도 선택…</option>
-                  <option value="office">업무시설</option>
-                  <option value="neighborhood">근린생활시설</option>
-                  <option value="housing">공동주택</option>
-                  <option value="welfare">사회복지시설</option>
-                  <option value="retail">판매/영업시설</option>
-                  <option value="etc">기타</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="step-box">
-              <div class="step-title">
-                <span>STEP 3 · 면적/세대수 입력</span>
-                <span class="pill">필수</span>
-              </div>
-              <p class="step-desc">우선은 <b>연면적(㎡)</b>을 기본으로 받습니다. (세대수/객실수 등은 다음 단계에서 추가)</p>
-              <div class="step-row">
-                <span>연면적</span>
-                <input id="parkBasisArea" class="mini" type="number" step="0.01" value="0" />
-                <span class="unit">㎡</span>
-                <button type="button" class="btn-mini" id="parkUseFaTotalBtn">연면적(계) 자동연동</button>
-              </div>
-            </div>
-
-            <div class="step-box">
-              <div class="step-title">
-                <span>STEP 4 · 자동 계산</span>
-                <span class="pill">결과</span>
-              </div>
-              <p class="step-desc">버튼을 누르면 <b>법정 주차대수</b>와 <b>메모</b>가 위 입력칸(법정/메모)에 자동 반영됩니다.</p>
-              <div class="parking-actions">
-                <button type="button" id="parkCalcBtn">주차대수 자동계산</button>
-                <button type="button" class="btn-mini" id="parkResetBtn">초기화</button>
-              </div>
-              <div class="parking-result" id="parkResultBox">대기중…</div>
-            </div>
+        <div class="parking-box">
+          <div class="row">
+            <span class="pill">자동계산 입력값</span>
+            <span class="muted">지자체(시/군/구) + 주용도 + 연면적(계)</span>
           </div>
-        </details>
+
+          <div class="row">
+            <button type="button" id="parkCalcBtn">주차대수 자동계산</button>
+            <button type="button" class="btn-mini" id="parkResetBtn">초기화</button>
+            <span class="muted">※ 1차 버전은 “수원시 조례 기준” 우선 적용(다음 단계에서 DB화)</span>
+          </div>
+
+          <div class="parking-detail" id="parkResultBox">대기중…</div>
+        </div>
       </div>
 
       <div class="row-label">조경면적</div>
@@ -800,7 +825,6 @@
               <div class="law-body" data-body></div>
             </details>
 
-            <!-- 나중 -->
             <details class="law-card" data-kind="조례">
               <summary>
                 <span>조례</span>
@@ -894,40 +918,18 @@ function escapeHtml(str) {
 
 /* =========================
    ✅ 법규 트리 (DB 자동 채움)
-   - 현재 단계: 법/시행령/시행규칙만
 ========================= */
-
-// 좌측 표시 목록(기존 유지)
 const RULE_ITEMS = [
-  "건폐율",
-  "용적률",
-  "주차대수 산정 기준",
-  "대지안의 공지",
-  "옹벽 등의 공작물에의 준용",
-  "건축물의 높이제한",
-  "일조 등의 확보를 위한 건축물의 높이제한",
-  "대지의 조경",
-  "구조안전의 확인 대상",
-  "직통계단의 설치",
-  "피난계단 설치",
-  "계단 및 복도의 설치기준",
-  "승용 승강기의 설치",
-  "거실의 채광 및 환기",
-  "방화구획",
-  "지하층의 구조 및 설비",
-  "에너지절약계획서 제출 대상 건축물",
-  "녹색건축인증",
-  "에너지효율등급 인증",
-  "신‧재생에너지 설비",
-  "장애인‧노인‧임산부 등의 편의증진 시설",
-  "공중화장실",
-  "건축심의",
-  "경관심의",
-  "건설기술심의",
-  "단열재의 두께"
+  "건폐율","용적률","주차대수 산정 기준",
+  "대지안의 공지","옹벽 등의 공작물에의 준용","건축물의 높이제한",
+  "일조 등의 확보를 위한 건축물의 높이제한","대지의 조경","구조안전의 확인 대상",
+  "직통계단의 설치","피난계단 설치","계단 및 복도의 설치기준",
+  "승용 승강기의 설치","거실의 채광 및 환기","방화구획","지하층의 구조 및 설비",
+  "에너지절약계획서 제출 대상 건축물","녹색건축인증","에너지효율등급 인증",
+  "신‧재생에너지 설비","장애인‧노인‧임산부 등의 편의증진 시설","공중화장실",
+  "건축심의","경관심의","건설기술심의","단열재의 두께"
 ];
 
-// ✅ 지금 단계에서 동작하는 항목만 topic_key 매핑
 const TOPIC_MAP = {
   "건폐율": "coverage",
   "용적률": "far",
@@ -942,7 +944,6 @@ function expandAllLawCards(){
   const root = document.getElementById("ruleTree");
   root.querySelectorAll("#lawCards .law-card").forEach(d => d.open = true);
 }
-
 function setCardBody(kind, text){
   const root = document.getElementById("ruleTree");
   const card = root.querySelector(`#lawCards .law-card[data-kind="${kind}"]`);
@@ -951,7 +952,6 @@ function setCardBody(kind, text){
   if (!body) return;
   body.textContent = text || "";
 }
-
 function formatRefs(items = []){
   if (!items.length) return "연결된 근거 조문이 없습니다.";
   return items.map((x, i) => {
@@ -970,7 +970,6 @@ function formatRefs(items = []){
 async function loadRuleFromDB(itemName){
   const topicKey = TOPIC_MAP[itemName];
 
-  // 조례/지구단위계획은 지금 단계에서 무조건 준비중
   setCardBody("조례", "준비중(나중 단계에서 연결)");
   setCardBody("지구단위계획", "준비중(나중 단계에서 연결)");
 
@@ -997,11 +996,9 @@ async function loadRuleFromDB(itemName){
       return;
     }
 
-    // 현재는 topic당 root 1개 노드만 쓰는 구조(확장 가능)
     const node = (data.tree.nodes || [])[0];
     const refs = node?.refs || {};
 
-    // 서버에서 bucket 키: law / enforcement_decree / enforcement_rule
     setCardBody("법", formatRefs(refs.law || []));
     setCardBody("시행령", formatRefs(refs.enforcement_decree || []));
     setCardBody("시행규칙", formatRefs(refs.enforcement_rule || []));
@@ -1024,7 +1021,7 @@ async function loadRuleFromDB(itemName){
   RULE_ITEMS.forEach((name, idx) => {
     const div = document.createElement("div");
     div.className = "tree-item" + (idx === 0 ? " active" : "");
-    div.innerHTML = `<span>${name}</span><span class="chip">▶</span>`;
+    div.innerHTML = `<span>${name}</span><span class="chip2">▶</span>`;
     div.onclick = async () => {
       root.querySelectorAll(".tree-item").forEach(el => el.classList.remove("active"));
       div.classList.add("active");
@@ -1043,7 +1040,7 @@ async function loadRuleFromDB(itemName){
 })();
 
 /* =========================
-   대지면적 > 지번/공부상면적 (그대로)
+   공통 유틸
 ========================= */
 function round2(n) {
   const x = Number(n);
@@ -1053,7 +1050,14 @@ function round2(n) {
 function format2(n) {
   return round2(n).toFixed(2);
 }
+function n(v){
+  const x = Number(v);
+  return Number.isFinite(x) ? x : 0;
+}
 
+/* =========================
+   대지면적 > 지번/공부상면적
+========================= */
 function recalcParcelSumAndApplyToSite() {
   const tbody = document.getElementById("parcelRows");
   const inputs = tbody.querySelectorAll("input[data-role='parcelArea']");
@@ -1069,7 +1073,6 @@ function recalcParcelSumAndApplyToSite() {
 
 function addParcelRow(prefill = { jibun: "", area: "" }) {
   const tbody = document.getElementById("parcelRows");
-
   const tr = document.createElement("tr");
 
   const td1 = document.createElement("td");
@@ -1099,6 +1102,7 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
   td2.appendChild(area);
 
   const td3 = document.createElement("td");
+  td3.style.textAlign = "center";
   const del = document.createElement("button");
   del.type = "button";
   del.className = "btn-mini btn-danger";
@@ -1114,7 +1118,6 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
   tr.appendChild(td3);
 
   tbody.appendChild(tr);
-
   recalcParcelSumAndApplyToSite();
 }
 
@@ -1130,7 +1133,295 @@ function addParcelRow(prefill = { jibun: "", area: "" }) {
 })();
 
 /* =========================
-   ✅ 건축개요 자동연산 (그대로)
+   ✅ 지자체 배너(시도 기본 + 시군구 1차)
+   - 1차: 시도 17개
+   - 시군구: 수원 4구만 먼저(=주차 수원시 기준과 맞춤)
+   - 다음 단계: 전국 시군구 데이터/자동추천 연결
+========================= */
+const SIDO_LIST = [
+  "서울특별시","부산광역시","대구광역시","인천광역시","광주광역시","대전광역시","울산광역시",
+  "세종특별자치시","경기도","강원특별자치도","충청북도","충청남도","전북특별자치도","전라남도",
+  "경상북도","경상남도","제주특별자치도"
+];
+
+const SIGUNGU_SEED = {
+  "경기도": ["수원시 장안구","수원시 권선구","수원시 팔달구","수원시 영통구"]
+};
+
+function fillSelect(el, items, placeholder){
+  el.innerHTML = "";
+  const op0 = document.createElement("option");
+  op0.value = "";
+  op0.textContent = placeholder || "선택…";
+  el.appendChild(op0);
+  items.forEach(v => {
+    const op = document.createElement("option");
+    op.value = v;
+    op.textContent = v;
+    el.appendChild(op);
+  });
+}
+
+(function initJurisdictionBanner(){
+  const sido = document.getElementById("jSido");
+  const sigungu = document.getElementById("jSigungu");
+  if (!sido || !sigungu) return;
+
+  fillSelect(sido, SIDO_LIST, "시/도 선택…");
+  fillSelect(sigungu, [], "시/군/구 선택…");
+
+  // 초기값: 경기도
+  sido.value = "경기도";
+  fillSelect(sigungu, SIGUNGU_SEED["경기도"] || [], "시/군/구 선택…");
+  sigungu.value = "수원시 팔달구"; // 화면 예시용(원하면 비워도 됨)
+  // 원하면 위 줄 삭제 가능
+  // sigungu.value = "";
+  sido.addEventListener("change", () => {
+    const list = SIGUNGU_SEED[sido.value] || [];
+    fillSelect(sigungu, list, "시/군/구 선택…");
+  });
+})();
+
+/* =========================
+   ✅ 용도(추가/삭제 + 주용도)
+========================= */
+function syncPrimaryUseOptions(){
+  const chips = Array.from(document.querySelectorAll("[data-use-chip]")).map(el => el.getAttribute("data-use-chip"));
+  const sel = document.getElementById("primaryUse");
+  const label = document.getElementById("primaryUseLabel");
+  if (!sel || !label) return;
+
+  const cur = sel.value || "";
+  sel.innerHTML = `<option value="">주용도 선택…</option>`;
+  chips.forEach(u => {
+    const op = document.createElement("option");
+    op.value = u;
+    op.textContent = u;
+    sel.appendChild(op);
+  });
+
+  // 유지 가능하면 유지, 아니면 비움
+  if (chips.includes(cur)) sel.value = cur;
+  else sel.value = "";
+
+  label.textContent = sel.value || "미선택";
+}
+
+function addUseChip(useName){
+  const wrap = document.getElementById("useChips");
+  if (!wrap) return;
+
+  const exists = Array.from(wrap.querySelectorAll("[data-use-chip]")).some(el => el.getAttribute("data-use-chip") === useName);
+  if (exists) return;
+
+  const chip = document.createElement("div");
+  chip.className = "chip";
+  chip.setAttribute("data-use-chip", useName);
+  chip.innerHTML = `<span>${useName}</span> <button type="button" class="x" aria-label="삭제">×</button>`;
+  chip.querySelector(".x").onclick = () => {
+    chip.remove();
+    syncPrimaryUseOptions();
+    // 용도별면적 표에도 동일 용도 행이 있으면 자동으로 제거하지는 않음(사용자가 컨트롤)
+  };
+  wrap.appendChild(chip);
+  syncPrimaryUseOptions();
+}
+
+(function initUseUI(){
+  const picker = document.getElementById("usePicker");
+  const addBtn = document.getElementById("useAddBtn");
+  const primary = document.getElementById("primaryUse");
+  if (!picker || !addBtn || !primary) return;
+
+  addBtn.addEventListener("click", () => {
+    const v = (picker.value || "").trim();
+    if (!v) return alert("용도를 선택하세요.");
+    addUseChip(v);
+  });
+
+  primary.addEventListener("change", () => {
+    const label = document.getElementById("primaryUseLabel");
+    if (label) label.textContent = primary.value || "미선택";
+  });
+})();
+
+/* =========================
+   ✅ 연면적 테이블(용도별/층별) + 합계 자동
+========================= */
+function recalcAreaTables(){
+  // 용도별 합계
+  const useTbody = document.getElementById("useAreaRows");
+  let useSum = 0;
+  if (useTbody) {
+    useTbody.querySelectorAll("input[data-role='useArea']").forEach(inp => {
+      useSum += n(inp.value);
+    });
+  }
+  useSum = round2(useSum);
+  const useSumEl = document.getElementById("useAreaSum");
+  if (useSumEl) useSumEl.textContent = format2(useSum);
+
+  // 층별 합계 + 지상/지하 합계
+  const floorTbody = document.getElementById("floorRows");
+  let floorSum = 0, aboveSum = 0, belowSum = 0;
+  if (floorTbody) {
+    floorTbody.querySelectorAll("tr").forEach(tr => {
+      const kind = tr.getAttribute("data-floor-kind") || ""; // above / below / roof
+      const areaInp = tr.querySelector("input[data-role='floorArea']");
+      const a = n(areaInp?.value);
+      floorSum += a;
+      if (kind === "below") belowSum += a;
+      else aboveSum += a; // roof도 지상에 포함
+    });
+  }
+  floorSum = round2(floorSum);
+  aboveSum = round2(aboveSum);
+  belowSum = round2(belowSum);
+
+  const floorSumEl = document.getElementById("floorSum");
+  if (floorSumEl) floorSumEl.textContent = format2(floorSum);
+
+  // 최종: 일단 “층별 합계”를 연면적(계)로 본다 (실무에선 연면적 제외 항목이 있으니 DB단에서 조정 가능)
+  document.getElementById("faAbove").value = format2(aboveSum);
+  document.getElementById("faBelow").value = format2(belowSum);
+  document.getElementById("faTotal").value = format2(floorSum);
+
+  recalcBuildingOverview(); // FAR 등 갱신
+}
+
+function addUseAreaRow(prefill = { use:"", area:"", note:"" }){
+  const tbody = document.getElementById("useAreaRows");
+  if (!tbody) return;
+
+  const tr = document.createElement("tr");
+
+  const td1 = document.createElement("td");
+  const use = document.createElement("input");
+  use.placeholder = "예: 도서관";
+  use.value = prefill.use ?? "";
+  use.style.width = "100%";
+  td1.appendChild(use);
+
+  const td2 = document.createElement("td");
+  const area = document.createElement("input");
+  area.type = "number";
+  area.step = "0.01";
+  area.value = prefill.area ?? "";
+  area.setAttribute("data-role","useArea");
+  area.className = "right";
+  area.style.width = "180px";
+  area.style.textAlign = "right";
+  area.addEventListener("input", recalcAreaTables);
+  area.addEventListener("blur", () => {
+    area.value = format2(area.value);
+    recalcAreaTables();
+  });
+  td2.appendChild(area);
+
+  const td3 = document.createElement("td");
+  const note = document.createElement("input");
+  note.placeholder = "예: (지상1~4층)";
+  note.value = prefill.note ?? "";
+  note.style.width = "100%";
+  td3.appendChild(note);
+
+  const td4 = document.createElement("td");
+  td4.style.textAlign = "center";
+  const del = document.createElement("button");
+  del.type = "button";
+  del.className = "btn-mini btn-danger";
+  del.textContent = "삭제";
+  del.onclick = () => { tr.remove(); recalcAreaTables(); };
+  td4.appendChild(del);
+
+  tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tr.appendChild(td4);
+  tbody.appendChild(tr);
+
+  recalcAreaTables();
+}
+
+let _aboveIdx = 1;
+let _belowIdx = 1;
+let _roofIdx = 1;
+
+function addFloorRow(kind){ // above / below / roof
+  const tbody = document.getElementById("floorRows");
+  if (!tbody) return;
+
+  const tr = document.createElement("tr");
+  tr.setAttribute("data-floor-kind", kind);
+
+  const td1 = document.createElement("td");
+  const floor = document.createElement("input");
+  floor.placeholder = kind==="below" ? "예: 지하1층" : (kind==="roof" ? "예: 옥탑" : "예: 지상1층");
+  if (kind === "below") floor.value = `지하${_belowIdx++}층`;
+  else if (kind === "roof") floor.value = `옥탑${_roofIdx++}`;
+  else floor.value = `지상${_aboveIdx++}층`;
+  floor.style.width = "100%";
+  td1.appendChild(floor);
+
+  const td2 = document.createElement("td");
+  const area = document.createElement("input");
+  area.type = "number";
+  area.step = "0.01";
+  area.value = "0";
+  area.setAttribute("data-role","floorArea");
+  area.style.width = "180px";
+  area.style.textAlign = "right";
+  area.addEventListener("input", recalcAreaTables);
+  area.addEventListener("blur", () => {
+    area.value = format2(area.value);
+    recalcAreaTables();
+  });
+  td2.appendChild(area);
+
+  const td3 = document.createElement("td");
+  const use = document.createElement("input");
+  use.placeholder = "예: 도서관";
+  use.style.width = "100%";
+  td3.appendChild(use);
+
+  const td4 = document.createElement("td");
+  const structure = document.createElement("input");
+  structure.placeholder = "예: 철근콘크리트조";
+  structure.style.width = "100%";
+  td4.appendChild(structure);
+
+  const td5 = document.createElement("td");
+  td5.style.textAlign = "center";
+  const del = document.createElement("button");
+  del.type = "button";
+  del.className = "btn-mini btn-danger";
+  del.textContent = "삭제";
+  del.onclick = () => { tr.remove(); recalcAreaTables(); };
+  td5.appendChild(del);
+
+  tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tr.appendChild(td4); tr.appendChild(td5);
+  tbody.appendChild(tr);
+
+  recalcAreaTables();
+}
+
+(function initAreaTables(){
+  const addUseBtn = document.getElementById("useAreaAddBtn");
+  if (addUseBtn) addUseBtn.addEventListener("click", () => addUseAreaRow());
+
+  const addAbove = document.getElementById("floorAddAboveBtn");
+  const addBelow = document.getElementById("floorAddBelowBtn");
+  const addRoof = document.getElementById("floorAddRooftopBtn");
+  if (addAbove) addAbove.addEventListener("click", () => addFloorRow("above"));
+  if (addBelow) addBelow.addEventListener("click", () => addFloorRow("below"));
+  if (addRoof) addRoof.addEventListener("click", () => addFloorRow("roof"));
+
+  // 초기 기본 2행(원하면 삭제 가능)
+  addUseAreaRow({ use:"", area:"0", note:"" });
+  addFloorRow("above");
+  addFloorRow("below");
+})();
+
+/* =========================
+   ✅ 건축개요 자동연산(건폐율/용적률/조경비율)
+   - 연면적(계)은 층별 표에서 자동 갱신됨
 ========================= */
 function num(id){
   const el = document.getElementById(id);
@@ -1147,10 +1438,7 @@ function recalcBuildingOverview(){
   const site = num("siteArea");
   const bArea = num("bAreaPlan");
 
-  const above = num("faAbove");
-  const below = num("faBelow");
-  const total = round2(above + below);
-  set2("faTotal", total);
+  const total = num("faTotal");
 
   const cov = site > 0 ? round2((bArea / site) * 100) : 0;
   set2("covPlan", cov);
@@ -1164,12 +1452,7 @@ function recalcBuildingOverview(){
 }
 
 (function bindBuildingOverview(){
-  const ids = [
-    "bAreaPlan",
-    "faAbove","faBelow",
-    "landPlan",
-    "siteArea"
-  ];
+  const ids = ["bAreaPlan","landPlan","siteArea"];
   ids.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1180,12 +1463,29 @@ function recalcBuildingOverview(){
       recalcBuildingOverview();
     });
   });
-
   recalcBuildingOverview();
+})();
+
+/* =========================
+   ✅ 주차 버튼(지금은 script.js가 실제 계산 담당)
+   - 여기서는 UI 리셋만 안전하게 처리
+========================= */
+(function bindParkingResetOnly(){
+  const btnReset = document.getElementById("parkResetBtn");
+  if (!btnReset) return;
+
+  btnReset.addEventListener("click", () => {
+    const legal = document.getElementById("parkLegal");
+    const memo = document.getElementById("parkMemo");
+    const box = document.getElementById("parkResultBox");
+    if (legal) legal.value = "0";
+    if (memo) memo.value = "";
+    if (box) box.textContent = "대기중…";
+  });
 })();
 </script>
 
-<!-- ✅ 외부 스크립트 로드: 지자체 자동표시 + 주차 자동계산 로직 -->
+<!-- ✅ 외부 스크립트: 주차 자동계산 로직(다음 단계에서 이 페이지 구조에 맞춰 전체 교체 예정) -->
 <script src="/script.js"></script>
 
 </body>
