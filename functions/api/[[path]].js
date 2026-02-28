@@ -269,12 +269,6 @@ export async function onRequest(context) {
     // =========================================================
     // ✅ NEW: 주차(법정) - 건축개요 기반 입력 연결 엔드포인트
     // POST /api/parking/legal
-    // body 예시:
-    // {
-    //   "jurisdiction": { "sido":"경기도", "sigungu":"수원시 팔달구" },
-    //   "usageAreas": [ { "use":"업무시설", "area_m2": 1234.56 } ],
-    //   "primaryUse": "업무시설"
-    // }
     // =========================================================
     if (request.method === "POST" && path === "parking/legal") {
       const body = await request.json().catch(() => ({}));
@@ -300,7 +294,7 @@ export async function onRequest(context) {
       ) / 100;
 
       // ⚠️ 아직 지자체 조례/기준 DB 미연결: 계산은 다음 단계
-      // 지금은 "입력값이 서버까지 연결됨"을 확인하는 응답만 반환
+      // ✅ 프론트 호환을 위해 legalCount / formula 키를 미리 반환
       return json({
         ok: true,
         mode: "WIRED_ONLY",
@@ -310,8 +304,13 @@ export async function onRequest(context) {
         primaryUse: payload.primaryUse || null,
         usageAreas: payload.usageAreas,
         totalArea_m2: totalArea,
-        legalParking: null, // 다음 단계에서 산출값(정수 + 산식/근거)로 채움
-        refs: [],          // 다음 단계에서 조문/조례 링크 넣기
+
+        // ✅ 프론트(index.html)에서 기대하는 키
+        legalCount: null,
+        formula: "",
+
+        // 다음 단계에서 조문/조례 링크 넣기
+        refs: [],
       });
     }
 
