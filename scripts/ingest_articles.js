@@ -1,27 +1,37 @@
+// scripts/ingest_articles.js (FULL REPLACE - SAFE VERSION)
+
 import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 
 const OUT_DIR = path.resolve("./data");
+const PART_DIR = path.resolve("./data/law_article_sql_parts");
 const DUMP_FILE = path.resolve("./data/law_article_dump.json");
-const SQL_FILE = path.resolve("./data/law_article_insert.sql");
 const RAW_FILE = path.resolve("./data/law_article_raw_response.txt");
 
 const LAW_OC = process.env.LAW_OC;
-const MST = String(process.env.LAW_ID || "").trim(); // ✅ 우리가 넘기는 값 = MST로 사용
-const LAW_KEY_ENV = String(process.env.LAW_KEY || "").trim(); // ✅ 선택: 법령ID(001823 등)
-const LIMIT = Number(process.env.LIMIT || 0); // 0이면 제한 없음
+const LAW_KEYS = String(process.env.LAW_KEYS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const ON_DATE = String(process.env.ON_DATE || "").trim();
+const LIMIT = Number(process.env.LIMIT || 0);
 const DRY_RUN = process.env.DRY_RUN === "1";
 const DEBUG_RAW = process.env.DEBUG_RAW === "1";
+const SQL_CHUNK_SIZE = Number(process.env.SQL_CHUNK_SIZE || 200);
 
+const DB_NAME = "archi_law_db";
 const BASE_URL = "http://www.law.go.kr/DRF/lawService.do";
 
-function ensureOutDir() {
-  if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
+function ensureDir(p) {
+  if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
 }
+
 function escSql(x) {
   return String(x ?? "").replace(/'/g, "''");
 }
+
 function stripHtml(s) {
   return String(s ?? "")
     .replace(/<br\s*\/?>/gi, "\n")
@@ -31,11 +41,26 @@ function stripHtml(s) {
     .trim();
 }
 
+function todayISO() {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
+}
+
+function extractArticleNoFromBody(body) {
+  const m = body.match(/^제\d+조(?:의\d+)?/);
+  return m ? m[0] : null;
+}
+
+function isDeletedArticle(body) {
+  const t = body.trim();
+  return /삭제$/.test(t);
+}
+
 async function fetchText(url) {
   const res = await fetch(url, {
     redirect: "follow",
     headers: {
-      "user-agent": "archi-law-article-ingestor/2.0",
+      "user-agent": "archi-law-article-ingestor/4.0",
       accept: "application/json,text/plain,*/*",
     },
   });
@@ -63,7 +88,6 @@ function getLawServiceRoot(data) {
 
 function findArticlesArray(data) {
   const root = getLawServiceRoot(data);
-
   const candidates = [
     root?.조문?.조문단위,
     root?.조문,
@@ -72,46 +96,38 @@ function findArticlesArray(data) {
     root?.Article,
     root?.article,
   ];
-
   for (const c of candidates) {
     if (Array.isArray(c)) return c;
   }
-
-  // fallback: 재귀로 조문 객체 모으기
-  const out = [];
-  const walk = (node) => {
-    if (Array.isArray(node)) {
-      for (const x of node) walk(x);
-      return;
-    }
-    if (!node || typeof node !== "object") return;
-
-    if (
-      ("조문번호" in node || "조문번호문자열" in node) &&
-      ("조문내용" in node || "조문내용HTML" in node || "내용" in node)
-    ) {
-      out.push(node);
-      return;
-    }
-
-    for (const v of Object.values(node)) walk(v);
-  };
-  walk(root);
-  return out;
+  return [];
 }
 
 function normalizeArticles(raw, lawKey, mst, sourceUrl) {
   const rows = [];
-  for (const it of raw || []) {
-    const no = it["조문번호"] || it["조문번호문자열"] || it["조문"] || "";
-    let article_no = String(no).trim();
-    if (article_no && /^\d+$/.test(article_no)) article_no = `제${article_no}조`;
-    if (!article_no) continue;
 
-    const title = String(it["조문제목"] || it["제목"] || "").trim();
+  for (const it of raw || []) {
     const bodyRaw = it["조문내용"] || it["내용"] || it["조문내용HTML"] || "";
     const body = stripHtml(bodyRaw);
     if (!body) continue;
+
+    // 🔴 삭제 조문 필터
+    if (isDeletedArticle(body)) continue;
+
+    let article_no =
+      it["조문번호"] || it["조문번호문자열"] || it["조문"] || "";
+
+    article_no = String(article_no).trim();
+
+    // 🔴 body 기준 조문번호 재정규화
+    const extracted = extractArticleNoFromBody(body);
+    if (extracted) article_no = extracted;
+
+    if (!article_no) continue;
+
+    let title = String(it["조문제목"] || it["제목"] || "").trim();
+
+    // 🟡 title fallback
+    if (!title) title = article_no;
 
     rows.push({
       law_key: String(lawKey),
@@ -123,42 +139,26 @@ function normalizeArticles(raw, lawKey, mst, sourceUrl) {
     });
   }
 
-  // 중복 제거 (law_key+mst+article_no)
   const map = new Map();
-  for (const r of rows) map.set(`${r.law_key}__${r.mst}__${r.article_no}`, r);
+  for (const r of rows) {
+    map.set(`${r.law_key}__${r.mst}__${r.article_no}`, r);
+  }
   return Array.from(map.values());
 }
 
-// ✅ mst로 law_key를 DB에서 찾아내기 (LAW_KEY 안 줘도 동작)
-function resolveLawKeyFromDB(envLawKey, mst) {
-  if (envLawKey) return envLawKey;
-
+function resolveLatestMstFromDB(lawKey, onDateISO) {
+  const dt = onDateISO || todayISO();
   const cmd =
-    `npx wrangler d1 execute archi_law_db --remote --command=` +
-    `"SELECT law_key FROM law_version WHERE mst='${escSql(mst)}' LIMIT 1;"`;
+    `npx wrangler d1 execute ${DB_NAME} --remote --command=` +
+    `"SELECT mst FROM law_version WHERE law_key='${escSql(
+      lawKey
+    )}' AND (시행일 IS NULL OR 시행일 = '' OR 시행일 <= '${escSql(
+      dt
+    )}') ORDER BY CASE WHEN (시행일 IS NULL OR 시행일 = '') THEN 0 ELSE 1 END DESC, 시행일 DESC, mst DESC LIMIT 1;"`;
 
   const out = execSync(cmd, { encoding: "utf-8" });
-
-  // wrangler 출력은 JSON 형태로 나오므로, law_key 문자열만 대충 추출
-  // (정확 파싱보다 안전하게: "law_key":"001823" 패턴 찾기)
-  const m = out.match(/"law_key"\s*:\s*"([^"]+)"/);
-  if (!m) {
-    throw new Error(
-      `mst=${mst}에 대한 law_key를 DB에서 찾지 못했습니다. (먼저 ingest:meta로 law_version을 채워야 합니다)`
-    );
-  }
-  return m[1];
-}
-
-function buildInsertSQL(rows) {
-  return rows
-    .map((r) => {
-      return `INSERT OR IGNORE INTO law_article (law_key, mst, article_no, title, body, source_url)
-VALUES ('${escSql(r.law_key)}','${escSql(r.mst)}','${escSql(r.article_no)}','${escSql(
-        r.title
-      )}','${escSql(r.body)}','${escSql(r.source_url)}');`;
-    })
-    .join("\n");
+  const m = out.match(/"mst"\s*:\s*"([^"]+)"/);
+  return m ? m[1] : "";
 }
 
 async function requestLawService(mst) {
@@ -166,68 +166,116 @@ async function requestLawService(mst) {
   u.searchParams.set("OC", LAW_OC);
   u.searchParams.set("target", "eflaw");
   u.searchParams.set("type", "JSON");
-  u.searchParams.set("MST", mst); // ✅ MST로 고정
-  const sourceUrl = u.toString();
+  u.searchParams.set("MST", mst);
 
-  console.log(`- 요청(MST) ${sourceUrl}`);
-  const { status, url, text } = await fetchText(sourceUrl);
+  const { status, url, text } = await fetchText(u.toString());
 
   if (DEBUG_RAW) {
+    ensureDir(OUT_DIR);
     fs.writeFileSync(RAW_FILE, text, "utf-8");
-    console.log(`🧪 DEBUG_RAW=1 → raw 저장: ${RAW_FILE}`);
   }
 
   const data = safeJsonParse(text);
   if (!data) {
-    throw new Error(
-      `법제처 응답이 JSON이 아닙니다(status=${status}). 앞부분: ${text.slice(0, 120)}`
-    );
+    throw new Error(`법제처 응답 JSON 아님 status=${status}`);
   }
 
-  return { data, sourceUrl };
+  return { data, sourceUrl: url };
+}
+
+function buildInsertLine(r) {
+  return `
+INSERT INTO law_article (law_key, mst, article_no, title, body, source_url, updated_at)
+VALUES ('${escSql(r.law_key)}','${escSql(r.mst)}','${escSql(
+    r.article_no
+  )}','${escSql(r.title)}','${escSql(r.body)}','${escSql(
+    r.source_url
+  )}', datetime('now'))
+ON CONFLICT(law_key, mst, article_no)
+DO UPDATE SET
+  title=excluded.title,
+  body=excluded.body,
+  source_url=excluded.source_url,
+  updated_at=datetime('now');
+`;
+}
+
+function writeChunkedSQL(rows) {
+  ensureDir(PART_DIR);
+
+  for (const f of fs.readdirSync(PART_DIR)) {
+    if (f.endsWith(".sql")) fs.unlinkSync(path.join(PART_DIR, f));
+  }
+
+  const lines = rows.map(buildInsertLine);
+
+  const parts = [];
+  for (let i = 0; i < lines.length; i += SQL_CHUNK_SIZE) {
+    const filename = path.join(
+      PART_DIR,
+      `law_article_part_${String(parts.length + 1).padStart(3, "0")}.sql`
+    );
+    fs.writeFileSync(
+      filename,
+      lines.slice(i, i + SQL_CHUNK_SIZE).join("\n"),
+      "utf-8"
+    );
+    parts.push(filename);
+  }
+
+  return parts;
+}
+
+function applyPartsRemote(parts) {
+  for (const p of parts) {
+    execSync(`npx wrangler d1 execute ${DB_NAME} --file=${p} --remote`, {
+      stdio: "inherit",
+    });
+  }
 }
 
 async function run() {
-  ensureOutDir();
+  ensureDir(OUT_DIR);
 
-  if (!LAW_OC) throw new Error("LAW_OC가 비어있습니다. 예) LAW_OC=dudy3038");
-  if (!MST) throw new Error("LAW_ID(MST)가 비어있습니다. 예) LAW_ID=276925");
+  if (!LAW_OC) throw new Error("LAW_OC 비어있음");
+  if (!LAW_KEYS.length) throw new Error("LAW_KEYS 비어있음");
 
-  // ✅ LAW_KEY는 없으면 DB에서 mst로 찾아온다
-  const lawKey = resolveLawKeyFromDB(LAW_KEY_ENV, MST);
+  const dt = ON_DATE || todayISO();
+  const allRows = [];
 
-  console.log("📡 조문 원문 수집 시작 (v2: law_key + mst)");
-  console.log(`- law_key=${lawKey} mst=${MST} LIMIT=${LIMIT || "no-limit"}`);
+  for (const lawKey of LAW_KEYS) {
+    const mst = resolveLatestMstFromDB(lawKey, dt);
+    if (!mst) continue;
 
-  const { data, sourceUrl } = await requestLawService(MST);
-  const rawArticles = findArticlesArray(data);
+    const { data, sourceUrl } = await requestLawService(mst);
+    const raw = findArticlesArray(data);
 
-  let rows = normalizeArticles(rawArticles, lawKey, MST, sourceUrl);
-  if (Number.isFinite(LIMIT) && LIMIT > 0) rows = rows.slice(0, LIMIT);
+    let rows = normalizeArticles(raw, lawKey, mst, sourceUrl);
+    if (LIMIT > 0) rows = rows.slice(0, LIMIT);
 
-  console.log(`✔ 최종 조문 추출: ${rows.length}건`);
+    allRows.push(...rows);
+  }
 
-  fs.writeFileSync(DUMP_FILE, JSON.stringify(rows, null, 2), "utf-8");
-  console.log(`✔ dump 저장: ${DUMP_FILE}`);
-
-  const sql = buildInsertSQL(rows);
-  fs.writeFileSync(SQL_FILE, sql, "utf-8");
-  console.log(`✔ INSERT SQL 생성: ${SQL_FILE}`);
-
-  if (DRY_RUN) {
-    console.log("🧪 DRY_RUN=1 이라 DB 반영 생략");
+  if (!allRows.length) {
+    console.log("❌ 수집 결과 없음");
     return;
   }
 
-  console.log("📦 원격 D1에 INSERT 실행 (--remote)");
-  execSync(`npx wrangler d1 execute archi_law_db --file=${SQL_FILE} --remote`, {
-    stdio: "inherit",
-  });
+  const map = new Map();
+  for (const r of allRows) {
+    map.set(`${r.law_key}__${r.mst}__${r.article_no}`, r);
+  }
+  const uniqueRows = Array.from(map.values());
 
-  console.log("🎯 DB 반영 완료");
+  fs.writeFileSync(DUMP_FILE, JSON.stringify(uniqueRows, null, 2), "utf-8");
+
+  const parts = writeChunkedSQL(uniqueRows);
+  if (!DRY_RUN) applyPartsRemote(parts);
+
+  console.log("🎯 ingest 완료");
 }
 
 run().catch((e) => {
-  console.error("❌ ingest:articles 실패:", e?.message || e);
+  console.error("❌ ingest 실패:", e?.message || e);
   process.exitCode = 1;
 });

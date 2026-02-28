@@ -22,7 +22,7 @@
       align-items:center;
     }
 
-    input, textarea {
+    input, textarea, select {
       padding: 10px 12px;
       font-size: 14px;
       border: 1px solid rgba(0,0,0,.12);
@@ -31,7 +31,7 @@
       outline: none;
       width: 260px;
     }
-    input:focus, textarea:focus {
+    input:focus, textarea:focus, select:focus {
       border-color: rgba(59,130,246,.6);
       box-shadow: 0 0 0 4px rgba(59,130,246,.12);
     }
@@ -197,6 +197,89 @@
     }
     .readonly {
       background:#f7f9fc;
+    }
+
+    /* ===== ✅ 주차(수원시) STEP 패널 ===== */
+    details.parking-steps {
+      width: 100%;
+      border: 1px solid rgba(0,0,0,.10);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fbfcff;
+      margin-top: 10px;
+    }
+    details.parking-steps > summary{
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+      font-weight: 900;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:10px;
+    }
+    details.parking-steps > summary::-webkit-details-marker{ display:none; }
+
+    .steps-grid{
+      margin-top: 10px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+    .step-box{
+      background:#fff;
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .step-title{
+      font-weight: 900;
+      margin: 0 0 8px;
+      font-size: 13px;
+      color:#223;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:8px;
+    }
+    .step-desc{
+      margin: 0 0 10px;
+      font-size: 12px;
+      color:#556;
+      line-height: 1.4;
+    }
+    .step-row{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap: wrap;
+    }
+    .step-row input.mini { width: 160px; }
+    .step-row select { width: min(420px, 100%); flex: 1 1 320px; }
+    .parking-actions{
+      margin-top: 10px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap: wrap;
+    }
+    .parking-result{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background:#fff;
+      border: 1px solid rgba(0,0,0,.06);
+      color:#111;
+      font-size: 13px;
+      white-space: pre-wrap;
+      min-height: 44px;
+    }
+    .parking-warn{
+      color:#8a4b00;
+      font-weight: 800;
+      font-size: 12px;
+      margin-top: 6px;
     }
 
     /* =========================================================
@@ -434,16 +517,90 @@
       </div>
 
       <div class="row-label">주차대수</div>
-      <div class="row-field">
-        <span>법정</span>
-        <input id="parkLegal" class="mini" type="number" step="1" value="0" style="width:140px;" />
-        <span class="unit">대</span>
+      <div class="row-field" style="flex-direction:column; align-items:flex-start;">
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%;">
+          <span>법정</span>
+          <input id="parkLegal" class="mini" type="number" step="1" value="0" style="width:140px;" />
+          <span class="unit">대</span>
 
-        <span style="margin-left:10px;">계획</span>
-        <input id="parkPlan" class="mini" type="number" step="1" value="0" style="width:140px;" />
-        <span class="unit">대</span>
+          <span style="margin-left:10px;">계획</span>
+          <input id="parkPlan" class="mini" type="number" step="1" value="0" style="width:140px;" />
+          <span class="unit">대</span>
 
-        <input id="parkMemo" class="wide" placeholder="예: 공공업무시설/사회복지시설 (1대/200㎡) 등 메모" />
+          <span class="pill">수원시 기준 자동계산(아래 STEP)</span>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%;">
+          <input id="parkMemo" class="wide" placeholder="예: (자동계산 시) 기준식/근거/메모가 여기에 채워집니다." />
+        </div>
+
+        <!-- ✅ STEP 1~4: 수원시 주차 자동계산 UI -->
+        <details class="parking-steps" id="parkingSteps" open>
+          <summary>
+            <span>STEP 1~4 · 수원시 주차대수 자동계산</span>
+            <span class="pill">현재: 수원시 고정</span>
+          </summary>
+
+          <div class="steps-grid">
+            <div class="step-box">
+              <div class="step-title">
+                <span>STEP 1 · 지자체</span>
+                <span class="pill">고정</span>
+              </div>
+              <p class="step-desc">지금 단계는 <b>경기도 수원시</b> 기준만 먼저 완성합니다.</p>
+              <div class="step-row">
+                <input id="parkCity" class="wide readonly" value="경기도 수원시" readonly />
+              </div>
+              <div class="parking-warn">※ “수원시 조례 기준” 표 데이터는 다음 단계에서 DB로 넣고 바로 교체됩니다.</div>
+            </div>
+
+            <div class="step-box">
+              <div class="step-title">
+                <span>STEP 2 · 용도 선택</span>
+                <span class="pill">필수</span>
+              </div>
+              <p class="step-desc">주차 산정 용도를 선택하세요. (초기값은 임시 분류이며, 다음 단계에서 “조례 기준”으로 정교화)</p>
+              <div class="step-row">
+                <select id="parkUse">
+                  <option value="">용도 선택…</option>
+                  <option value="office">업무시설</option>
+                  <option value="neighborhood">근린생활시설</option>
+                  <option value="housing">공동주택</option>
+                  <option value="welfare">사회복지시설</option>
+                  <option value="retail">판매/영업시설</option>
+                  <option value="etc">기타</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="step-box">
+              <div class="step-title">
+                <span>STEP 3 · 면적/세대수 입력</span>
+                <span class="pill">필수</span>
+              </div>
+              <p class="step-desc">용도에 따라 기준값이 달라질 수 있어요. 우선은 <b>연면적(㎡)</b>을 기본으로 받습니다. (세대수/객실수 등은 다음 단계에서 추가)</p>
+              <div class="step-row">
+                <span>연면적</span>
+                <input id="parkBasisArea" class="mini" type="number" step="0.01" value="0" />
+                <span class="unit">㎡</span>
+                <button type="button" class="btn-mini" id="parkUseFaTotalBtn">연면적(계) 자동연동</button>
+              </div>
+            </div>
+
+            <div class="step-box">
+              <div class="step-title">
+                <span>STEP 4 · 자동 계산</span>
+                <span class="pill">결과</span>
+              </div>
+              <p class="step-desc">버튼을 누르면 <b>법정 주차대수</b>와 <b>메모</b>가 위 입력칸(법정/메모)에 자동 반영됩니다.</p>
+              <div class="parking-actions">
+                <button type="button" id="parkCalcBtn">주차대수 자동계산</button>
+                <button type="button" class="btn-mini" id="parkResetBtn">초기화</button>
+              </div>
+              <div class="parking-result" id="parkResultBox">대기중…</div>
+            </div>
+          </div>
+        </details>
       </div>
 
       <div class="row-label">조경면적</div>
@@ -778,6 +935,56 @@ async function loadRuleFromDB(itemName){
 })();
 
 /* =========================
+   ✅ (새) 수원시 주차 STEP UI - 이벤트만 연결(로직은 public/script.js에서 구현)
+   - ⚠️ 주의: 이 페이지의 initParkingSteps는 "임시 안내"만 했던 과거 코드.
+   - 이제 public/script.js가 실제 계산을 담당하므로, 충돌 방지를 위해 이 블록은 비활성화.
+========================= */
+/*
+(function initParkingSteps(){
+  const $ = (id) => document.getElementById(id);
+
+  // 연면적(계) 자동연동 버튼: faTotal → parkBasisArea
+  const btnUseFaTotal = $("parkUseFaTotalBtn");
+  if (btnUseFaTotal) {
+    btnUseFaTotal.addEventListener("click", () => {
+      const faTotal = Number($("faTotal")?.value || 0);
+      $("parkBasisArea").value = Number.isFinite(faTotal) ? faTotal : 0;
+    });
+  }
+
+  // 임시 동작: 계산 버튼 누르면 “아직 로직 없음” 표시
+  const btnCalc = $("parkCalcBtn");
+  if (btnCalc) {
+    btnCalc.addEventListener("click", () => {
+      const city = $("parkCity")?.value || "경기도 수원시";
+      const use = $("parkUse")?.value || "";
+      const area = Number($("parkBasisArea")?.value || 0);
+
+      const msg = [
+        `[${city}] 주차 자동계산 준비중`,
+        `- 용도: ${use || "(미선택)"}`,
+        `- 연면적: ${Number.isFinite(area) ? area : 0} ㎡`,
+        ``,
+        `다음 단계에서: public/script.js에 “수원시 조례 기준” 계산 로직을 넣고`,
+        `→ parkLegal / parkMemo 자동 채움까지 완성합니다.`
+      ].join("\n");
+
+      $("parkResultBox").textContent = msg;
+    });
+  }
+
+  const btnReset = $("parkResetBtn");
+  if (btnReset) {
+    btnReset.addEventListener("click", () => {
+      $("parkUse").value = "";
+      $("parkBasisArea").value = 0;
+      $("parkResultBox").textContent = "대기중…";
+    });
+  }
+})();
+*/
+
+/* =========================
    대지면적 > 지번/공부상면적 (그대로)
 ========================= */
 function round2(n) {
@@ -919,6 +1126,9 @@ function recalcBuildingOverview(){
   recalcBuildingOverview();
 })();
 </script>
+
+<!-- ✅ NEW: 외부 스크립트 로드 (수원시 주차 자동계산 실제 로직) -->
+<script src="/script.js"></script>
 
 </body>
 </html>
