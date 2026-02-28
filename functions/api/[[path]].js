@@ -108,10 +108,9 @@ async function upsertLawArticles(DB, { lawKey, mst, sourceUrl, articles }) {
 }
 
 // =========================================================
-// ✅ NEW: 주차(법정) 계산 입력 연결용(1단계)
-// - 지금은 "조례/지자체 기준 DB"가 없으므로 계산하지 않음
-// - 대신, 프론트에서 보낸 입력값(시도/시군구 + 용도별 면적)이
-//   서버까지 잘 도착하는지 검증/정규화해서 반환
+// ✅ 주차(법정) 계산 입력 연결용(1단계)
+// - 아직 조례/기준 DB가 없으므로 "테스트 더미 산정"을 반환해서
+//   프론트의 parkLegal이 실제로 변하는지 검증한다.
 // =========================================================
 function normalizeParkingPayload(body) {
   const jurisdiction = body?.jurisdiction || {};
@@ -145,7 +144,7 @@ export async function onRequest(context) {
       return json({ ok: true });
     }
 
-    // ✅ NEW: GET /api/rules/tree?topic=coverage
+    // GET /api/rules/tree?topic=coverage
     if (request.method === "GET" && path === "rules/tree") {
       const topic = url.searchParams.get("topic") || "";
       const onDate = url.searchParams.get("onDate") || ""; // optional: YYYY-MM-DD
@@ -159,7 +158,7 @@ export async function onRequest(context) {
       return json({ ok: true, topic, tree });
     }
 
-    // ✅ 개선: GET /api/law/meta/search?q=건축&onDate=2026-02-27
+    // GET /api/law/meta/search?q=건축&onDate=2026-02-27
     if (request.method === "GET" && path === "law/meta/search") {
       const q = url.searchParams.get("q") || "";
       const onDate = url.searchParams.get("onDate") || "";
@@ -178,7 +177,6 @@ export async function onRequest(context) {
       return json({ ok: true, q, lawId, limit, rows });
     }
 
-    // ✅ 단건 조회(권장)
     // GET /api/law/article/get?lawId=276925&articleNo=제34조
     if (request.method === "GET" && path === "law/article/get") {
       const lawId = url.searchParams.get("lawId") || ""; // mst
@@ -190,7 +188,7 @@ export async function onRequest(context) {
       return json({ ok: true, row });
     }
 
-    // ✅ 기존 호환 유지
+    // 기존 호환 유지
     if (request.method === "GET" && path === "law/article") {
       const lawId = url.searchParams.get("lawId") || ""; // mst
       const articleNo = url.searchParams.get("articleNo") || "";
@@ -201,7 +199,6 @@ export async function onRequest(context) {
       return json({ ok: true, row });
     }
 
-    // ✅ NEW: 전조문 자동수집(Workers에서 실행)
     // POST /api/law/ingest
     if (request.method === "POST" && path === "law/ingest") {
       const body = await request.json().catch(() => ({}));
@@ -218,13 +215,11 @@ export async function onRequest(context) {
       let mst = (body.mst || "").toString().trim();
       const onDate = (body.onDate || "").toString().trim() || ""; // optional
 
-      // mst만 오면 law_key 역조회
       if (!lawKey && mst) {
         lawKey = await getLawKeyByMst(env.DB, mst);
       }
 
       if (!mst) {
-        // lawKey 기준 최신 시행 mst 선택
         if (!lawKey) {
           return json({ ok: false, error: "MISSING_PARAMS", need: ["lawKey or mst"] }, 400);
         }
@@ -267,8 +262,9 @@ export async function onRequest(context) {
     }
 
     // =========================================================
-    // ✅ NEW: 주차(법정) - 건축개요 기반 입력 연결 엔드포인트
+    // ✅ 주차(법정) - 건축개요 기반 입력 연결 엔드포인트
     // POST /api/parking/legal
+    // - 현재는 WIRED_ONLY 이지만, 프론트가 갱신되도록 legalCount/formula 제공
     // =========================================================
     if (request.method === "POST" && path === "parking/legal") {
       const body = await request.json().catch(() => ({}));
@@ -293,24 +289,33 @@ export async function onRequest(context) {
         payload.usageAreas.reduce((acc, x) => acc + (Number(x.area_m2) || 0), 0) * 100
       ) / 100;
 
-      // ⚠️ 아직 지자체 조례/기준 DB 미연결: 계산은 다음 단계
-      // ✅ 프론트 호환을 위해 legalCount / formula 키를 미리 반환
+      // ✅ 테스트 더미 산정 (지자체 DB 붙이면 교체)
+      // - 지금 단계 목표: "법정 값이 UI에 반영되는지" 확인
+      // - 규칙: ceil(totalArea_m2 / 1000), 최소 1대
+      const legalCount = Math.max(1, Math.ceil(totalArea / 1000));
+      const formula = `TEST MODE(WIRED_ONLY): ceil(totalArea_m2 / 1000), 최소 1대 (총면적=${totalArea}㎡)`;
+
       return json({
         ok: true,
         mode: "WIRED_ONLY",
-        message:
-          "주차 법정대수 산정 기준(지자체 조례/부설주차장 설치기준) DB가 아직 연결되지 않아 계산은 보류합니다. 입력(지자체/용도별면적)은 정상 수신되었습니다.",
         jurisdiction: payload.jurisdiction,
         primaryUse: payload.primaryUse || null,
         usageAreas: payload.usageAreas,
         totalArea_m2: totalArea,
 
-        // ✅ 프론트(index.html)에서 기대하는 키
-        legalCount: null,
-        formula: "",
+        // ✅ 프론트(index.html)가 기대하는 키
+        legalCount,
+        formula,
 
-        // 다음 단계에서 조문/조례 링크 넣기
+        // ✅ (기존/향후 호환용) 남겨둠
+        legalParking: legalCount,
+        message:
+          "현재는 조례/부설주차장 설치기준 DB가 없어 테스트 산정값을 반환합니다. 다음 단계에서 지자체 기준 DB 연결 후 실제 산정으로 교체됩니다.",
         refs: [],
+
+        debug: {
+          receivedUsageAreasCount: payload.usageAreas.length,
+        },
       });
     }
 
