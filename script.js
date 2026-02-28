@@ -1,11 +1,9 @@
 // public/script.js (FULL REPLACE)
-// 이번 턴 반영:
-// 1) 대지위치: "지자체/주소기반/안내문구" 삭제 (index에서 제거)
-// 2) "직접수정/법정동/수동기입칸" 삭제 → script도 해당 요소 의존 제거
-// 3) 주소(siteAddr)는 readonly, 아래 입력(시도/시군구/행정동/상세주소)로 자동 합성
-// 4) 경기도 수원시는 '구'까지 포함(예: 수원시 팔달구)
-// 5) X표시 문구 삭제는 index에서 처리
-// 6) +행추가/+층추가 동작 보장: 초기 부팅 에러(함수 호출 순서) 제거
+// 이번 턴 반영(요청한 것만, 주차 토픽 설계용):
+// 1) parkResultBox에 자동으로 문구를 쓰는 placeholder 로직 제거(1번 이미지 문구 재등장 방지)
+// 2) 주차 법정대수 산정 입력값을 "건축개요 UI"에서 가져올 수 있게 전역 getter 제공
+//    - 지자체: 시도/시군구 (jurisSidoSelect, jurisSigunguSelect)
+//    - 용도/면적: 용도별면적개요(_usageRows)
 
 (() => {
     const $ = (id) => document.getElementById(id);
@@ -47,9 +45,9 @@
       "울산광역시": ["중구","남구","동구","북구","울주군"],
       "세종특별자치시": ["세종시"],
       "경기도": [
-        // ✅ 수원시: 구 포함 (요청사항)
+        // ✅ 수원시: 구 포함
         "수원시 장안구","수원시 권선구","수원시 팔달구","수원시 영통구",
-        // 나머지는 시 단위(필요시 추후 구 단위 확장)
+        // 나머지 시 단위
         "성남시","용인시","고양시","화성시","부천시","남양주시","안산시","안양시","평택시","시흥시","김포시","파주시","의정부시","광주시","하남시","광명시","군포시","오산시","양주시",
         "이천시","안성시","구리시","포천시","의왕시","여주시","동두천시","과천시","가평군","양평군","연천군"
       ],
@@ -86,7 +84,7 @@
     }
   
     // =========================================================
-    // D) 주소 자동 합성 (요청사항 3)
+    // D) 주소 자동 합성
     // siteAddr = `${시도} ${시군구} ${행정동} ${상세주소}` (빈값 제외)
     // =========================================================
     function bindJurisComposeAddr() {
@@ -139,7 +137,6 @@
     // E) 용도(추가/삭제/주용도) + 최소 1개 유지
     // =========================================================
     const _uses = []; // [{id,label}]
-    // ✅ 부팅 순서 문제 방지용: 먼저 안전하게 선언
     window.refreshUsageAreaRowsUseOptions = window.refreshUsageAreaRowsUseOptions || function () {};
   
     function bindUses() {
@@ -213,7 +210,7 @@
     }
   
     // =========================================================
-    // F) 용도별면적개요 (+행추가 동작 보장)
+    // F) 용도별면적개요
     // =========================================================
     const _usageRows = []; // {id,use,area,note}
   
@@ -291,7 +288,6 @@
         render();
       }
   
-      // ✅ bindUses에서 호출하는 함수 정의(부팅 순서 안전)
       window.refreshUsageAreaRowsUseOptions = function () {
         render();
       };
@@ -304,7 +300,6 @@
   
     // =========================================================
     // G) 층별면적개요 (+층추가 동작 보장) + 자동정렬 + 합계 연동
-    // 정렬: 옥탑 → 지상(높은층→낮은층) → 지하(낮은층→높은층)
     // =========================================================
     const _floors = []; // {id,type:'roof'|'above'|'below', no:number|null, area, use, structure}
   
@@ -356,7 +351,6 @@
         _floors.forEach(f => {
           const tr = document.createElement("tr");
   
-          // 구분(층): 타입+층수
           const tdKind = document.createElement("td");
           const wrap = document.createElement("div");
           wrap.style.display = "flex";
@@ -416,7 +410,6 @@
           wrap.appendChild(badge);
           tdKind.appendChild(wrap);
   
-          // 면적
           const tdArea = document.createElement("td");
           const inpA = document.createElement("input");
           inpA.type = "number";
@@ -426,7 +419,6 @@
           inpA.addEventListener("blur", () => { inpA.value = format2(inpA.value); f.area = inpA.value; calcFloorSums(); });
           tdArea.appendChild(inpA);
   
-          // 주용도(수동)
           const tdUse = document.createElement("td");
           const inpU = document.createElement("input");
           inpU.placeholder = "예: 도서관";
@@ -434,7 +426,6 @@
           inpU.addEventListener("input", () => { f.use = inpU.value; });
           tdUse.appendChild(inpU);
   
-          // 구조(수동)
           const tdStr = document.createElement("td");
           const inpS = document.createElement("input");
           inpS.placeholder = "예: 철근콘크리트조";
@@ -442,7 +433,6 @@
           inpS.addEventListener("input", () => { f.structure = inpS.value; });
           tdStr.appendChild(inpS);
   
-          // 삭제
           const tdDel = document.createElement("td");
           const del = document.createElement("button");
           del.type = "button";
@@ -483,7 +473,6 @@
   
       btnAdd.addEventListener("click", addFloor);
   
-      // 초기 1개
       addFloor();
     }
   
@@ -528,30 +517,60 @@
     }
   
     // =========================================================
-    // I) 주차 영역(이번 단계는 placeholder만)
+    // ✅ 주차 토픽 설계용: "건축개요 값"을 그대로 가져가는 전역 getter
+    // - 다음 단계(주차 법정대수 자동계산)가 이 함수만 보면 됨
     // =========================================================
-    function bindParkingPlaceholder() {
+    function getParkingTopicPayload() {
+      const sido = String($("jurisSidoSelect")?.value || "").trim();
+      const sigungu = String($("jurisSigunguSelect")?.value || "").trim();
+  
+      const usageAreas = _usageRows
+        .map(r => ({
+          use: String(r.use || "").trim(),
+          area_m2: round2(r.area),
+        }))
+        .filter(x => x.use && x.area_m2 > 0);
+  
+      const primaryUse = String($("primaryUseSelect")?.value || "").trim();
+  
+      return {
+        jurisdiction: { sido, sigungu },
+        usageAreas,          // ✅ 3번 이미지의 "용도별면적개요" 그대로
+        primaryUse,
+        totals: {
+          faTotal_m2: round2($("faTotal")?.value),
+          faAbove_m2: round2($("faAbove")?.value),
+          faBelow_m2: round2($("faBelow")?.value),
+          parkingArea_m2: round2($("parkingArea")?.value),
+        },
+      };
+    }
+    window.__getParkingTopicPayload = getParkingTopicPayload;
+  
+    // =========================================================
+    // ✅ (중요) 주차 영역 자동 문구 주입 제거
+    // - index.html에서 문구를 지워도 script가 다시 쓰지 않도록 함
+    // =========================================================
+    function clearParkingBoxOnBoot() {
       const box = $("parkResultBox");
       if (!box) return;
-      if (!box.textContent || box.textContent.trim() === "대기중…") {
-        box.textContent = [
-          "이번 단계에서는 ‘건축개요 UI(대지위치/용도/연면적)’ 정리가 우선입니다.",
-          "주차 자동계산은 다음 단계에서 다시 연결합니다."
-        ].join("\n");
-      }
+      // 어떤 경우든 "자동 안내 문구"는 넣지 않음
+      if (box.textContent) box.textContent = "";
     }
   
     // ---------- BOOT ----------
     function boot() {
       bindJurisComposeAddr();
   
-      // ✅ 순서 중요: usage table이 refresh 함수를 먼저 준비 → uses가 호출해도 안전
+      // 순서 중요
       bindUsageAreaTable();
       bindUses();
   
       bindFloorTable();
       bindBuildingOverviewInputs();
-      bindParkingPlaceholder();
+  
+      // ✅ 주차 박스는 무조건 비움(문구 재등장 방지)
+      clearParkingBoxOnBoot();
     }
   
     if (document.readyState === "loading") {
