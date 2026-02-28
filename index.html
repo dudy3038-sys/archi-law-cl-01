@@ -92,6 +92,7 @@
     .wide{width:min(720px,100%);flex:1 1 520px}
     .mini{width:180px;text-align:right}
     .readonly{background:#f7f9fc}
+
     .btn-mini{
       padding:8px 10px;border-radius:10px;font-size:12px;
       border:1px solid rgba(0,0,0,.12);
@@ -132,7 +133,7 @@
     .parcels-table th{background:#f7f9ff;font-weight:900}
     .parcels-table td:last-child,.parcels-table th:last-child{width:88px;text-align:center}
 
-    /* 지자체/주소 - 가로 폭 줄이기 */
+    /* 지자체/주소: 폭 더 줄임(요청사항) */
     .juris-wrap{
       width:100%;
       border:1px solid rgba(0,0,0,.10);
@@ -143,9 +144,6 @@
       flex-direction:column;
       gap:10px;
     }
-    .juris-head{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-    }
     .juris-grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -155,10 +153,8 @@
     }
     .juris-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .juris-row label{font-size:12px;font-weight:900;color:#223;min-width:56px}
-    .juris-row select,.juris-row input{width: 240px} /* ✅ 기존 대비 줄임 */
-    .juris-row input.short{width: 240px}
+    .juris-row select,.juris-row input{width: 180px} /* ✅ 더 줄임 */
     .juris-row input.detail{width: min(740px,100%); flex:1 1 420px}
-    .juris-help{font-size:12px;color:#556;line-height:1.4}
 
     /* 용도(주용도) - 칩 + 추가 */
     .use-wrap{
@@ -180,9 +176,7 @@
       border:1px solid rgba(0,0,0,.10);
       background:#fff;font-weight:800;font-size:13px;
     }
-    .chip2 button{
-      padding:4px 8px;border-radius:999px;font-size:12px;
-    }
+    .chip2 button{padding:4px 8px;border-radius:999px;font-size:12px}
 
     /* 연면적: 용도별/층별 테이블 */
     .subsection-title{
@@ -205,12 +199,8 @@
       vertical-align:middle;
     }
     .table th{background:#f7f9ff;font-weight:900}
-    .table td .mini{width:160px}
     .table td input, .table td select{width:100%}
-    .table tfoot td{
-      background:#fbfcff;
-      font-weight:900;
-    }
+    .table tfoot td{background:#fbfcff;font-weight:900}
   </style>
 </head>
 
@@ -241,22 +231,14 @@
 
       <div class="row-label">대지위치</div>
       <div class="row-field" style="flex-direction:column;align-items:flex-start;">
-        <!-- ✅ 큰 프레임 삭제: 단일 주소 입력 + 지자체 자동표시 + 상세주소 -->
+        <!-- ✅ (요청 반영)
+             - '지자체/주소기반/안내문구' 삭제
+             - '직접수정/법정동' 삭제
+             - 주소칸(siteAddr)은 아래 입력값으로 자동 합성(스크립트) + readonly -->
         <div class="juris-wrap">
-          <div class="juris-head">
-            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-              <span class="pill">지자체(시/군/구/법정동/행정동) 자동표시</span>
-              <span class="pill">주소 기반</span>
-            </div>
-            <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:900;color:#223;">
-              <input type="checkbox" id="jurisOverride" />
-              직접 수정
-            </label>
-          </div>
-
           <div class="juris-row">
             <label>주소</label>
-            <input id="siteAddr" class="detail" placeholder="예: 경기도 수원시 팔달구 인계동 123-4" />
+            <input id="siteAddr" class="detail readonly" readonly placeholder="시도/시군구/행정동/상세주소 입력 시 자동 작성됩니다." />
           </div>
 
           <div class="juris-grid">
@@ -276,23 +258,18 @@
 
             <div class="juris-row">
               <label>행정동</label>
-              <input id="jurisAdminDong" class="short" placeholder="수동 입력 (예: 인계동)" />
+              <input id="jurisAdminDong" placeholder="예: 인계동" />
             </div>
 
             <div class="juris-row">
-              <label>법정동</label>
-              <input id="jurisLegalDong" class="short" placeholder="수동 입력 (예: 인계동)" />
+              <label></label>
+              <span class="pill">※ 수원시는 ‘구’ 포함 선택 가능</span>
             </div>
           </div>
 
           <div class="juris-row">
             <label>상세주소</label>
-            <input id="addrDetail" class="detail" placeholder="예: ○○로 12, 3층 / (번지 이후 상세) 수동 입력" />
-          </div>
-
-          <div class="juris-help">
-            - 목적: <b>주차/조례/지구단위</b> 등 “지자체 기준” 오류를 줄이기 위해 <b>고정 필드</b>로 둡니다.<br/>
-            - 시도/시군구는 선택형, 행정동/법정동/상세주소는 <b>수동 보정</b> 가능하게 둡니다.
+            <input id="addrDetail" class="detail" placeholder="예: ○○로 12, 3층 / 번지 이후 상세 수동 입력" />
           </div>
         </div>
       </div>
@@ -356,10 +333,6 @@
               <option value="">(용도 1개 이상 추가 필요)</option>
             </select>
           </div>
-
-          <div style="font-size:12px;color:#556;">
-            - “+ 용도 추가”로 복수 선택 가능, <b>최소 1개는 반드시 유지</b>됩니다.
-          </div>
         </div>
       </div>
 
@@ -393,8 +366,6 @@
           <span style="margin-left:10px;">주차장면적</span>
           <input id="parkingArea" class="mini" type="number" step="0.01" value="0" style="width:160px;" />
           <span class="unit">㎡</span>
-
-          <span class="pill">층별면적개요 합계와 자동 연동</span>
         </div>
 
         <div class="subsection-title">■ 용도별면적개요</div>
@@ -412,7 +383,6 @@
             <tr>
               <td colspan="4">
                 <button type="button" class="btn-mini" id="addUsageAreaBtn">+ 행 추가</button>
-                <span class="pill" style="margin-left:10px;">면적은 소수점 2자리 반올림</span>
                 <span class="pill" style="margin-left:10px;">소계: <span id="usageAreaSum">0.00</span> ㎡</span>
               </td>
             </tr>
@@ -435,9 +405,6 @@
             <tr>
               <td colspan="5">
                 <button type="button" class="btn-mini" id="addFloorBtn">+ 층추가</button>
-                <span class="pill" style="margin-left:10px;">
-                  정렬: <b>옥탑</b> → <b>지상(높은층→낮은층)</b> → <b>지하(낮은층→높은층)</b>
-                </span>
               </td>
             </tr>
           </tfoot>
@@ -453,8 +420,6 @@
         <span style="margin-left:10px;">계획</span>
         <input id="covPlan" class="mini readonly" type="number" step="0.01" value="0" style="width:140px;" readonly />
         <span class="unit">%</span>
-
-        <span class="pill">계획 = (건축면적 ÷ 대지면적)×100</span>
       </div>
 
       <div class="row-label">용적률</div>
@@ -466,11 +431,8 @@
         <span style="margin-left:10px;">계획</span>
         <input id="farPlan" class="mini readonly" type="number" step="0.01" value="0" style="width:140px;" readonly />
         <span class="unit">%</span>
-
-        <span class="pill">계획 = (연면적계 ÷ 대지면적)×100</span>
       </div>
 
-      <!-- ✅ 주차대수는 “나중에 다시 보기” 요청이라, STEP 패널/큰 박스는 여기서 제거(최소 UI만 유지) -->
       <div class="row-label">주차대수</div>
       <div class="row-field" style="flex-direction:column;align-items:flex-start;">
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%;">
@@ -481,8 +443,6 @@
           <span style="margin-left:10px;">계획</span>
           <input id="parkPlan" class="mini" type="number" step="1" value="0" style="width:140px;" />
           <span class="unit">대</span>
-
-          <span class="pill">※ 주차 자동계산은 다음 단계에서 다시 연결</span>
         </div>
         <input id="parkMemo" class="wide" placeholder="예: (자동계산 시) 기준식/근거/메모" />
         <div id="parkResultBox" class="detail" style="display:block; margin:0; padding:12px; border-radius:12px; width:100%; box-shadow:none; border:1px solid rgba(0,0,0,.06);">
@@ -503,8 +463,6 @@
         <span style="margin-left:10px;">(비율)</span>
         <input id="landRatio" class="mini readonly" type="number" step="0.01" value="0" style="width:140px;" readonly />
         <span class="unit">%</span>
-
-        <span class="pill">비율 = (조경(계획) ÷ 대지면적)×100</span>
       </div>
 
       <div class="row-label">공개공지</div>
@@ -530,9 +488,6 @@
 
   <hr class="sep"/>
 
-  <!-- =========================
-       🌳 법규 트리 (기존 유지)
-  ========================== -->
   <section id="ruleTree">
     <div class="section-title">🌳 법규 트리</div>
     <p class="hint">* 지금은 <b>법/시행령/시행규칙</b>만 DB에서 자동 채움합니다. (조례/지구단위계획은 나중)</p>
@@ -545,9 +500,6 @@
   </section>
 
   <script>
-    /* =========================
-       조문 검색 (그대로)
-    ========================= */
     async function search() {
       const q = document.getElementById("keyword").value.trim();
       const lawId = document.getElementById("lawId").value.trim();
@@ -605,9 +557,6 @@
         .replace(/>/g, "&gt;");
     }
 
-    /* =========================
-       대지면적 > 지번/공부상면적 (그대로)
-    ========================= */
     function round2(n){
       const x = Number(n);
       if(!Number.isFinite(x)) return 0;
@@ -625,7 +574,6 @@
       });
       sum = round2(sum);
       document.getElementById("siteArea").value = format2(sum);
-      // 나머지 계산은 /script.js에서 처리
       if (window.__recalcBuildingOverview) window.__recalcBuildingOverview();
     }
 
@@ -682,7 +630,6 @@
     })();
   </script>
 
-  <!-- ✅ 핵심 UI 로직: 분리된 외부 스크립트 -->
   <script src="/script.js"></script>
 </body>
 </html>

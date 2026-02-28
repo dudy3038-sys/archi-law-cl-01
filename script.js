@@ -1,15 +1,11 @@
 // public/script.js (FULL REPLACE)
-// 목적(이번 턴 범위):
-// 1) index.html 길이/복잡도 감소: 주요 UI 동작을 여기로 이동
-// 2) 대지위치: 큰 프레임 제거(이미 index에서 제거 완료)
-// 3) 지자체: 시도/시군구 = 선택형(전국), 행정동/법정동/상세주소 = 수동 입력
-//    + "직접 수정" 토글(자동 파싱 덮어쓰기 방지)
-// 4) 용도: 별표1 '주용도' 카테고리만 선택 가능 + 추가/삭제 + 최소 1개 유지 + 주용도 지정
-// 5) 연면적: 용도별면적개요(행 추가/삭제/합계), 층별면적개요(층추가/정렬/합계)
-// 6) 층별 합계가 연면적(지상/지하/계)와 자동 연동되며, 하단 합계행은 제거(이미 index에서 제거)
-//
-// 주차대수(자동계산)는 "다음 단계"에서 다시 보기로 했으므로
-// - 이번 파일에선 parkResultBox 안내만 유지 (UI 없으면 스킵)
+// 이번 턴 반영:
+// 1) 대지위치: "지자체/주소기반/안내문구" 삭제 (index에서 제거)
+// 2) "직접수정/법정동/수동기입칸" 삭제 → script도 해당 요소 의존 제거
+// 3) 주소(siteAddr)는 readonly, 아래 입력(시도/시군구/행정동/상세주소)로 자동 합성
+// 4) 경기도 수원시는 '구'까지 포함(예: 수원시 팔달구)
+// 5) X표시 문구 삭제는 index에서 처리
+// 6) +행추가/+층추가 동작 보장: 초기 부팅 에러(함수 호출 순서) 제거
 
 (() => {
     const $ = (id) => document.getElementById(id);
@@ -31,38 +27,16 @@
       if (!el) return;
       el.value = format2(value);
     }
-    function setText(id, text) {
-      const el = $(id);
-      if (!el) return;
-      el.textContent = text ?? "";
-    }
   
     // =========================================================
-    // A) 시도/시군구 선택 데이터 (전국)
-    // - 정확한 "행정동/법정동" 코드는 다음 단계에서 API/코드로 확정 권장
+    // A) 시도/시군구(전국 + 수원시 구 포함)
     // =========================================================
     const SIDO = [
-      "서울특별시",
-      "부산광역시",
-      "대구광역시",
-      "인천광역시",
-      "광주광역시",
-      "대전광역시",
-      "울산광역시",
-      "세종특별자치시",
-      "경기도",
-      "강원특별자치도",
-      "충청북도",
-      "충청남도",
-      "전북특별자치도",
-      "전라남도",
-      "경상북도",
-      "경상남도",
-      "제주특별자치도",
+      "서울특별시","부산광역시","대구광역시","인천광역시","광주광역시","대전광역시","울산광역시",
+      "세종특별자치시","경기도","강원특별자치도","충청북도","충청남도","전북특별자치도","전라남도",
+      "경상북도","경상남도","제주특별자치도",
     ];
   
-    // ✅ 시군구 목록(대표/실무용: 누락 최소화 버전)
-    // 필요하면 나중에 “공식 코드 API”로 완전 자동화 가능.
     const SIGUNGU = {
       "서울특별시": ["종로구","중구","용산구","성동구","광진구","동대문구","중랑구","성북구","강북구","도봉구","노원구","은평구","서대문구","마포구","양천구","강서구","구로구","금천구","영등포구","동작구","관악구","서초구","강남구","송파구","강동구"],
       "부산광역시": ["중구","서구","동구","영도구","부산진구","동래구","남구","북구","해운대구","사하구","금정구","강서구","연제구","수영구","사상구","기장군"],
@@ -73,7 +47,10 @@
       "울산광역시": ["중구","남구","동구","북구","울주군"],
       "세종특별자치시": ["세종시"],
       "경기도": [
-        "수원시","성남시","용인시","고양시","화성시","부천시","남양주시","안산시","안양시","평택시","시흥시","김포시","파주시","의정부시","광주시","하남시","광명시","군포시","오산시","양주시",
+        // ✅ 수원시: 구 포함 (요청사항)
+        "수원시 장안구","수원시 권선구","수원시 팔달구","수원시 영통구",
+        // 나머지는 시 단위(필요시 추후 구 단위 확장)
+        "성남시","용인시","고양시","화성시","부천시","남양주시","안산시","안양시","평택시","시흥시","김포시","파주시","의정부시","광주시","하남시","광명시","군포시","오산시","양주시",
         "이천시","안성시","구리시","포천시","의왕시","여주시","동두천시","과천시","가평군","양평군","연천군"
       ],
       "강원특별자치도": ["춘천시","원주시","강릉시","동해시","태백시","속초시","삼척시","홍천군","횡성군","영월군","평창군","정선군","철원군","화천군","양구군","인제군","고성군","양양군"],
@@ -87,172 +64,96 @@
     };
   
     // =========================================================
-    // B) 주용도(별표1) “대분류” (PDF 기반 29개)
-    // - 상세 소분류는 제외(요청사항)
+    // B) 주용도(별표1) 대분류만
     // =========================================================
     const MAIN_USES = [
-      "단독주택",
-      "공동주택",
-      "제1종 근린생활시설",
-      "제2종 근린생활시설",
-      "문화 및 집회시설",
-      "종교시설",
-      "판매시설",
-      "운수시설",
-      "의료시설",
-      "교육연구시설",
-      "노유자시설",
-      "수련시설",
-      "운동시설",
-      "업무시설",
-      "숙박시설",
-      "위락시설",
-      "공장",
-      "창고시설",
-      "위험물 저장 및 처리 시설",
-      "자동차 관련 시설",
-      "동물 및 식물 관련 시설",
-      "자원순환 관련 시설",
-      "교정 및 군사 시설",
-      "국방·군사시설",
-      "방송통신시설",
-      "발전시설",
-      "묘지 관련 시설",
-      "관광 휴게시설",
-      "장례시설",
-      "야영장 시설",
+      "단독주택","공동주택","제1종 근린생활시설","제2종 근린생활시설","문화 및 집회시설","종교시설",
+      "판매시설","운수시설","의료시설","교육연구시설","노유자시설","수련시설","운동시설","업무시설",
+      "숙박시설","위락시설","공장","창고시설","위험물 저장 및 처리 시설","자동차 관련 시설",
+      "동물 및 식물 관련 시설","자원순환 관련 시설","교정 및 군사 시설","국방·군사시설","방송통신시설",
+      "발전시설","묘지 관련 시설","관광 휴게시설","장례시설","야영장 시설",
     ];
   
     // =========================================================
-    // C) 지자체 UI 바인딩
+    // C) 유틸: ID
     // =========================================================
-    function bindJuris() {
-      const addrEl = $("siteAddr");
-      const sidoSel = $("jurisSidoSelect");
-      const sggSel = $("jurisSigunguSelect");
-      const adminDong = $("jurisAdminDong");
-      const legalDong = $("jurisLegalDong");
-      const override = $("jurisOverride");
-  
-      if (!addrEl || !sidoSel || !sggSel || !adminDong || !legalDong || !override) return;
-  
-      // populate sido
-      sidoSel.innerHTML = `<option value="">시도 선택…</option>` + SIDO.map(s => `<option value="${s}">${s}</option>`).join("");
-  
-      function populateSigungu(sido) {
-        const list = SIGUNGU[sido] || [];
-        sggSel.innerHTML = `<option value="">시군구 선택…</option>` + list.map(x => `<option value="${x}">${x}</option>`).join("");
+    function cryptoRandomId() {
+      try {
+        return crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+      } catch {
+        return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
       }
-  
-      function setDisabled(disabled) {
-        sidoSel.disabled = disabled;
-        sggSel.disabled = disabled;
-        // 동/상세는 원래 수동이므로 disabled 하지 않음 (요청사항)
-        addrEl.readOnly = disabled ? true : false;
-        addrEl.classList.toggle("readonly", disabled);
-      }
-  
-      // 주소에서 시도/시군구/동(대충) 파싱(1차)
-      function parseFromAddr(addrRaw) {
-        const addr = String(addrRaw || "").trim();
-        if (!addr) return { sido:"", sigungu:"", dong:"" };
-  
-        let sido = "";
-        for (const s of SIDO) {
-          if (addr.startsWith(s)) { sido = s; break; }
-        }
-        if (!sido) {
-          const first = addr.split(/\s+/)[0] || "";
-          const map = {
-            서울:"서울특별시", 부산:"부산광역시", 대구:"대구광역시", 인천:"인천광역시",
-            광주:"광주광역시", 대전:"대전광역시", 울산:"울산광역시", 세종:"세종특별자치시",
-            경기:"경기도", 강원:"강원특별자치도", 충북:"충청북도", 충남:"충청남도",
-            전북:"전북특별자치도", 전남:"전라남도", 경북:"경상북도", 경남:"경상남도", 제주:"제주특별자치도",
-          };
-          if (map[first]) sido = map[first];
-        }
-  
-        const tokens = addr.split(/\s+/).filter(Boolean);
-        let sigungu = "";
-        if (sido && SIGUNGU[sido]) {
-          // 목록에서 포함되는 시군구 찾기(최초 1개)
-          const list = SIGUNGU[sido];
-          sigungu = list.find(x => tokens.includes(x)) || "";
-          // 예: "수원시 팔달구" 케이스 보정(서울/부산 제외)
-          if (!sigungu) {
-            // 토큰 중 "OO시/군/구" 1개만이라도 가져오기
-            sigungu = tokens.find(t => /(시|군|구)$/.test(t) && t !== sido) || "";
-          }
-        } else {
-          sigungu = tokens.find(t => /(시|군|구)$/.test(t) && t !== sido) || "";
-        }
-  
-        let dong = "";
-        dong = tokens.find(t => /(동|읍|면|리)$/.test(t)) || "";
-  
-        return { sido, sigungu, dong };
-      }
-  
-      // override OFF일 때 주소로 자동 반영
-      let timer = null;
-      function autoApplyFromAddr() {
-        if (override.checked) return;
-        const { sido, sigungu, dong } = parseFromAddr(addrEl.value);
-        if (sido) {
-          sidoSel.value = sido;
-          populateSigungu(sido);
-        } else {
-          sidoSel.value = "";
-          populateSigungu("");
-        }
-        if (sigungu) sggSel.value = sigungu;
-  
-        // 동은 "초기 자동 힌트"만 넣고, 사용자가 수동 보정하는 흐름
-        if (!adminDong.value) adminDong.value = dong;
-        if (!legalDong.value) legalDong.value = dong;
-      }
-  
-      // events
-      sidoSel.addEventListener("change", () => {
-        populateSigungu(sidoSel.value);
-        // 시도 바꾸면 시군구 리셋
-        sggSel.value = "";
-      });
-  
-      addrEl.addEventListener("input", () => {
-        if (override.checked) return;
-        clearTimeout(timer);
-        timer = setTimeout(autoApplyFromAddr, 200);
-      });
-  
-      override.addEventListener("change", () => {
-        // 직접수정 ON: 주소 자동덮어쓰기 금지(입력만 막지 않고 그대로 두되, 자동반영만 끔)
-        setDisabled(false);
-        if (!override.checked) autoApplyFromAddr();
-      });
-  
-      // 초기 1회
-      populateSigungu("");
-      autoApplyFromAddr();
     }
   
     // =========================================================
-    // D) 용도(추가/삭제/주용도)
+    // D) 주소 자동 합성 (요청사항 3)
+    // siteAddr = `${시도} ${시군구} ${행정동} ${상세주소}` (빈값 제외)
+    // =========================================================
+    function bindJurisComposeAddr() {
+      const addrOut = $("siteAddr");
+      const sidoSel = $("jurisSidoSelect");
+      const sggSel = $("jurisSigunguSelect");
+      const adminDong = $("jurisAdminDong");
+      const detail = $("addrDetail");
+  
+      if (!addrOut || !sidoSel || !sggSel || !adminDong || !detail) return;
+  
+      // populate sido
+      sidoSel.innerHTML =
+        `<option value="">시도 선택…</option>` +
+        SIDO.map(s => `<option value="${s}">${s}</option>`).join("");
+  
+      function populateSigungu(sido) {
+        const list = SIGUNGU[sido] || [];
+        sggSel.innerHTML =
+          `<option value="">시군구 선택…</option>` +
+          list.map(x => `<option value="${x}">${x}</option>`).join("");
+      }
+  
+      function compose() {
+        const parts = [
+          String(sidoSel.value || "").trim(),
+          String(sggSel.value || "").trim(),
+          String(adminDong.value || "").trim(),
+          String(detail.value || "").trim(),
+        ].filter(Boolean);
+  
+        addrOut.value = parts.join(" ").replace(/\s+/g, " ").trim();
+      }
+  
+      sidoSel.addEventListener("change", () => {
+        populateSigungu(sidoSel.value);
+        sggSel.value = "";
+        compose();
+      });
+      sggSel.addEventListener("change", compose);
+      adminDong.addEventListener("input", compose);
+      detail.addEventListener("input", compose);
+  
+      // init
+      populateSigungu("");
+      compose();
+    }
+  
+    // =========================================================
+    // E) 용도(추가/삭제/주용도) + 최소 1개 유지
     // =========================================================
     const _uses = []; // [{id,label}]
+    // ✅ 부팅 순서 문제 방지용: 먼저 안전하게 선언
+    window.refreshUsageAreaRowsUseOptions = window.refreshUsageAreaRowsUseOptions || function () {};
+  
     function bindUses() {
       const pick = $("usePick");
       const addBtn = $("addUseBtn");
       const chips = $("useChips");
       const primarySel = $("primaryUseSelect");
-  
       if (!pick || !addBtn || !chips || !primarySel) return;
   
-      // populate pick
-      pick.innerHTML = `<option value="">주용도 선택…</option>` + MAIN_USES.map(u => `<option value="${u}">${u}</option>`).join("");
+      pick.innerHTML =
+        `<option value="">주용도 선택…</option>` +
+        MAIN_USES.map(u => `<option value="${u}">${u}</option>`).join("");
   
       function render() {
-        // chips
         chips.innerHTML = "";
         _uses.forEach(u => {
           const el = document.createElement("span");
@@ -266,24 +167,22 @@
   
         chips.querySelectorAll("button[data-id]").forEach(btn => {
           btn.addEventListener("click", () => {
-            const id = btn.getAttribute("data-id");
             if (_uses.length <= 1) {
               alert("용도는 최소 1개는 유지되어야 합니다.");
               return;
             }
+            const id = btn.getAttribute("data-id");
             const idx = _uses.findIndex(x => x.id === id);
             if (idx >= 0) _uses.splice(idx, 1);
-            // 주용도 유지
+  
             if (!_uses.some(x => x.label === primarySel.value)) {
               primarySel.value = _uses[0]?.label || "";
             }
             render();
-            // 용도별면적개요의 용도 셀렉트도 갱신
-            refreshUsageAreaRowsUseOptions();
+            window.refreshUsageAreaRowsUseOptions();
           });
         });
   
-        // primary select
         primarySel.innerHTML =
           _uses.length
             ? _uses.map(u => `<option value="${u.label}">${u.label}</option>`).join("")
@@ -300,7 +199,7 @@
         }
         _uses.push({ id: cryptoRandomId(), label });
         render();
-        refreshUsageAreaRowsUseOptions();
+        window.refreshUsageAreaRowsUseOptions();
       }
   
       addBtn.addEventListener("click", () => {
@@ -313,19 +212,11 @@
       addUse("업무시설");
     }
   
-    function cryptoRandomId() {
-      try {
-        return crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
-      } catch {
-        return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
-      }
-    }
-  
     // =========================================================
-    // E) 용도별면적개요 테이블
-    // - 용도는 선택(현재 추가된 용도 목록 내에서)
+    // F) 용도별면적개요 (+행추가 동작 보장)
     // =========================================================
     const _usageRows = []; // {id,use,area,note}
+  
     function bindUsageAreaTable() {
       const tbody = $("usageAreaTbody");
       const btnAdd = $("addUsageAreaBtn");
@@ -336,14 +227,7 @@
         let s = 0;
         _usageRows.forEach(r => s += n(r.area));
         sumEl.textContent = format2(s);
-        // (요청사항) 이 합계가 연면적계에 직접 반영되게 하진 않음:
-        // 연면적계는 "층별면적개요 합계"가 기준(더 안전).
       }
-  
-      window.refreshUsageAreaRowsUseOptions = function refreshUsageAreaRowsUseOptions() {
-        // 행들 다시 렌더해서 옵션 갱신
-        render();
-      };
   
       function render() {
         tbody.innerHTML = "";
@@ -352,7 +236,7 @@
   
           const tdUse = document.createElement("td");
           const sel = document.createElement("select");
-          const options = _uses.length ? _uses : [{label:"(용도 없음)"}];
+          const options = _uses.length ? _uses : [{ label: "(용도 없음)" }];
           sel.innerHTML = options.map(u => `<option value="${u.label}">${u.label}</option>`).join("");
           sel.value = r.use || (options[0]?.label || "");
           sel.addEventListener("change", () => { r.use = sel.value; });
@@ -407,6 +291,11 @@
         render();
       }
   
+      // ✅ bindUses에서 호출하는 함수 정의(부팅 순서 안전)
+      window.refreshUsageAreaRowsUseOptions = function () {
+        render();
+      };
+  
       btnAdd.addEventListener("click", addRow);
   
       // 초기 1행
@@ -414,9 +303,11 @@
     }
   
     // =========================================================
-    // F) 층별면적개요: 층추가 + 자동정렬 + 합계(지상/지하) → 연면적 연동
+    // G) 층별면적개요 (+층추가 동작 보장) + 자동정렬 + 합계 연동
+    // 정렬: 옥탑 → 지상(높은층→낮은층) → 지하(낮은층→높은층)
     // =========================================================
     const _floors = []; // {id,type:'roof'|'above'|'below', no:number|null, area, use, structure}
+  
     function bindFloorTable() {
       const tbody = $("floorTbody");
       const btnAdd = $("addFloorBtn");
@@ -430,17 +321,14 @@
   
       function sortFloors() {
         _floors.sort((a, b) => {
-          // order: roof(0), above(1), below(2)
           const rank = (x) => (x.type === "roof" ? 0 : x.type === "above" ? 1 : 2);
           const ra = rank(a), rb = rank(b);
           if (ra !== rb) return ra - rb;
   
-          // within above: high -> low
-          // within below: low -> high (지하1,2,3...)
           const na = n(a.no);
           const nb = n(b.no);
-          if (a.type === "above") return nb - na;
-          if (a.type === "below") return na - nb;
+          if (a.type === "above") return nb - na; // 높은층 먼저
+          if (a.type === "below") return na - nb; // 지하1,2,3...
           return 0;
         });
       }
@@ -458,7 +346,6 @@
         set2("faBelow", belowSum);
         set2("faTotal", aboveSum + belowSum);
   
-        // 건폐율/용적률 등 갱신
         recalcBuildingOverview();
       }
   
@@ -469,7 +356,7 @@
         _floors.forEach(f => {
           const tr = document.createElement("tr");
   
-          // 구분(층): 타입 선택 + 층수 입력(roof는 층수 숨김)
+          // 구분(층): 타입+층수
           const tdKind = document.createElement("td");
           const wrap = document.createElement("div");
           wrap.style.display = "flex";
@@ -508,7 +395,7 @@
           selType.addEventListener("change", () => {
             f.type = selType.value;
             syncNoVisibility();
-            render(); // 정렬 반영
+            render();
             calcFloorSums();
           });
   
@@ -520,7 +407,7 @@
             f.no = n(inpNo.value) || 1;
             inpNo.value = String(f.no);
             badge.textContent = floorLabel(f);
-            render(); // 정렬 반영
+            render();
             calcFloorSums();
           });
   
@@ -573,6 +460,7 @@
           tr.appendChild(tdArea);
           tr.appendChild(tdUse);
           tr.appendChild(tdStr);
+          tr.appendChild(tdDel);
           tbody.appendChild(tr);
   
           syncNoVisibility();
@@ -595,13 +483,12 @@
   
       btnAdd.addEventListener("click", addFloor);
   
-      // 초기: 지상1층 1개
+      // 초기 1개
       addFloor();
     }
   
     // =========================================================
-    // G) 건축개요 자동 계산(건폐율/용적률/조경비율)
-    // - faTotal은 "층별면적개요 합계"로 자동 채워짐
+    // H) 건축개요 자동 계산(건폐율/용적률/조경비율)
     // =========================================================
     function recalcBuildingOverview() {
       const site = n($("siteArea")?.value);
@@ -618,8 +505,6 @@
       const landRatio = site > 0 ? round2((landPlan / site) * 100) : 0;
       set2("landRatio", landRatio);
     }
-  
-    // index.html 인라인(지번 합계)에서 호출하는 훅
     window.__recalcBuildingOverview = recalcBuildingOverview;
   
     function bindBuildingOverviewInputs() {
@@ -634,7 +519,6 @@
         });
       });
   
-      // 주차장면적도 숫자 포맷만
       const p = $("parkingArea");
       if (p) {
         p.addEventListener("blur", () => { p.value = format2(p.value); });
@@ -644,15 +528,14 @@
     }
   
     // =========================================================
-    // H) (임시) 주차 영역 안내만 유지
+    // I) 주차 영역(이번 단계는 placeholder만)
     // =========================================================
     function bindParkingPlaceholder() {
       const box = $("parkResultBox");
       if (!box) return;
-      // 이번 단계는 주차 자동계산 제외
       if (!box.textContent || box.textContent.trim() === "대기중…") {
         box.textContent = [
-          "이번 단계에서는 ‘건축개요 UI(지자체/용도/연면적)’ 정리가 우선입니다.",
+          "이번 단계에서는 ‘건축개요 UI(대지위치/용도/연면적)’ 정리가 우선입니다.",
           "주차 자동계산은 다음 단계에서 다시 연결합니다."
         ].join("\n");
       }
@@ -660,9 +543,12 @@
   
     // ---------- BOOT ----------
     function boot() {
-      bindJuris();
-      bindUses();
+      bindJurisComposeAddr();
+  
+      // ✅ 순서 중요: usage table이 refresh 함수를 먼저 준비 → uses가 호출해도 안전
       bindUsageAreaTable();
+      bindUses();
+  
       bindFloorTable();
       bindBuildingOverviewInputs();
       bindParkingPlaceholder();
