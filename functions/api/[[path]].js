@@ -17,7 +17,12 @@ const LAW_SERVICE_URL = "http://www.law.go.kr/DRF/lawService.do";
 
 function pickArticlesFromLawServiceJson(data) {
   const root = data?.법령 || data?.Law || data?.law || data;
-  const jo = root?.조문 || root?.Jo || root?.articles || root?.article || root?.조문목록;
+  const jo =
+    root?.조문 ||
+    root?.Jo ||
+    root?.articles ||
+    root?.article ||
+    root?.조문목록;
   const units =
     jo?.조문단위 ||
     jo?.joList ||
@@ -30,12 +35,22 @@ function pickArticlesFromLawServiceJson(data) {
 }
 
 function normalizeArticleUnit(u) {
-  const articleNo =
-    (u?.조문번호 || u?.조문번호명 || u?.조문명 || u?.articleNo || u?.article_no || "").toString().trim();
-  const title =
-    (u?.조문제목 || u?.제목 || u?.title || u?.조문제목명 || "").toString().trim();
-  const body =
-    (u?.조문내용 || u?.내용 || u?.body || u?.text || u?.조문 || "").toString().trim();
+  const articleNo = (
+    u?.조문번호 ||
+    u?.조문번호명 ||
+    u?.조문명 ||
+    u?.articleNo ||
+    u?.article_no ||
+    ""
+  )
+    .toString()
+    .trim();
+  const title = (u?.조문제목 || u?.제목 || u?.title || u?.조문제목명 || "")
+    .toString()
+    .trim();
+  const body = (u?.조문내용 || u?.내용 || u?.body || u?.text || u?.조문 || "")
+    .toString()
+    .trim();
 
   if (!articleNo || !body) return null;
 
@@ -78,7 +93,9 @@ async function fetchLawServiceJson({ oc, mst }) {
 async function getLawKeyByMst(DB, mst) {
   const row = await DB.prepare(
     `SELECT law_key FROM law_version WHERE mst = ? LIMIT 1`
-  ).bind(String(mst)).first();
+  )
+    .bind(String(mst))
+    .first();
   return row?.law_key ? String(row.law_key) : "";
 }
 
@@ -108,9 +125,7 @@ async function upsertLawArticles(DB, { lawKey, mst, sourceUrl, articles }) {
 }
 
 // =========================================================
-// ✅ 주차(법정) 계산 입력 연결용(1단계)
-// - 아직 조례/기준 DB가 없으므로 "테스트 더미 산정"을 반환해서
-//   프론트의 parkLegal이 실제로 변하는지 검증한다.
+// ✅ 주차(법정) 계산 입력 연결용(현재는 still 테스트)
 // =========================================================
 function normalizeParkingPayload(body) {
   const jurisdiction = body?.jurisdiction || {};
@@ -133,17 +148,16 @@ function normalizeParkingPayload(body) {
 }
 
 // =========================================================
-// ✅ 크롤러 실행 유틸 (동적 import + 함수명 자동 탐색)
+// ✅ (핵심) 크롤러 실행 유틸: DB/OC/지자체 인자를 넘겨 "수집+저장" 가능하게
+// - parkingCrawler.js는 다음 형태를 권장:
+//   export async function runParkingCrawler({ db, oc, sido, sigungu, limit, debug }) { ... }
 // =========================================================
-async function runParkingCrawlerIndex({ limit, debug }) {
+async function runParkingCrawler({ env, input }) {
   const mod = await import("../../src/crawler/parkingCrawler.js");
 
-  // 흔히 쓸 법한 export 이름 후보들
   const candidates = [
-    "crawlParkingOrdinanceIndex",
-    "crawlParkingIndex",
-    "crawlIndex",
     "runParkingCrawler",
+    "crawlParkingOrdinanceIndex",
     "run",
     "main",
     "default",
@@ -151,30 +165,44 @@ async function runParkingCrawlerIndex({ limit, debug }) {
 
   let fn = null;
   for (const name of candidates) {
-    if (name === "default" && typeof mod?.default === "function") { fn = mod.default; break; }
-    if (typeof mod?.[name] === "function") { fn = mod[name]; break; }
+    if (name === "default" && typeof mod?.default === "function") {
+      fn = mod.default;
+      break;
+    }
+    if (typeof mod?.[name] === "function") {
+      fn = mod[name];
+      break;
+    }
   }
 
   if (!fn) {
     const keys = Object.keys(mod || {});
     throw new Error(
-      `PARKING_CRAWLER_EXPORT_NOT_FOUND: expected one of [${candidates.join(", ")}], got exports=[${keys.join(", ")}]`
+      `PARKING_CRAWLER_EXPORT_NOT_FOUND: expected one of [${candidates.join(
+        ", "
+      )}], got exports=[${keys.join(", ")}]`
     );
   }
 
-  // limit/debug를 받는 크롤러일 수도, 아닐 수도 있어서 "최대한 안전 호출"
-  // - 인자 0개로도 호출해보고
-  // - 실패하면 옵션 인자로 한번 더 시도
-  try {
-    return await fn();
-  } catch (e1) {
-    try {
-      return await fn({ limit, debug });
-    } catch (e2) {
-      // 두 에러 중 더 의미있는 걸 던짐
-      throw new Error(`PARKING_CRAWLER_CALL_FAILED: ${String(e2?.message || e2)}`);
-    }
+  const oc = String(env.LAW_OC || "").trim();
+  if (!oc) {
+    throw new Error(
+      "MISSING_ENV_LAW_OC: 조례 DRF 수집도 LAW_OC가 필요할 수 있습니다. Cloudflare Pages env var LAW_OC를 설정하세요."
+    );
   }
+
+  if (!env.DB) {
+    throw new Error(
+      "MISSING_ENV_DB: D1 바인딩(env.DB)이 없습니다. Pages Functions에 D1 binding을 연결하세요."
+    );
+  }
+
+  // 크롤러에 DB/OC/입력값 전달
+  return await fn({
+    db: env.DB,
+    oc,
+    ...input,
+  });
 }
 
 export async function onRequest(context) {
@@ -190,42 +218,56 @@ export async function onRequest(context) {
     }
 
     // =========================================================
-    // ✅ NEW: 크롤러(주차 조례 인덱스) 실행
-    // GET  /api/crawler/parking/index?limit=30&debug=1
-    // POST /api/crawler/parking/index { "limit": 30, "debug": true }
+    // ✅ NEW: (진짜 단계) 주차 조례 수집+저장 실행
+    // GET  /api/crawler/parking/run?sido=서울특별시&sigungu=성동구&limit=20&debug=1
+    // POST /api/crawler/parking/run { "sido":"서울특별시","sigungu":"성동구","limit":20,"debug":true }
     // =========================================================
     if (
       (request.method === "GET" || request.method === "POST") &&
-      path === "crawler/parking/index"
+      path === "crawler/parking/run"
     ) {
       let body = {};
       if (request.method === "POST") {
         body = await request.json().catch(() => ({}));
       }
 
+      const sido = String(url.searchParams.get("sido") || body?.sido || "").trim();
+      const sigungu = String(url.searchParams.get("sigungu") || body?.sigungu || "").trim();
+
       const limitQ = Number(url.searchParams.get("limit"));
       const debugQ = url.searchParams.get("debug");
 
       const limit = Number.isFinite(limitQ)
-        ? Math.max(1, Math.min(500, limitQ))
+        ? Math.max(1, Math.min(200, limitQ))
         : Number.isFinite(Number(body?.limit))
-        ? Math.max(1, Math.min(500, Number(body.limit)))
-        : 100;
+        ? Math.max(1, Math.min(200, Number(body.limit)))
+        : 50;
 
       const debug =
         (debugQ && debugQ !== "0") ||
         body?.debug === true ||
         body?.debug === "true";
 
+      if (!sido || !sigungu) {
+        return json(
+          { ok: false, error: "MISSING_PARAMS", need: ["sido", "sigungu"] },
+          400
+        );
+      }
+
       const startedAt = Date.now();
-      const result = await runParkingCrawlerIndex({ limit, debug });
+
+      const result = await runParkingCrawler({
+        env,
+        input: { sido, sigungu, limit, debug },
+      });
+
       const ms = Date.now() - startedAt;
 
       return json({
         ok: true,
-        ran: "crawler/parking/index",
-        limit,
-        debug,
+        ran: "crawler/parking/run",
+        input: { sido, sigungu, limit, debug },
         took_ms: ms,
         result,
       });
@@ -258,7 +300,9 @@ export async function onRequest(context) {
       const q = url.searchParams.get("q") || "";
       const lawId = url.searchParams.get("lawId") || ""; // mst
       const limitRaw = Number(url.searchParams.get("limit") || 20);
-      const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(100, limitRaw)) : 20;
+      const limit = Number.isFinite(limitRaw)
+        ? Math.max(1, Math.min(100, limitRaw))
+        : 20;
 
       const rows = await searchLawArticle(env.DB, q, { mst: lawId, limit });
       return json({ ok: true, q, lawId, limit, rows });
@@ -269,7 +313,10 @@ export async function onRequest(context) {
       const lawId = url.searchParams.get("lawId") || ""; // mst
       const articleNo = url.searchParams.get("articleNo") || "";
       if (!lawId || !articleNo) {
-        return json({ ok: false, error: "MISSING_PARAMS", need: ["lawId", "articleNo"] }, 400);
+        return json(
+          { ok: false, error: "MISSING_PARAMS", need: ["lawId", "articleNo"] },
+          400
+        );
       }
       const row = await getLawArticle(env.DB, lawId, articleNo);
       return json({ ok: true, row });
@@ -280,7 +327,10 @@ export async function onRequest(context) {
       const lawId = url.searchParams.get("lawId") || ""; // mst
       const articleNo = url.searchParams.get("articleNo") || "";
       if (!lawId || !articleNo) {
-        return json({ ok: false, error: "MISSING_PARAMS", need: ["lawId", "articleNo"] }, 400);
+        return json(
+          { ok: false, error: "MISSING_PARAMS", need: ["lawId", "articleNo"] },
+          400
+        );
       }
       const row = await getLawArticle(env.DB, lawId, articleNo);
       return json({ ok: true, row });
@@ -293,7 +343,12 @@ export async function onRequest(context) {
       const oc = (env.LAW_OC || "").toString().trim();
       if (!oc) {
         return json(
-          { ok: false, error: "MISSING_ENV", need: ["LAW_OC"], hint: "Cloudflare Pages env var LAW_OC를 설정하세요." },
+          {
+            ok: false,
+            error: "MISSING_ENV",
+            need: ["LAW_OC"],
+            hint: "Cloudflare Pages env var LAW_OC를 설정하세요.",
+          },
           500
         );
       }
@@ -308,13 +363,24 @@ export async function onRequest(context) {
 
       if (!mst) {
         if (!lawKey) {
-          return json({ ok: false, error: "MISSING_PARAMS", need: ["lawKey or mst"] }, 400);
+          return json(
+            { ok: false, error: "MISSING_PARAMS", need: ["lawKey or mst"] },
+            400
+          );
         }
         mst = (await getEffectiveMst(env.DB, lawKey, onDate)) || "";
       }
 
       if (!lawKey || !mst) {
-        return json({ ok: false, error: "CANNOT_RESOLVE", lawKey: lawKey || null, mst: mst || null }, 400);
+        return json(
+          {
+            ok: false,
+            error: "CANNOT_RESOLVE",
+            lawKey: lawKey || null,
+            mst: mst || null,
+          },
+          400
+        );
       }
 
       const { data, finalUrl } = await fetchLawServiceJson({ oc, mst });
@@ -322,13 +388,16 @@ export async function onRequest(context) {
       const articles = rawUnits.map(normalizeArticleUnit).filter(Boolean);
 
       if (articles.length === 0) {
-        return json({
-          ok: false,
-          error: "NO_ARTICLES_PARSED",
-          lawKey,
-          mst,
-          hint: "law.go.kr 응답 구조가 예상과 다를 수 있습니다.",
-        }, 500);
+        return json(
+          {
+            ok: false,
+            error: "NO_ARTICLES_PARSED",
+            lawKey,
+            mst,
+            hint: "law.go.kr 응답 구조가 예상과 다를 수 있습니다.",
+          },
+          500
+        );
       }
 
       const saved = await upsertLawArticles(env.DB, {
@@ -349,9 +418,7 @@ export async function onRequest(context) {
     }
 
     // =========================================================
-    // ✅ 주차(법정) - 건축개요 기반 입력 연결 엔드포인트
-    // POST /api/parking/legal
-    // - 현재는 WIRED_ONLY 이지만, 프론트가 갱신되도록 legalCount/formula 제공
+    // ✅ 주차(법정) - 아직은 테스트 모드 유지
     // =========================================================
     if (request.method === "POST" && path === "parking/legal") {
       const body = await request.json().catch(() => ({}));
@@ -360,23 +427,35 @@ export async function onRequest(context) {
       const { sido, sigungu } = payload.jurisdiction;
       if (!sido || !sigungu) {
         return json(
-          { ok: false, error: "MISSING_PARAMS", need: ["jurisdiction.sido", "jurisdiction.sigungu"] },
+          {
+            ok: false,
+            error: "MISSING_PARAMS",
+            need: ["jurisdiction.sido", "jurisdiction.sigungu"],
+          },
           400
         );
       }
 
       if (!payload.usageAreas.length) {
         return json(
-          { ok: false, error: "MISSING_PARAMS", need: ["usageAreas (use, area_m2 > 0)"] },
+          {
+            ok: false,
+            error: "MISSING_PARAMS",
+            need: ["usageAreas (use, area_m2 > 0)"],
+          },
           400
         );
       }
 
-      const totalArea = Math.round(
-        payload.usageAreas.reduce((acc, x) => acc + (Number(x.area_m2) || 0), 0) * 100
-      ) / 100;
+      const totalArea =
+        Math.round(
+          payload.usageAreas.reduce(
+            (acc, x) => acc + (Number(x.area_m2) || 0),
+            0
+          ) * 100
+        ) / 100;
 
-      // ✅ 테스트 더미 산정 (지자체 DB 붙이면 교체)
+      // ✅ 테스트 더미 산정 (다음 단계에서 DB 기반 "용도별 산정+합산"으로 교체)
       const legalCount = Math.max(1, Math.ceil(totalArea / 1000));
       const formula = `TEST MODE(WIRED_ONLY): ceil(totalArea_m2 / 1000), 최소 1대 (총면적=${totalArea}㎡)`;
 
@@ -387,20 +466,13 @@ export async function onRequest(context) {
         primaryUse: payload.primaryUse || null,
         usageAreas: payload.usageAreas,
         totalArea_m2: totalArea,
-
-        // ✅ 프론트(index.html)가 기대하는 키
         legalCount,
         formula,
-
-        // ✅ (기존/향후 호환용)
         legalParking: legalCount,
         message:
-          "현재는 조례/부설주차장 설치기준 DB가 없어 테스트 산정값을 반환합니다. 다음 단계에서 지자체 기준 DB 연결 후 실제 산정으로 교체됩니다.",
+          "현재는 조례/부설주차장 설치기준 DB가 없어 테스트 산정값을 반환합니다. (지금부터 크롤러가 DB를 채우기 시작하며, 다음 단계에서 실제 산정으로 교체합니다.)",
         refs: [],
-
-        debug: {
-          receivedUsageAreasCount: payload.usageAreas.length,
-        },
+        debug: { receivedUsageAreasCount: payload.usageAreas.length },
       });
     }
 
