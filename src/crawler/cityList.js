@@ -5,6 +5,11 @@
 //   1) 시도 목록 제공
 //   2) (다음 단계) 크롤링 과정에서 시군구 목록을 자동 수집/캐시하도록 설계
 //   3) 지자체 문자열 표준화/키 생성 유틸 제공
+//
+// ✅ 중요(빌드 에러 해결):
+// parkingCrawler.js 에서 `import { CITY_LIST } from "./cityList.js";` 를 사용하므로
+// 여기서 반드시 named export `CITY_LIST` 를 제공해야 함.
+// 동시에 default export도 제공해서 향후 import 방식이 바뀌어도 안전하게 유지.
 
 export const SIDO_LIST = Object.freeze([
     "서울특별시",
@@ -25,6 +30,14 @@ export const SIDO_LIST = Object.freeze([
     "경상남도",
     "제주특별자치도",
   ]);
+  
+  // ✅ parkingCrawler.js 호환용 별칭
+  // - 지금 단계에서는 CITY_LIST = "시도 목록"으로 둔다.
+  // - (다음 단계) 시군구까지 확장되면 CITY_LIST 구조를 바꾸거나 별도 목록을 추가할 수 있음.
+  export const CITY_LIST = SIDO_LIST;
+  
+  // ✅ default export도 제공(향후 `import CITY_LIST from ...` 같은 형태 지원)
+  export default CITY_LIST;
   
   /**
    * 공백/특수문자 정리: 크롤링 입력이 "경기도 " 처럼 들어와도 안정적으로 처리
@@ -47,16 +60,13 @@ export const SIDO_LIST = Object.freeze([
   
     // 최소 alias
     const alias = {
-      "강원도": "강원특별자치도",
-      "전라북도": "전북특별자치도",
-      "제주도": "제주특별자치도",
-      "세종시": "세종특별자치시",
+      강원도: "강원특별자치도",
+      전라북도: "전북특별자치도",
+      제주도: "제주특별자치도",
+      세종시: "세종특별자치시",
     };
   
-    const mapped = alias[s] || s;
-  
-    // SIDO_LIST에 있는지 확인. 없으면 그대로 반환(크롤러가 탐색을 시도할 수 있게)
-    return mapped;
+    return alias[s] || s;
   }
   
   /**
