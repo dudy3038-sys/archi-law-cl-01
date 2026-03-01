@@ -1,64 +1,118 @@
 // src/crawler/parkingCrawler.js (FULL REPLACE)
 //
-// ✅ 목표(즉시 실행 가능한 실수집 1단계):
-// - org/sborg(기관코드) "완전 동적 수집" 전이라도,
-//   1) law.go.kr 자치법규 검색 페이지 HTML에서 '시도(org)' 코드 목록을 파싱
-//   2) sborg 없이 org 단위로 DRF 자치법규 목록을 조회
-//   3) 결과의 '지자체기관명(orgName)'에 시군구 문자열이 포함된 것만 필터
-// -> 이렇게 하면 "서울특별시/성동구" 같은 입력으로도 당장 실데이터 수집이 가능함.
+// ✅ 목표(즉시 실행 가능한 실수집+저장 1단계):
+// - org/sborg(기관코드) 완전 동적 수집 전이라도,
+//   1) law.go.kr 자치법규 검색 UI(ordinSc.do) HTML에서 시도(org) 코드 목록 파싱
+//   2) sborg 없이 org(시도) 단위로 DRF 자치법규 목록 조회
+//   3) 결과의 orgName(지자체기관명)에 sigungu 문자열이 포함된 것만 필터
+//   4) D1에 저장:
+//      - parking_jurisdiction
+//      - parking_ordinance_index
+//      - (옵션) parking_ordinance_text: 상위 N개 원문(raw_json) 저장 시작
 //
-// ⚠️ 다음 단계(정석):
-// - 시군구 옵션 목록/기관코드(sbrog) 동적 수집까지 붙이면 정확도/성능이 크게 좋아짐.
+// ⚠️ 정석 2단계(다음):
+// - 시군구 옵션 목록 + sborg(기관코드)까지 동적 수집/캐시 → 정확도/성능 업
 
-import {
-  SIDO_LIST,
-  cleanText,
-  normalizeSido,
-  normalizeSigungu,
-} from "./cityList.js";
+import { SIDO_LIST, cleanText, normalizeSido, normalizeSigungu } from "./cityList.js";
 
-// DRF 자치법규 검색
-const DRF_BASE = "http://www.law.go.kr/DRF/lawSearch.do";
-// DRF 본문 조회(자치법규도 lawService.do + target=ordin로 조회 가능)
-const LAW_SERVICE_URL = "http://www.law.go.kr/DRF/lawService.do";
-
-// law.go.kr 자치법규 검색 UI (org 코드 파싱용)
+// ✅ https 고정 (Cloudflare에서 http → https 리다이렉트/TLS 문제로 525가 잘 뜸)
+const DRF_BASE = "https://www.law.go.kr/DRF/lawSearch.do";
+const LAW_SERVICE_URL = "https://www.law.go.kr/DRF/lawService.do";
 const ORDIN_SEARCH_UI = "https://www.law.go.kr/ordinSc.do";
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-function toNum(x, fallback = 0) {
-  const n = Number(x);
-  return Number.isFinite(n) ? n : fallback;
+function safeJsonStringify(x) {
+  try {
+    return JSON.stringify(x);
+  } catch {
+    return null;
+  }
+}
+
+/** -------------------------------------------------------
+ * ✅ fetch with retry (525/520/522/523/524/5xx 등)
+ * ------------------------------------------------------*/
+async function fetchWithRetry(url, opts = {}, retry = 3) {
+  let lastErr = null;
+  for (let i = 0; i <= retry; i++) {
+    try {
+      const res = await fetch(url, {
+        redirect: "follow",
+        headers: {
+          "user-agent": "archi-law-crawler/1.0",
+          ...(opts.headers || {}),
+        },
+        ...opts,
+      });
+
+      // Cloudflare 계열/서버 5xx는 재시도
+      if (!res.ok) {
+        const status = res.status;
+        const text = await res.text().catch(() => "");
+        const msg = `HTTP_${status}: ${text.slice(0, 200)}`;
+
+        // 재시도 대상
+        const retryable =
+          status === 408 ||
+          status === 425 ||
+          status === 429 ||
+          status === 500 ||
+          status === 502 ||
+          status === 503 ||
+          status === 504 ||
+          status === 520 ||
+          status === 522 ||
+          status === 523 ||
+          status === 524 ||
+          status === 525;
+
+        if (retryable && i < retry) {
+          // 지수 백오프 + 약간의 지터
+          await sleep(250 * Math.pow(2, i) + Math.floor(Math.random() * 120));
+          continue;
+        }
+        throw new Error(msg);
+      }
+
+      return res;
+    } catch (e) {
+      lastErr = e;
+      if (i < retry) {
+        await sleep(250 * Math.pow(2, i) + Math.floor(Math.random() * 120));
+        continue;
+      }
+      throw lastErr;
+    }
+  }
+  throw lastErr || new Error("FETCH_FAILED");
 }
 
 async function fetchText(url) {
-  const res = await fetch(url, {
-    redirect: "follow",
-    headers: {
-      "user-agent": "archi-law-crawler/1.0",
-      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  const res = await fetchWithRetry(
+    url,
+    {
+      headers: {
+        accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      },
     },
-  });
-  const text = await res.text();
-  if (!res.ok) throw new Error(`HTTP_${res.status}: ${text.slice(0, 200)}`);
-  return text;
+    3
+  );
+  return await res.text();
 }
 
 async function fetchJson(url) {
-  const res = await fetch(url, {
-    redirect: "follow",
-    headers: {
-      "user-agent": "archi-law-crawler/1.0",
-      accept: "application/json,text/plain,*/*",
+  const res = await fetchWithRetry(
+    url,
+    {
+      headers: { accept: "application/json,text/plain,*/*" },
     },
-  });
+    3
+  );
   const text = await res.text();
-  if (!res.ok) {
-    throw new Error(`HTTP_${res.status}: ${text.slice(0, 200)}`);
-  }
   try {
     return JSON.parse(text);
   } catch {
@@ -137,19 +191,19 @@ function normalizeOrdinItem(x) {
   };
 }
 
-// ---------------------------------------------------------
-// ✅ 자치법규 목록 조회 (org는 필수, sborg는 선택)
-// ---------------------------------------------------------
+/* ---------------------------------------------------------
+ * ✅ 자치법규 목록 조회 (org 필수, sborg 선택)
+ * --------------------------------------------------------*/
 export async function fetchOrdinList({
   oc,
   org,
-  sborg = "", // ✅ 없어도 됨(시도 단위 검색)
+  sborg = "",
   query = "주차",
-  search = 1, // 1: 자치법규명, 2: 본문검색
-  knd = "30001", // 조례
+  search = 1,
+  knd = "30001",
   display = 100,
   page = 1,
-  sort = "ddes", // 공포일자 내림차순
+  sort = "ddes",
   ordinFd = "",
 }) {
   if (!oc) throw new Error("MISSING_OC");
@@ -176,25 +230,20 @@ export async function fetchOrdinList({
   return { url, rows, raw: data };
 }
 
-// ---------------------------------------------------------
-// ✅ 시도(org) 코드 파싱
-// - law.go.kr 자치법규 검색 페이지 HTML에서 option을 파싱해 orgMap 생성
-// - 예: { "서울특별시": "6110000", ... }
-// ---------------------------------------------------------
+/* ---------------------------------------------------------
+ * ✅ 시도(org) 코드 파싱 (ordinSc.do HTML)
+ * --------------------------------------------------------*/
 let _orgMapCache = null;
 
 function parseOrgMapFromHtml(html) {
-  // 여러 형태를 최대한 넓게 커버: value=숫자 + 텍스트=시도명
-  // (페이지 구조가 바뀔 수 있어 보수적으로)
   const map = new Map();
-
-  // option value="6110000">서울특별시</option> 같은 패턴
-  const re = /<option\s+value\s*=\s*["']?(\d{4,})["']?\s*>\s*([^<]+?)\s*<\/option>/g;
+  // option value="6110000">서울특별시</option>
+  const re =
+    /<option\s+value\s*=\s*["']?(\d{4,})["']?\s*>\s*([^<]+?)\s*<\/option>/g;
   let m;
   while ((m = re.exec(html))) {
     const code = String(m[1] || "").trim();
     const name = cleanText(m[2] || "");
-    // 시도만 골라 담기: SIDO_LIST와 매칭되는 것만
     if (code && name && SIDO_LIST.includes(name)) {
       map.set(name, code);
     }
@@ -208,7 +257,9 @@ export async function getOrgMapByScrape({ force = false } = {}) {
   const map = parseOrgMapFromHtml(html);
 
   if (!map.size) {
-    throw new Error("ORG_MAP_PARSE_FAILED: cannot find sido->org codes from ordinSc.do");
+    throw new Error(
+      "ORG_MAP_PARSE_FAILED: cannot find sido->org codes from ordinSc.do"
+    );
   }
   _orgMapCache = map;
   return map;
@@ -222,11 +273,12 @@ export async function resolveOrgBySido(sido) {
   return org;
 }
 
-// ---------------------------------------------------------
-// ✅ 자치법규 본문(JSON/HTML) 조회 (조례 텍스트/별표 수집 시작점)
-// - lawService.do?OC=...&target=ordin&MST=...&type=JSON
-// ---------------------------------------------------------
-export async function fetchOrdinanceText({ oc, mst, type = "JSON" }) {
+/* ---------------------------------------------------------
+ * ✅ 자치법규 본문(JSON) 조회: lawService.do?target=ordin&MST=...
+ * - MST 자리에 ordinId를 넣어보는 방식(실측 필요)
+ * - 일단 raw_json 저장부터 시작 (파싱은 다음 단계)
+ * --------------------------------------------------------*/
+export async function fetchOrdinanceText({ oc, mst }) {
   if (!oc) throw new Error("MISSING_OC");
   if (!mst) throw new Error("MISSING_MST");
 
@@ -234,38 +286,15 @@ export async function fetchOrdinanceText({ oc, mst, type = "JSON" }) {
   u.searchParams.set("OC", oc);
   u.searchParams.set("target", "ordin");
   u.searchParams.set("MST", String(mst));
-  u.searchParams.set("type", type);
+  u.searchParams.set("type", "JSON");
 
-  const res = await fetch(u.toString(), {
-    redirect: "follow",
-    headers: {
-      "user-agent": "archi-law-crawler/1.0",
-      accept: type === "JSON" ? "application/json,text/plain,*/*" : "text/html,*/*",
-    },
-  });
-
-  const text = await res.text();
-  if (!res.ok) throw new Error(`ORDIN_TEXT_HTTP_${res.status}: ${text.slice(0, 200)}`);
-
-  if (type === "JSON") {
-    try {
-      return { finalUrl: res.url, data: JSON.parse(text) };
-    } catch {
-      throw new Error(`ORDIN_TEXT_NOT_JSON: ${text.slice(0, 120)}`);
-    }
-  }
-
-  return { finalUrl: res.url, html: text };
+  const data = await fetchJson(u.toString());
+  return { finalUrl: u.toString(), data };
 }
 
-// ---------------------------------------------------------
-// ✅ (실수집 1단계) 시도/시군구 입력으로 "주차" 조례 목록을 실제로 가져오기
-//
-// 방법:
-// - org(시도)만 구해서 sborg 없이 목록 조회
-// - 결과 rows 중 orgName에 sigungu 문자열이 포함된 것만 필터
-// - limit만큼 모을 때까지 페이지를 넘겨가며 수집
-// ---------------------------------------------------------
+/* ---------------------------------------------------------
+ * ✅ (실수집) 시도/시군구 입력 → org-only 검색 + sigungu 필터
+ * --------------------------------------------------------*/
 export async function crawlParkingOrdinanceIndex({
   oc,
   sido,
@@ -293,7 +322,7 @@ export async function crawlParkingOrdinanceIndex({
     const r = await fetchOrdinList({
       oc,
       org,
-      sborg: "", // ✅ 핵심: 시도 단위로 넓게 조회
+      sborg: "",
       query,
       search: searchMode,
       display: 100,
@@ -304,7 +333,6 @@ export async function crawlParkingOrdinanceIndex({
     const rows = r.rows || [];
     if (!rows.length) break;
 
-    // 시군구 필터(기관명에 "성동구" 포함 등)
     for (const row of rows) {
       const orgName = row.orgName || "";
       if (orgName.includes(s2)) {
@@ -323,7 +351,7 @@ export async function crawlParkingOrdinanceIndex({
     await sleep(throttleMs);
   }
 
-  // 중복 제거(같은 조례가 여러 페이지/검색으로 잡힐 수 있음)
+  // ordinId 중복 제거
   const uniq = new Map();
   for (const it of collected) {
     const key = String(it.ordinId);
@@ -340,33 +368,212 @@ export async function crawlParkingOrdinanceIndex({
     collected: items.length,
     items,
     debug: debug
-      ? {
-          pagesTried: page - 1,
-          maxPages,
-          throttleMs,
-        }
+      ? { pagesTried: page - 1, maxPages, throttleMs }
       : undefined,
   };
 }
 
-// ---------------------------------------------------------
-// ✅ API에서 쉽게 부르도록 run() 제공
-// - functions/api에서 동적 import로 이 함수를 잡아 호출할 수 있음
-// ---------------------------------------------------------
-export async function run({
+/* ---------------------------------------------------------
+ * ✅ D1 저장(Upsert)
+ * --------------------------------------------------------*/
+function makeJurKey(sido, sigungu) {
+  return `${sido}__${sigungu}`;
+}
+
+async function upsertJurisdiction(db, { sido, sigungu }) {
+  const jurKey = makeJurKey(sido, sigungu);
+
+  await db
+    .prepare(
+      `
+      INSERT INTO parking_jurisdiction (jur_key, sido, sigungu, updated_at)
+      VALUES (?, ?, ?, datetime('now'))
+      ON CONFLICT(jur_key) DO UPDATE SET
+        sido=excluded.sido,
+        sigungu=excluded.sigungu,
+        updated_at=datetime('now')
+    `
+    )
+    .bind(jurKey, sido, sigungu)
+    .run();
+
+  return jurKey;
+}
+
+async function upsertIndexRows(db, jurKey, items) {
+  if (!items.length) return 0;
+
+  const stmts = items.map((it) =>
+    db
+      .prepare(
+        `
+        INSERT INTO parking_ordinance_index
+          (jur_key, ordin_id, name, org_name, kind, field, eff_date, ann_date, ann_no, link, collected_at, updated_at)
+        VALUES
+          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+        ON CONFLICT(jur_key, ordin_id) DO UPDATE SET
+          name=excluded.name,
+          org_name=excluded.org_name,
+          kind=excluded.kind,
+          field=excluded.field,
+          eff_date=excluded.eff_date,
+          ann_date=excluded.ann_date,
+          ann_no=excluded.ann_no,
+          link=excluded.link,
+          updated_at=datetime('now')
+      `
+      )
+      .bind(
+        jurKey,
+        String(it.ordinId),
+        String(it.name),
+        it.orgName || null,
+        it.kind || null,
+        it.field || null,
+        it.effDate || null,
+        it.annDate || null,
+        it.annNo || null,
+        it.link || null
+      )
+  );
+
+  await db.batch(stmts);
+  return items.length;
+}
+
+async function upsertOrdinanceTextRaw(db, jurKey, { ordinId, name, sourceUrl, rawJson, bodyText, tablesText }) {
+  await db
+    .prepare(
+      `
+      INSERT INTO parking_ordinance_text
+        (ordin_id, jur_key, name, source_url, raw_json, body_text, tables_text, collected_at, updated_at)
+      VALUES
+        (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+      ON CONFLICT(ordin_id) DO UPDATE SET
+        jur_key=excluded.jur_key,
+        name=excluded.name,
+        source_url=excluded.source_url,
+        raw_json=excluded.raw_json,
+        body_text=excluded.body_text,
+        tables_text=excluded.tables_text,
+        updated_at=datetime('now')
+    `
+    )
+    .bind(
+      String(ordinId),
+      jurKey,
+      name || null,
+      sourceUrl || null,
+      rawJson || null,
+      bodyText || null,
+      tablesText || null
+    )
+    .run();
+}
+
+function tryExtractBodyTextFromOrdinJson(data) {
+  // 구조가 지자체마다/시스템 버전마다 달라서 “보수적으로” 몇 가지 후보만
+  const root = data?.자치법규 || data?.ordin || data?.Ordin || data;
+  const body =
+    root?.본문 ||
+    root?.내용 ||
+    root?.body ||
+    root?.text ||
+    root?.자치법규내용 ||
+    null;
+
+  if (typeof body === "string" && body.trim()) return body.trim();
+  return null;
+}
+
+/* ---------------------------------------------------------
+ * ✅ API가 기대하는 "진짜 실행 함수"
+ * - functions/api/[[path]].js 가 이 형태로 호출함:
+ *   runParkingCrawler({ db, oc, sido, sigungu, limit, debug })
+ * --------------------------------------------------------*/
+export async function runParkingCrawler({
+  db,
   oc,
   sido,
   sigungu,
   limit = 30,
   debug = false,
   query = "주차",
+  // 원문(raw_json) 저장은 너무 무거울 수 있어서 기본 3개만
+  saveTextTopN = 3,
 }) {
-  return crawlParkingOrdinanceIndex({
+  if (!db) throw new Error("MISSING_DB");
+  if (!oc) throw new Error("MISSING_OC");
+
+  const s1 = normalizeSido(sido);
+  const s2 = normalizeSigungu(sigungu);
+  if (!s1) throw new Error("MISSING_SIDO");
+  if (!s2) throw new Error("MISSING_SIGUNGU");
+
+  // 1) 목록 수집
+  const index = await crawlParkingOrdinanceIndex({
     oc,
-    sido,
-    sigungu,
+    sido: s1,
+    sigungu: s2,
     limit,
     debug,
     query,
   });
+
+  // 2) 지자체 upsert
+  const jurKey = await upsertJurisdiction(db, { sido: s1, sigungu: s2 });
+
+  // 3) 인덱스 upsert
+  const savedIndex = await upsertIndexRows(db, jurKey, index.items || []);
+
+  // 4) (옵션) 상위 N개는 원문(raw_json)도 저장 시작
+  const picked = (index.items || []).slice(0, Math.max(0, saveTextTopN));
+  let savedText = 0;
+  const textErrors = [];
+
+  for (const it of picked) {
+    try {
+      const { data } = await fetchOrdinanceText({ oc, mst: it.ordinId });
+      const rawJson = safeJsonStringify(data);
+      const bodyText = tryExtractBodyTextFromOrdinJson(data);
+
+      await upsertOrdinanceTextRaw(db, jurKey, {
+        ordinId: it.ordinId,
+        name: it.name,
+        sourceUrl: it.link || null,
+        rawJson,
+        bodyText,
+        tablesText: null,
+      });
+      savedText += 1;
+      await sleep(120);
+    } catch (e) {
+      textErrors.push({ ordinId: it.ordinId, error: String(e?.message || e) });
+      await sleep(120);
+    }
+  }
+
+  return {
+    ok: true,
+    step: "COLLECT_AND_SAVE_INDEX(+OPTIONAL_RAW_TEXT)",
+    input: { sido: s1, sigungu: s2, limit, query },
+    jurKey,
+    resolved: index.resolved,
+    collected: index.collected,
+    saved: {
+      index_rows: savedIndex,
+      text_rows: savedText,
+    },
+    sample: (index.items || []).slice(0, 5),
+    debug: debug ? { textErrors } : undefined,
+  };
 }
+
+/* ---------------------------------------------------------
+ * ✅ functions/api에서 후보로 찾을 수 있게 alias 제공
+ * --------------------------------------------------------*/
+export async function run({ db, oc, sido, sigungu, limit = 30, debug = false }) {
+  return runParkingCrawler({ db, oc, sido, sigungu, limit, debug });
+}
+
+export default runParkingCrawler;
