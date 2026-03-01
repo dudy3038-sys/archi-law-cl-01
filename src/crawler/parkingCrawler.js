@@ -1,14 +1,12 @@
 // src/crawler/parkingCrawler.js (FULL REPLACE)
-// collected=0 탈출 + "실제 DB 쌓기" 버전
+// ✅ 실수집 + 즉시 DB 적재 버전
 //
-// 핵심:
-// 1) 1차: org(시도)만으로 빠르게 검색
-// 2) 2차: 0건이면 org를 아예 빼고(전국 검색) sigungu로 필터해서 수집
-// 3) db가 주어지면 parking_jurisdiction / parking_ordinance_index에 즉시 upsert
-//
-// 주의:
-// - DRF 구조가 변할 수 있어 debug에 url/rowsCount/sampleOrgNames를 남김
-// - 다음 단계에서 sborg 동적수집 붙이면 1차에서 대부분 해결됨
+// 핵심 수정:
+// 1) DRF 자치법규 검색 응답이 { OrdinSearch: { law: [...] } } 형태로 올 수 있어
+//    pickListAny가 OrdinSearch.law 를 반드시 읽도록 보강
+// 2) run({ db, oc, sido, sigungu, ... })에서
+//    parking_jurisdiction / parking_ordinance_index에 즉시 upsert 해서 DB를 "쌓는" 방식으로 진행
+// 3) debug 시 rowsCount=0 원인(파싱/응답구조)을 바로 확인할 수 있게 rawHints 유지
 
 import { SIDO_LIST, cleanText, normalizeSido, normalizeSigungu } from "./cityList.js";
 
@@ -100,23 +98,65 @@ function buildUrl(params) {
   return u.toString();
 }
 
-function pickListAny(root) {
-  if (!root) return [];
-  if (Array.isArray(root)) return root;
+/**
+ * ✅ DRF ordin 검색 결과가 다음 형태로 올 수 있음
+ * - { OrdinSearch: { law: [...] } }
+ * - { ordinSearch: { law: [...] } }
+ * - { 자치법규: { 자치법규: [...] } } 등
+ */
+function pickListAny(data) {
+  if (!data) return [];
+  if (Array.isArray(data)) return data;
 
-  const a = root?.자치법규 || root?.ordin || root?.Ordin || root?.list || root?.items || null;
+  // 1) 가장 흔한 케이스: OrdinSearch.law
+  const os = data?.OrdinSearch || data?.ordinSearch || data?.ORDINSEARCH;
+  const osLaw = os?.law || os?.Law || os?.list || os?.items;
+  if (Array.isArray(osLaw)) return osLaw;
+
+  // 2) 기존 케이스들
+  const a =
+    data?.자치법규 ||
+    data?.ordin ||
+    data?.Ordin ||
+    data?.list ||
+    data?.items ||
+    null;
+
   if (Array.isArray(a)) return a;
 
-  const b = a?.자치법규 || a?.ordin || a?.Ordin || a?.list || a?.items || null;
-  return Array.isArray(b) ? b : [];
+  const b =
+    a?.자치법규 ||
+    a?.ordin ||
+    a?.Ordin ||
+    a?.list ||
+    a?.items ||
+    null;
+
+  if (Array.isArray(b)) return b;
+
+  // 3) 혹시 law가 바로 최상위에 오는 케이스
+  if (Array.isArray(data?.law)) return data.law;
+
+  return [];
 }
 
 function normalizeOrdinItem(x) {
-  const ordinId = String(x?.자치법규ID ?? x?.ordinId ?? x?.ID ?? x?.id ?? "").trim();
-  const name = String(x?.자치법규명 ?? x?.ordinName ?? x?.명칭 ?? x?.name ?? "").trim();
-  const link = String(x?.자치법규상세링크 ?? x?.link ?? x?.상세링크 ?? "").trim();
-  const orgName = String(x?.지자체기관명 ?? x?.기관명 ?? x?.orgName ?? "").trim();
-  const kind = String(x?.자치법규종류 ?? x?.종류 ?? x?.kndName ?? "").trim();
+  const ordinId = String(x?.자치법규ID ?? x?.ordinId ?? x?.ID ?? x?.id ?? x?.MST ?? x?.mst ?? "").trim();
+  const name = String(x?.자치법규명 ?? x?.ordinName ?? x?.명칭 ?? x?.name ?? x?.법규명 ?? "").trim();
+
+  // 기관명은 다양한 키로 올 수 있음
+  const orgName = String(
+    x?.지자체기관명 ??
+    x?.기관명 ??
+    x?.orgName ??
+    x?.자치법규기관명 ??
+    x?.자치법규기관 ??
+    ""
+  ).trim();
+
+  const link = String(x?.자치법규상세링크 ?? x?.link ?? x?.상세링크 ?? x?.법령상세링크 ?? "").trim();
+
+  const kind = String(x?.자치법규종류 ?? x?.종류 ?? x?.kndName ?? x?.구분 ?? "").trim();
   const field = String(x?.자치법규분야명 ?? x?.분야명 ?? x?.fieldName ?? "").trim();
   const effDate = String(x?.시행일자 ?? x?.efYd ?? x?.effDate ?? "").trim();
   const annDate = String(x?.공포일자 ?? x?.ancYd ?? x?.annDate ?? "").trim();
@@ -137,14 +177,9 @@ function normalizeOrdinItem(x) {
   };
 }
 
-/**
- * ✅ DRF ordin list
- * - org는 "있으면 좁게", 없으면(빈 문자열/undefined) 전국검색 시도
- * - 일부 환경에서 org 없이 에러날 수 있으니 상위에서 catch하여 다른 전략으로 넘어가게 함
- */
 export async function fetchOrdinList({
   oc,
-  org,               // optional
+  org,
   sborg = "",
   query = "주차",
   search = 1,
@@ -160,7 +195,7 @@ export async function fetchOrdinList({
     OC: oc,
     target: "ordin",
     type: "JSON",
-    // ✅ org가 falsy면 아예 파라미터를 넣지 않음(전국검색 시도)
+    // ✅ org/sborg는 선택적으로만
     ...(org ? { org } : {}),
     ...(sborg ? { sborg } : {}),
     knd,
@@ -172,12 +207,13 @@ export async function fetchOrdinList({
     ordinFd,
   });
 
-  const data = await fetchJson(url);
-  const list = pickListAny(data?.자치법규) || pickListAny(data);
+  const raw = await fetchJson(url);
+  const list = pickListAny(raw);
   const rows = list.map(normalizeOrdinItem).filter(Boolean);
-  return { url, rows, raw: data };
+  return { url, rows, raw };
 }
 
+// ----- orgMap scrape (가능하면, 실패하면 fallback) -----
 let _orgMapCache = null;
 
 function parseOrgMapFromHtml(html) {
@@ -213,71 +249,39 @@ export async function resolveOrgBySido(sido) {
   return org;
 }
 
-function orgNameHit({ orgName, s1, s2 }) {
-  if (!orgName) return false;
-  const a = orgName;
-  const b = a.replace(/\s+/g, "");
-  const s2c = s2.replace(/\s+/g, "");
-  return (
-    a.includes(s2) ||
-    b.includes(s2c) ||
-    a.includes(`${s1} ${s2}`) ||
-    a.includes(`${s2}청`)
-  );
-}
-
+// ----- DB helpers -----
 function makeJurKey(sido, sigungu) {
-  return `${String(sido).trim()}__${String(sigungu).trim()}`;
+  // schema.sql 예시가 "__"라서 그대로 사용
+  return `${sido}__${sigungu}`;
 }
 
-/**
- * ✅ DB upsert helpers (D1)
- */
 async function upsertJurisdiction(db, { jurKey, sido, sigungu }) {
   await db.prepare(
-    `
-    INSERT INTO parking_jurisdiction (jur_key, sido, sigungu, updated_at)
-    VALUES (?, ?, ?, datetime('now'))
-    ON CONFLICT(jur_key) DO UPDATE SET
-      sido=excluded.sido,
-      sigungu=excluded.sigungu,
-      updated_at=datetime('now')
-    `
+    `INSERT OR REPLACE INTO parking_jurisdiction (jur_key, sido, sigungu, updated_at)
+     VALUES (?, ?, ?, datetime('now'))`
   ).bind(jurKey, sido, sigungu).run();
 }
 
-async function upsertIndexRows(db, jurKey, items) {
+async function upsertOrdinIndexBatch(db, { jurKey, items }) {
   if (!items.length) return 0;
 
   const stmts = items.map((it) =>
     db.prepare(
-      `
-      INSERT INTO parking_ordinance_index
-        (jur_key, ordin_id, name, org_name, kind, field, eff_date, ann_date, ann_no, link, collected_at, updated_at)
-      VALUES
-        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
-      ON CONFLICT(jur_key, ordin_id) DO UPDATE SET
-        name=excluded.name,
-        org_name=excluded.org_name,
-        kind=excluded.kind,
-        field=excluded.field,
-        eff_date=excluded.eff_date,
-        ann_date=excluded.ann_date,
-        ann_no=excluded.ann_no,
-        link=excluded.link,
-        updated_at=datetime('now')
-      `
+      `INSERT OR REPLACE INTO parking_ordinance_index
+       (jur_key, ordin_id, name, org_name, kind, field, eff_date, ann_date, ann_no, link, collected_at, updated_at)
+       VALUES
+       (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
     ).bind(
       jurKey,
       String(it.ordinId),
-      String(it.name),
-      it.orgName || null,
-      it.kind || null,
-      it.field || null,
-      it.effDate || null,
-      it.annDate || null,
-      it.annNo || null,
-      it.link || null
+      it.name,
+      it.orgName,
+      it.kind,
+      it.field,
+      it.effDate,
+      it.annDate,
+      it.annNo,
+      it.link
     )
   );
 
@@ -285,11 +289,9 @@ async function upsertIndexRows(db, jurKey, items) {
   return items.length;
 }
 
-/**
- * ✅ collected=0 원인 확정 + fallback 수집 + 즉시 DB 적재
- */
+// ✅ 수집 + 필터 + (DB 적재)
 export async function crawlParkingOrdinanceIndex({
-  db = null,          // ✅ D1 (있으면 저장)
+  db,
   oc,
   sido,
   sigungu,
@@ -297,7 +299,7 @@ export async function crawlParkingOrdinanceIndex({
   searchMode = 1,
   limit = 30,
   throttleMs = 200,
-  maxPages = 3,
+  maxPages = 6,
   debug = false,
 }) {
   if (!oc) throw new Error("MISSING_OC");
@@ -306,105 +308,86 @@ export async function crawlParkingOrdinanceIndex({
   if (!s1) throw new Error("MISSING_SIDO");
   if (!s2) throw new Error("MISSING_SIGUNGU");
 
-  const debugPack = debug ? { phases: [], rawHints: [] } : null;
-
-  // -----------------------------
-  // Phase A: org-only (fast)
-  // -----------------------------
-  let org = "";
-  try {
-    org = await resolveOrgBySido(s1);
-  } catch {
-    org = "";
-  }
-
-  async function collectPhase({ phase, orgParam }) {
-    const collected = [];
-    let page = 1;
-
-    while (page <= maxPages && collected.length < limit) {
-      const r = await fetchOrdinList({
-        oc,
-        org: orgParam || undefined,
-        sborg: "",
-        query,
-        search: searchMode,
-        display: 100,
-        page,
-        sort: "ddes",
-      });
-
-      const rows = r.rows || [];
-
-      if (debug) {
-        const topKeys = r.raw && typeof r.raw === "object" ? Object.keys(r.raw).slice(0, 30) : [];
-        debugPack.phases.push({
-          phase,
-          page,
-          url: r.url,
-          rowsCount: rows.length,
-          sampleOrgNames: rows.slice(0, 8).map(x => x.orgName).filter(Boolean),
-        });
-
-        if (!rows.length) {
-          debugPack.rawHints.push({
-            phase,
-            page,
-            topKeys,
-            rawHead: safeJsonStringify(r.raw)?.slice(0, 400) || null,
-          });
-        }
-      }
-
-      if (!rows.length) break;
-
-      for (const row of rows) {
-        if (orgNameHit({ orgName: row.orgName || "", s1, s2 })) {
-          collected.push({ sido: s1, sigungu: s2, org: orgParam || null, sborg: null, ...row });
-          if (collected.length >= limit) break;
-        }
-      }
-
-      page += 1;
-      await sleep(throttleMs);
-    }
-
-    const uniq = new Map();
-    for (const it of collected) uniq.set(String(it.ordinId), it);
-    return Array.from(uniq.values()).slice(0, limit);
-  }
-
-  let items = [];
-  let mode = "";
-  let orgMapSource = (_orgMapCache === FALLBACK_ORG_MAP) ? "FALLBACK" : "SCRAPED";
-
-  // A-1) org-only
-  if (org) {
-    items = await collectPhase({ phase: "A:ORG_ONLY", orgParam: org });
-    mode = "ORG_ONLY_FILTER_BY_SIGUNGU";
-  }
-
-  // A-2) fallback: nationwide (org param omitted)
-  if (!items.length) {
-    try {
-      const nationwide = await collectPhase({ phase: "B:NATIONWIDE_NO_ORG", orgParam: "" });
-      items = nationwide;
-      mode = "NATIONWIDE_FILTER_BY_SIGUNGU";
-    } catch (e) {
-      // 전국검색 자체가 막히면 여기서 에러를 그대로 노출(원인 파악이 쉬움)
-      throw new Error(`NATIONWIDE_SEARCH_FAILED: ${String(e?.message || e)}`);
-    }
-  }
-
-  // ✅ DB 저장(쌓기)
-  let saved = { index_rows: 0 };
+  const org = await resolveOrgBySido(s1);
   const jurKey = makeJurKey(s1, s2);
 
+  const collected = [];
+  const debugPack = debug ? { tried: [], rawHints: [] } : null;
+
+  let page = 1;
+  while (page <= maxPages && collected.length < limit) {
+    const r = await fetchOrdinList({
+      oc,
+      org,
+      sborg: "",          // 시도 단위
+      query,
+      search: searchMode,
+      display: 100,
+      page,
+      sort: "ddes",
+    });
+
+    const rows = r.rows || [];
+
+    if (debug) {
+      const topKeys = r.raw && typeof r.raw === "object" ? Object.keys(r.raw).slice(0, 30) : [];
+      debugPack.tried.push({
+        page,
+        url: r.url,
+        rowsCount: rows.length,
+        sampleOrgNames: rows.slice(0, 10).map(x => x.orgName).filter(Boolean),
+        sampleNames: rows.slice(0, 5).map(x => x.name).filter(Boolean),
+      });
+
+      if (!rows.length) {
+        debugPack.rawHints.push({
+          page,
+          topKeys,
+          rawHead: safeJsonStringify(r.raw)?.slice(0, 500) || null,
+        });
+      }
+    }
+
+    if (!rows.length) break;
+
+    for (const row of rows) {
+      const orgName = row.orgName || "";
+      if (!orgName) continue;
+
+      // 표기 흔들림 대응
+      const hit =
+        orgName.includes(s2) ||
+        orgName.replace(/\s+/g, "").includes(s2.replace(/\s+/g, "")) ||
+        orgName.includes(`${s1}${s2}`) ||
+        orgName.includes(`${s1} ${s2}`) ||
+        orgName.includes(`${s2}청`);
+
+      if (hit) {
+        collected.push({
+          sido: s1,
+          sigungu: s2,
+          org,
+          sborg: null,
+          ...row,
+        });
+        if (collected.length >= limit) break;
+      }
+    }
+
+    page += 1;
+    await sleep(throttleMs);
+  }
+
+  // 중복 제거
+  const uniq = new Map();
+  for (const it of collected) uniq.set(String(it.ordinId), it);
+  const items = Array.from(uniq.values()).slice(0, limit);
+
+  // ✅ 즉시 DB 적재(허수 테스트 낭비 줄이기)
+  let savedIndex = 0;
   if (db) {
     await upsertJurisdiction(db, { jurKey, sido: s1, sigungu: s2 });
-    if (items.length) {
-      saved.index_rows = await upsertIndexRows(db, jurKey, items);
-    }
+    savedIndex = await upsertOrdinIndexBatch(db, { jurKey, items });
   }
 
   return {
@@ -412,18 +395,15 @@ export async function crawlParkingOrdinanceIndex({
     step: "COLLECT_AND_SAVE_INDEX",
     input: { sido: s1, sigungu: s2, limit, query },
     jurKey,
-    resolved: { org: org || null, sborg: null, orgMapSource },
-    mode,
+    resolved: { org, sborg: null, orgMapSource: (_orgMapCache === FALLBACK_ORG_MAP) ? "FALLBACK" : "SCRAPED" },
     collected: items.length,
-    saved,
-    sample: items.slice(0, 5),
+    saved: { index_rows: savedIndex },
+    sample: items.slice(0, Math.min(5, items.length)),
     debug: debug ? debugPack : undefined,
   };
 }
 
-/**
- * ✅ API 호환 (functions/api에서 fn({db,oc,...}) 형태로 호출)
- */
+// ✅ API에서 바로 호출되는 entry
 export async function run({ db, oc, sido, sigungu, limit = 30, debug = false, query = "주차" }) {
   return crawlParkingOrdinanceIndex({ db, oc, sido, sigungu, limit, debug, query });
 }
