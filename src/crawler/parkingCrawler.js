@@ -1,10 +1,18 @@
 // src/crawler/parkingCrawler.js (FULL REPLACE)
-// 디버그 강화 버전: collected=0 원인 확정용
+// collected=0 탈출 + "실제 DB 쌓기" 버전
+//
+// 핵심:
+// 1) 1차: org(시도)만으로 빠르게 검색
+// 2) 2차: 0건이면 org를 아예 빼고(전국 검색) sigungu로 필터해서 수집
+// 3) db가 주어지면 parking_jurisdiction / parking_ordinance_index에 즉시 upsert
+//
+// 주의:
+// - DRF 구조가 변할 수 있어 debug에 url/rowsCount/sampleOrgNames를 남김
+// - 다음 단계에서 sborg 동적수집 붙이면 1차에서 대부분 해결됨
 
 import { SIDO_LIST, cleanText, normalizeSido, normalizeSigungu } from "./cityList.js";
 
 const DRF_BASE = "https://www.law.go.kr/DRF/lawSearch.do";
-const LAW_SERVICE_URL = "https://www.law.go.kr/DRF/lawService.do";
 const ORDIN_SEARCH_UI = "https://www.law.go.kr/ordinSc.do";
 
 function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
@@ -116,13 +124,27 @@ function normalizeOrdinItem(x) {
 
   if (!ordinId || !name) return null;
 
-  return { ordinId, name, orgName: orgName || null, kind: kind || null, field: field || null,
-    effDate: effDate || null, annDate: annDate || null, annNo: annNo || null, link: link || null };
+  return {
+    ordinId,
+    name,
+    orgName: orgName || null,
+    kind: kind || null,
+    field: field || null,
+    effDate: effDate || null,
+    annDate: annDate || null,
+    annNo: annNo || null,
+    link: link || null,
+  };
 }
 
+/**
+ * ✅ DRF ordin list
+ * - org는 "있으면 좁게", 없으면(빈 문자열/undefined) 전국검색 시도
+ * - 일부 환경에서 org 없이 에러날 수 있으니 상위에서 catch하여 다른 전략으로 넘어가게 함
+ */
 export async function fetchOrdinList({
   oc,
-  org,
+  org,               // optional
   sborg = "",
   query = "주차",
   search = 1,
@@ -133,14 +155,14 @@ export async function fetchOrdinList({
   ordinFd = "",
 }) {
   if (!oc) throw new Error("MISSING_OC");
-  if (!org) throw new Error("MISSING_ORG");
 
   const url = buildUrl({
     OC: oc,
     target: "ordin",
     type: "JSON",
-    org,
-    sborg,
+    // ✅ org가 falsy면 아예 파라미터를 넣지 않음(전국검색 시도)
+    ...(org ? { org } : {}),
+    ...(sborg ? { sborg } : {}),
     knd,
     search,
     query,
@@ -153,7 +175,6 @@ export async function fetchOrdinList({
   const data = await fetchJson(url);
   const list = pickListAny(data?.자치법규) || pickListAny(data);
   const rows = list.map(normalizeOrdinItem).filter(Boolean);
-
   return { url, rows, raw: data };
 }
 
@@ -192,8 +213,83 @@ export async function resolveOrgBySido(sido) {
   return org;
 }
 
-// ✅ 핵심: collected=0 원인 확정용 디버그를 반환
+function orgNameHit({ orgName, s1, s2 }) {
+  if (!orgName) return false;
+  const a = orgName;
+  const b = a.replace(/\s+/g, "");
+  const s2c = s2.replace(/\s+/g, "");
+  return (
+    a.includes(s2) ||
+    b.includes(s2c) ||
+    a.includes(`${s1} ${s2}`) ||
+    a.includes(`${s2}청`)
+  );
+}
+
+function makeJurKey(sido, sigungu) {
+  return `${String(sido).trim()}__${String(sigungu).trim()}`;
+}
+
+/**
+ * ✅ DB upsert helpers (D1)
+ */
+async function upsertJurisdiction(db, { jurKey, sido, sigungu }) {
+  await db.prepare(
+    `
+    INSERT INTO parking_jurisdiction (jur_key, sido, sigungu, updated_at)
+    VALUES (?, ?, ?, datetime('now'))
+    ON CONFLICT(jur_key) DO UPDATE SET
+      sido=excluded.sido,
+      sigungu=excluded.sigungu,
+      updated_at=datetime('now')
+    `
+  ).bind(jurKey, sido, sigungu).run();
+}
+
+async function upsertIndexRows(db, jurKey, items) {
+  if (!items.length) return 0;
+
+  const stmts = items.map((it) =>
+    db.prepare(
+      `
+      INSERT INTO parking_ordinance_index
+        (jur_key, ordin_id, name, org_name, kind, field, eff_date, ann_date, ann_no, link, collected_at, updated_at)
+      VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+      ON CONFLICT(jur_key, ordin_id) DO UPDATE SET
+        name=excluded.name,
+        org_name=excluded.org_name,
+        kind=excluded.kind,
+        field=excluded.field,
+        eff_date=excluded.eff_date,
+        ann_date=excluded.ann_date,
+        ann_no=excluded.ann_no,
+        link=excluded.link,
+        updated_at=datetime('now')
+      `
+    ).bind(
+      jurKey,
+      String(it.ordinId),
+      String(it.name),
+      it.orgName || null,
+      it.kind || null,
+      it.field || null,
+      it.effDate || null,
+      it.annDate || null,
+      it.annNo || null,
+      it.link || null
+    )
+  );
+
+  await db.batch(stmts);
+  return items.length;
+}
+
+/**
+ * ✅ collected=0 원인 확정 + fallback 수집 + 즉시 DB 적재
+ */
 export async function crawlParkingOrdinanceIndex({
+  db = null,          // ✅ D1 (있으면 저장)
   oc,
   sido,
   sigungu,
@@ -210,90 +306,126 @@ export async function crawlParkingOrdinanceIndex({
   if (!s1) throw new Error("MISSING_SIDO");
   if (!s2) throw new Error("MISSING_SIGUNGU");
 
-  const org = await resolveOrgBySido(s1);
+  const debugPack = debug ? { phases: [], rawHints: [] } : null;
 
-  const collected = [];
-  const debugPack = debug ? { tried: [], rawHints: [] } : null;
-
-  let page = 1;
-  while (page <= maxPages && collected.length < limit) {
-    const r = await fetchOrdinList({
-      oc,
-      org,
-      sborg: "",
-      query,
-      search: searchMode,
-      display: 100,
-      page,
-      sort: "ddes",
-    });
-
-    const rows = r.rows || [];
-
-    if (debug) {
-      // rows가 0이면 raw 구조 힌트 남기기
-      const topKeys = r.raw && typeof r.raw === "object" ? Object.keys(r.raw).slice(0, 30) : [];
-      debugPack.tried.push({
-        page,
-        url: r.url,
-        rowsCount: rows.length,
-        sampleOrgNames: rows.slice(0, 5).map(x => x.orgName).filter(Boolean),
-      });
-
-      if (!rows.length) {
-        debugPack.rawHints.push({
-          page,
-          topKeys,
-          rawHead: safeJsonStringify(r.raw)?.slice(0, 400) || null,
-        });
-      }
-    }
-
-    if (!rows.length) break;
-
-    // ✅ 필터 전에 1차로 rows를 보여줘야 원인 확정 가능
-    for (const row of rows) {
-      const orgName = row.orgName || "";
-      if (!orgName) continue;
-
-      // 기존: orgName.includes(s2)
-      // ✅ 디버그 상황에서 표기 차이(성동구청/서울특별시 성동구 등)를 위해 완화:
-      const hit =
-        orgName.includes(s2) ||
-        orgName.replace(/\s+/g, "").includes(s2.replace(/\s+/g, "")) ||
-        orgName.includes(`${s1} ${s2}`) ||
-        orgName.includes(`${s2}청`);
-
-      if (hit) {
-        collected.push({ sido: s1, sigungu: s2, org, sborg: null, ...row });
-        if (collected.length >= limit) break;
-      }
-    }
-
-    page += 1;
-    await sleep(throttleMs);
+  // -----------------------------
+  // Phase A: org-only (fast)
+  // -----------------------------
+  let org = "";
+  try {
+    org = await resolveOrgBySido(s1);
+  } catch {
+    org = "";
   }
 
-  const uniq = new Map();
-  for (const it of collected) uniq.set(String(it.ordinId), it);
-  const items = Array.from(uniq.values()).slice(0, limit);
+  async function collectPhase({ phase, orgParam }) {
+    const collected = [];
+    let page = 1;
+
+    while (page <= maxPages && collected.length < limit) {
+      const r = await fetchOrdinList({
+        oc,
+        org: orgParam || undefined,
+        sborg: "",
+        query,
+        search: searchMode,
+        display: 100,
+        page,
+        sort: "ddes",
+      });
+
+      const rows = r.rows || [];
+
+      if (debug) {
+        const topKeys = r.raw && typeof r.raw === "object" ? Object.keys(r.raw).slice(0, 30) : [];
+        debugPack.phases.push({
+          phase,
+          page,
+          url: r.url,
+          rowsCount: rows.length,
+          sampleOrgNames: rows.slice(0, 8).map(x => x.orgName).filter(Boolean),
+        });
+
+        if (!rows.length) {
+          debugPack.rawHints.push({
+            phase,
+            page,
+            topKeys,
+            rawHead: safeJsonStringify(r.raw)?.slice(0, 400) || null,
+          });
+        }
+      }
+
+      if (!rows.length) break;
+
+      for (const row of rows) {
+        if (orgNameHit({ orgName: row.orgName || "", s1, s2 })) {
+          collected.push({ sido: s1, sigungu: s2, org: orgParam || null, sborg: null, ...row });
+          if (collected.length >= limit) break;
+        }
+      }
+
+      page += 1;
+      await sleep(throttleMs);
+    }
+
+    const uniq = new Map();
+    for (const it of collected) uniq.set(String(it.ordinId), it);
+    return Array.from(uniq.values()).slice(0, limit);
+  }
+
+  let items = [];
+  let mode = "";
+  let orgMapSource = (_orgMapCache === FALLBACK_ORG_MAP) ? "FALLBACK" : "SCRAPED";
+
+  // A-1) org-only
+  if (org) {
+    items = await collectPhase({ phase: "A:ORG_ONLY", orgParam: org });
+    mode = "ORG_ONLY_FILTER_BY_SIGUNGU";
+  }
+
+  // A-2) fallback: nationwide (org param omitted)
+  if (!items.length) {
+    try {
+      const nationwide = await collectPhase({ phase: "B:NATIONWIDE_NO_ORG", orgParam: "" });
+      items = nationwide;
+      mode = "NATIONWIDE_FILTER_BY_SIGUNGU";
+    } catch (e) {
+      // 전국검색 자체가 막히면 여기서 에러를 그대로 노출(원인 파악이 쉬움)
+      throw new Error(`NATIONWIDE_SEARCH_FAILED: ${String(e?.message || e)}`);
+    }
+  }
+
+  // ✅ DB 저장(쌓기)
+  let saved = { index_rows: 0 };
+  const jurKey = makeJurKey(s1, s2);
+
+  if (db) {
+    await upsertJurisdiction(db, { jurKey, sido: s1, sigungu: s2 });
+    if (items.length) {
+      saved.index_rows = await upsertIndexRows(db, jurKey, items);
+    }
+  }
 
   return {
     ok: true,
-    mode: "ORG_ONLY_FILTER_BY_SIGUNGU",
-    input: { sido: s1, sigungu: s2, query, limit },
-    resolved: { org, sborg: null, orgMapSource: (_orgMapCache === FALLBACK_ORG_MAP) ? "FALLBACK" : "SCRAPED" },
+    step: "COLLECT_AND_SAVE_INDEX",
+    input: { sido: s1, sigungu: s2, limit, query },
+    jurKey,
+    resolved: { org: org || null, sborg: null, orgMapSource },
+    mode,
     collected: items.length,
-    items,
+    saved,
+    sample: items.slice(0, 5),
     debug: debug ? debugPack : undefined,
   };
 }
 
-// ✅ API 호환
+/**
+ * ✅ API 호환 (functions/api에서 fn({db,oc,...}) 형태로 호출)
+ */
 export async function run({ db, oc, sido, sigungu, limit = 30, debug = false, query = "주차" }) {
-  // 저장은 기존 버전 유지한다고 가정하고 "index만" 반환
-  // (고미 프로젝트에서는 runParkingCrawler가 따로 있으니, 여기서는 index만 충분)
-  return crawlParkingOrdinanceIndex({ oc, sido, sigungu, limit, debug, query });
+  return crawlParkingOrdinanceIndex({ db, oc, sido, sigungu, limit, debug, query });
 }
 
 export default run;
