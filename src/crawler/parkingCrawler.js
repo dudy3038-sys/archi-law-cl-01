@@ -1,21 +1,16 @@
 // src/crawler/parkingCrawler.js (FULL REPLACE)
 //
 // ✅ 목표(즉시 실행 가능한 실수집+저장 1단계):
-// - org/sborg(기관코드) 완전 동적 수집 전이라도,
-//   1) law.go.kr 자치법규 검색 UI(ordinSc.do) HTML에서 시도(org) 코드 목록 파싱
-//   2) sborg 없이 org(시도) 단위로 DRF 자치법규 목록 조회
-//   3) 결과의 orgName(지자체기관명)에 sigungu 문자열이 포함된 것만 필터
-//   4) D1에 저장:
-//      - parking_jurisdiction
-//      - parking_ordinance_index
-//      - (옵션) parking_ordinance_text: 상위 N개 원문(raw_json) 저장 시작
+// - ordinSc.do HTML 스크랩이 막히거나(동적 렌더링) 구조가 바뀌어도,
+//   시도(org) 코드를 fallback 맵으로 해결해서 "바로 수집"을 계속한다.
+// - sborg 없이 org(시도) 단위 검색 → orgName에 sigungu 포함된 것만 필터
+// - D1에 저장(인덱스 + 원문(raw_json) 일부)
 //
-// ⚠️ 정석 2단계(다음):
-// - 시군구 옵션 목록 + sborg(기관코드)까지 동적 수집/캐시 → 정확도/성능 업
+// ⚠️ 다음 단계(정석):
+// - 시군구 목록/기관코드(sbrog) 동적 수집 + 캐시
 
 import { SIDO_LIST, cleanText, normalizeSido, normalizeSigungu } from "./cityList.js";
 
-// ✅ https 고정 (Cloudflare에서 http → https 리다이렉트/TLS 문제로 525가 잘 뜸)
 const DRF_BASE = "https://www.law.go.kr/DRF/lawSearch.do";
 const LAW_SERVICE_URL = "https://www.law.go.kr/DRF/lawService.do";
 const ORDIN_SEARCH_UI = "https://www.law.go.kr/ordinSc.do";
@@ -25,16 +20,32 @@ function sleep(ms) {
 }
 
 function safeJsonStringify(x) {
-  try {
-    return JSON.stringify(x);
-  } catch {
-    return null;
-  }
+  try { return JSON.stringify(x); } catch { return null; }
 }
 
-/** -------------------------------------------------------
- * ✅ fetch with retry (525/520/522/523/524/5xx 등)
- * ------------------------------------------------------*/
+// ✅ fallback: 시도(org) 코드 (스크랩 실패 시 즉시 사용)
+// ※ 만약 특정 시도가 0건이면 해당 org 코드가 다른 값일 수 있으니,
+//   그 시도만 별도로 확인/수정하면 됨.
+const FALLBACK_ORG_MAP = new Map([
+  ["서울특별시", "6110000"],
+  ["부산광역시", "6260000"],
+  ["대구광역시", "6270000"],
+  ["인천광역시", "6280000"],
+  ["광주광역시", "6290000"],
+  ["대전광역시", "6300000"],
+  ["울산광역시", "6310000"],
+  ["세종특별자치시", "5690000"],
+  ["경기도", "6410000"],
+  ["강원특별자치도", "6420000"],
+  ["충청북도", "6430000"],
+  ["충청남도", "6440000"],
+  ["전북특별자치도", "6450000"],
+  ["전라남도", "6460000"],
+  ["경상북도", "6470000"],
+  ["경상남도", "6480000"],
+  ["제주특별자치도", "6500000"],
+]);
+
 async function fetchWithRetry(url, opts = {}, retry = 3) {
   let lastErr = null;
   for (let i = 0; i <= retry; i++) {
@@ -48,29 +59,17 @@ async function fetchWithRetry(url, opts = {}, retry = 3) {
         ...opts,
       });
 
-      // Cloudflare 계열/서버 5xx는 재시도
       if (!res.ok) {
         const status = res.status;
         const text = await res.text().catch(() => "");
         const msg = `HTTP_${status}: ${text.slice(0, 200)}`;
 
-        // 재시도 대상
         const retryable =
-          status === 408 ||
-          status === 425 ||
-          status === 429 ||
-          status === 500 ||
-          status === 502 ||
-          status === 503 ||
-          status === 504 ||
-          status === 520 ||
-          status === 522 ||
-          status === 523 ||
-          status === 524 ||
-          status === 525;
+          status === 408 || status === 425 || status === 429 ||
+          status === 500 || status === 502 || status === 503 || status === 504 ||
+          status === 520 || status === 522 || status === 523 || status === 524 || status === 525;
 
         if (retryable && i < retry) {
-          // 지수 백오프 + 약간의 지터
           await sleep(250 * Math.pow(2, i) + Math.floor(Math.random() * 120));
           continue;
         }
@@ -93,12 +92,7 @@ async function fetchWithRetry(url, opts = {}, retry = 3) {
 async function fetchText(url) {
   const res = await fetchWithRetry(
     url,
-    {
-      headers: {
-        accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-      },
-    },
+    { headers: { accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" } },
     3
   );
   return await res.text();
@@ -107,17 +101,12 @@ async function fetchText(url) {
 async function fetchJson(url) {
   const res = await fetchWithRetry(
     url,
-    {
-      headers: { accept: "application/json,text/plain,*/*" },
-    },
+    { headers: { accept: "application/json,text/plain,*/*" } },
     3
   );
   const text = await res.text();
-  try {
-    return JSON.parse(text);
-  } catch {
-    throw new Error(`NOT_JSON: ${text.slice(0, 120)}`);
-  }
+  try { return JSON.parse(text); }
+  catch { throw new Error(`NOT_JSON: ${text.slice(0, 120)}`); }
 }
 
 function buildUrl(params) {
@@ -135,46 +124,23 @@ function pickListAny(root) {
   if (!root) return [];
   if (Array.isArray(root)) return root;
 
-  const a =
-    root?.자치법규 ||
-    root?.ordin ||
-    root?.Ordin ||
-    root?.list ||
-    root?.items ||
-    null;
-
+  const a = root?.자치법규 || root?.ordin || root?.Ordin || root?.list || root?.items || null;
   if (Array.isArray(a)) return a;
 
-  const b =
-    a?.자치법규 ||
-    a?.ordin ||
-    a?.Ordin ||
-    a?.list ||
-    a?.items ||
-    null;
-
+  const b = a?.자치법규 || a?.ordin || a?.Ordin || a?.list || a?.items || null;
   return Array.isArray(b) ? b : [];
 }
 
 function normalizeOrdinItem(x) {
-  const ordinId =
-    String(x?.자치법규ID ?? x?.ordinId ?? x?.ID ?? x?.id ?? "").trim();
-  const name =
-    String(x?.자치법규명 ?? x?.ordinName ?? x?.명칭 ?? x?.name ?? "").trim();
-  const link =
-    String(x?.자치법규상세링크 ?? x?.link ?? x?.상세링크 ?? "").trim();
-  const orgName =
-    String(x?.지자체기관명 ?? x?.기관명 ?? x?.orgName ?? "").trim();
-  const kind =
-    String(x?.자치법규종류 ?? x?.종류 ?? x?.kndName ?? "").trim();
-  const field =
-    String(x?.자치법규분야명 ?? x?.분야명 ?? x?.fieldName ?? "").trim();
-  const effDate =
-    String(x?.시행일자 ?? x?.efYd ?? x?.effDate ?? "").trim();
-  const annDate =
-    String(x?.공포일자 ?? x?.ancYd ?? x?.annDate ?? "").trim();
-  const annNo =
-    String(x?.공포번호 ?? x?.ancNo ?? x?.annNo ?? "").trim();
+  const ordinId = String(x?.자치법규ID ?? x?.ordinId ?? x?.ID ?? x?.id ?? "").trim();
+  const name = String(x?.자치법규명 ?? x?.ordinName ?? x?.명칭 ?? x?.name ?? "").trim();
+  const link = String(x?.자치법규상세링크 ?? x?.link ?? x?.상세링크 ?? "").trim();
+  const orgName = String(x?.지자체기관명 ?? x?.기관명 ?? x?.orgName ?? "").trim();
+  const kind = String(x?.자치법규종류 ?? x?.종류 ?? x?.kndName ?? "").trim();
+  const field = String(x?.자치법규분야명 ?? x?.분야명 ?? x?.fieldName ?? "").trim();
+  const effDate = String(x?.시행일자 ?? x?.efYd ?? x?.effDate ?? "").trim();
+  const annDate = String(x?.공포일자 ?? x?.ancYd ?? x?.annDate ?? "").trim();
+  const annNo = String(x?.공포번호 ?? x?.ancNo ?? x?.annNo ?? "").trim();
 
   if (!ordinId || !name) return null;
 
@@ -191,9 +157,9 @@ function normalizeOrdinItem(x) {
   };
 }
 
-/* ---------------------------------------------------------
- * ✅ 자치법규 목록 조회 (org 필수, sborg 선택)
- * --------------------------------------------------------*/
+// ---------------------------------------------------------
+// ✅ 목록 조회 (org 필수, sborg 선택)
+// ---------------------------------------------------------
 export async function fetchOrdinList({
   oc,
   org,
@@ -230,16 +196,14 @@ export async function fetchOrdinList({
   return { url, rows, raw: data };
 }
 
-/* ---------------------------------------------------------
- * ✅ 시도(org) 코드 파싱 (ordinSc.do HTML)
- * --------------------------------------------------------*/
+// ---------------------------------------------------------
+// ✅ orgMap 스크랩(시도 코드) — 실패하면 fallback 사용
+// ---------------------------------------------------------
 let _orgMapCache = null;
 
 function parseOrgMapFromHtml(html) {
   const map = new Map();
-  // option value="6110000">서울특별시</option>
-  const re =
-    /<option\s+value\s*=\s*["']?(\d{4,})["']?\s*>\s*([^<]+?)\s*<\/option>/g;
+  const re = /<option\s+value\s*=\s*["']?(\d{4,})["']?\s*>\s*([^<]+?)\s*<\/option>/g;
   let m;
   while ((m = re.exec(html))) {
     const code = String(m[1] || "").trim();
@@ -253,16 +217,21 @@ function parseOrgMapFromHtml(html) {
 
 export async function getOrgMapByScrape({ force = false } = {}) {
   if (_orgMapCache && !force) return _orgMapCache;
-  const html = await fetchText(ORDIN_SEARCH_UI);
-  const map = parseOrgMapFromHtml(html);
 
-  if (!map.size) {
-    throw new Error(
-      "ORG_MAP_PARSE_FAILED: cannot find sido->org codes from ordinSc.do"
-    );
+  try {
+    const html = await fetchText(ORDIN_SEARCH_UI);
+    const map = parseOrgMapFromHtml(html);
+    if (map.size) {
+      _orgMapCache = map;
+      return map;
+    }
+    // 스크랩 실패 → fallback
+    _orgMapCache = FALLBACK_ORG_MAP;
+    return _orgMapCache;
+  } catch {
+    _orgMapCache = FALLBACK_ORG_MAP;
+    return _orgMapCache;
   }
-  _orgMapCache = map;
-  return map;
 }
 
 export async function resolveOrgBySido(sido) {
@@ -273,11 +242,9 @@ export async function resolveOrgBySido(sido) {
   return org;
 }
 
-/* ---------------------------------------------------------
- * ✅ 자치법규 본문(JSON) 조회: lawService.do?target=ordin&MST=...
- * - MST 자리에 ordinId를 넣어보는 방식(실측 필요)
- * - 일단 raw_json 저장부터 시작 (파싱은 다음 단계)
- * --------------------------------------------------------*/
+// ---------------------------------------------------------
+// ✅ 원문(JSON) 조회: lawService.do?target=ordin&MST=...
+// ---------------------------------------------------------
 export async function fetchOrdinanceText({ oc, mst }) {
   if (!oc) throw new Error("MISSING_OC");
   if (!mst) throw new Error("MISSING_MST");
@@ -292,9 +259,17 @@ export async function fetchOrdinanceText({ oc, mst }) {
   return { finalUrl: u.toString(), data };
 }
 
-/* ---------------------------------------------------------
- * ✅ (실수집) 시도/시군구 입력 → org-only 검색 + sigungu 필터
- * --------------------------------------------------------*/
+function tryExtractBodyTextFromOrdinJson(data) {
+  const root = data?.자치법규 || data?.ordin || data?.Ordin || data;
+  const body =
+    root?.본문 || root?.내용 || root?.body || root?.text || root?.자치법규내용 || null;
+  if (typeof body === "string" && body.trim()) return body.trim();
+  return null;
+}
+
+// ---------------------------------------------------------
+// ✅ (실수집) org-only + sigungu 포함 필터
+// ---------------------------------------------------------
 export async function crawlParkingOrdinanceIndex({
   oc,
   sido,
@@ -309,7 +284,6 @@ export async function crawlParkingOrdinanceIndex({
   if (!oc) throw new Error("MISSING_OC");
   const s1 = normalizeSido(sido);
   const s2 = normalizeSigungu(sigungu);
-
   if (!s1) throw new Error("MISSING_SIDO");
   if (!s2) throw new Error("MISSING_SIGUNGU");
 
@@ -336,13 +310,7 @@ export async function crawlParkingOrdinanceIndex({
     for (const row of rows) {
       const orgName = row.orgName || "";
       if (orgName.includes(s2)) {
-        collected.push({
-          sido: s1,
-          sigungu: s2,
-          org,
-          sborg: null,
-          ...row,
-        });
+        collected.push({ sido: s1, sigungu: s2, org, sborg: null, ...row });
         if (collected.length >= limit) break;
       }
     }
@@ -351,7 +319,6 @@ export async function crawlParkingOrdinanceIndex({
     await sleep(throttleMs);
   }
 
-  // ordinId 중복 제거
   const uniq = new Map();
   for (const it of collected) {
     const key = String(it.ordinId);
@@ -364,18 +331,20 @@ export async function crawlParkingOrdinanceIndex({
     ok: true,
     mode: "ORG_ONLY_FILTER_BY_SIGUNGU",
     input: { sido: s1, sigungu: s2, query, limit },
-    resolved: { org, sborg: null },
+    resolved: {
+      org,
+      sborg: null,
+      orgMapSource: (_orgMapCache === FALLBACK_ORG_MAP) ? "FALLBACK" : "SCRAPED",
+    },
     collected: items.length,
     items,
-    debug: debug
-      ? { pagesTried: page - 1, maxPages, throttleMs }
-      : undefined,
+    debug: debug ? { pagesTried: page - 1, maxPages, throttleMs } : undefined,
   };
 }
 
-/* ---------------------------------------------------------
- * ✅ D1 저장(Upsert)
- * --------------------------------------------------------*/
+// ---------------------------------------------------------
+// ✅ D1 저장(Upsert)
+// ---------------------------------------------------------
 function makeJurKey(sido, sigungu) {
   return `${sido}__${sigungu}`;
 }
@@ -383,17 +352,14 @@ function makeJurKey(sido, sigungu) {
 async function upsertJurisdiction(db, { sido, sigungu }) {
   const jurKey = makeJurKey(sido, sigungu);
 
-  await db
-    .prepare(
-      `
+  await db.prepare(`
       INSERT INTO parking_jurisdiction (jur_key, sido, sigungu, updated_at)
       VALUES (?, ?, ?, datetime('now'))
       ON CONFLICT(jur_key) DO UPDATE SET
         sido=excluded.sido,
         sigungu=excluded.sigungu,
         updated_at=datetime('now')
-    `
-    )
+    `)
     .bind(jurKey, sido, sigungu)
     .run();
 
@@ -404,9 +370,7 @@ async function upsertIndexRows(db, jurKey, items) {
   if (!items.length) return 0;
 
   const stmts = items.map((it) =>
-    db
-      .prepare(
-        `
+    db.prepare(`
         INSERT INTO parking_ordinance_index
           (jur_key, ordin_id, name, org_name, kind, field, eff_date, ann_date, ann_no, link, collected_at, updated_at)
         VALUES
@@ -421,8 +385,7 @@ async function upsertIndexRows(db, jurKey, items) {
           ann_no=excluded.ann_no,
           link=excluded.link,
           updated_at=datetime('now')
-      `
-      )
+      `)
       .bind(
         jurKey,
         String(it.ordinId),
@@ -442,9 +405,7 @@ async function upsertIndexRows(db, jurKey, items) {
 }
 
 async function upsertOrdinanceTextRaw(db, jurKey, { ordinId, name, sourceUrl, rawJson, bodyText, tablesText }) {
-  await db
-    .prepare(
-      `
+  await db.prepare(`
       INSERT INTO parking_ordinance_text
         (ordin_id, jur_key, name, source_url, raw_json, body_text, tables_text, collected_at, updated_at)
       VALUES
@@ -457,8 +418,7 @@ async function upsertOrdinanceTextRaw(db, jurKey, { ordinId, name, sourceUrl, ra
         body_text=excluded.body_text,
         tables_text=excluded.tables_text,
         updated_at=datetime('now')
-    `
-    )
+    `)
     .bind(
       String(ordinId),
       jurKey,
@@ -471,26 +431,9 @@ async function upsertOrdinanceTextRaw(db, jurKey, { ordinId, name, sourceUrl, ra
     .run();
 }
 
-function tryExtractBodyTextFromOrdinJson(data) {
-  // 구조가 지자체마다/시스템 버전마다 달라서 “보수적으로” 몇 가지 후보만
-  const root = data?.자치법규 || data?.ordin || data?.Ordin || data;
-  const body =
-    root?.본문 ||
-    root?.내용 ||
-    root?.body ||
-    root?.text ||
-    root?.자치법규내용 ||
-    null;
-
-  if (typeof body === "string" && body.trim()) return body.trim();
-  return null;
-}
-
-/* ---------------------------------------------------------
- * ✅ API가 기대하는 "진짜 실행 함수"
- * - functions/api/[[path]].js 가 이 형태로 호출함:
- *   runParkingCrawler({ db, oc, sido, sigungu, limit, debug })
- * --------------------------------------------------------*/
+// ---------------------------------------------------------
+// ✅ API가 기대하는 "수집+저장" 실행 함수
+// ---------------------------------------------------------
 export async function runParkingCrawler({
   db,
   oc,
@@ -499,7 +442,6 @@ export async function runParkingCrawler({
   limit = 30,
   debug = false,
   query = "주차",
-  // 원문(raw_json) 저장은 너무 무거울 수 있어서 기본 3개만
   saveTextTopN = 3,
 }) {
   if (!db) throw new Error("MISSING_DB");
@@ -510,23 +452,11 @@ export async function runParkingCrawler({
   if (!s1) throw new Error("MISSING_SIDO");
   if (!s2) throw new Error("MISSING_SIGUNGU");
 
-  // 1) 목록 수집
-  const index = await crawlParkingOrdinanceIndex({
-    oc,
-    sido: s1,
-    sigungu: s2,
-    limit,
-    debug,
-    query,
-  });
+  const index = await crawlParkingOrdinanceIndex({ oc, sido: s1, sigungu: s2, limit, debug, query });
 
-  // 2) 지자체 upsert
   const jurKey = await upsertJurisdiction(db, { sido: s1, sigungu: s2 });
-
-  // 3) 인덱스 upsert
   const savedIndex = await upsertIndexRows(db, jurKey, index.items || []);
 
-  // 4) (옵션) 상위 N개는 원문(raw_json)도 저장 시작
   const picked = (index.items || []).slice(0, Math.max(0, saveTextTopN));
   let savedText = 0;
   const textErrors = [];
@@ -560,18 +490,13 @@ export async function runParkingCrawler({
     jurKey,
     resolved: index.resolved,
     collected: index.collected,
-    saved: {
-      index_rows: savedIndex,
-      text_rows: savedText,
-    },
+    saved: { index_rows: savedIndex, text_rows: savedText },
     sample: (index.items || []).slice(0, 5),
     debug: debug ? { textErrors } : undefined,
   };
 }
 
-/* ---------------------------------------------------------
- * ✅ functions/api에서 후보로 찾을 수 있게 alias 제공
- * --------------------------------------------------------*/
+// alias
 export async function run({ db, oc, sido, sigungu, limit = 30, debug = false }) {
   return runParkingCrawler({ db, oc, sido, sigungu, limit, debug });
 }
