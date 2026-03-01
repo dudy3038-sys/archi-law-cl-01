@@ -15,6 +15,9 @@ import { buildChecklist } from "../../src/server/checklist.js";
  */
 const LAW_SERVICE_URL = "http://www.law.go.kr/DRF/lawService.do";
 
+/* =========================
+   law ingest helpers
+========================= */
 function pickArticlesFromLawServiceJson(data) {
   const root = data?.법령 || data?.Law || data?.law || data;
   const jo =
@@ -124,9 +127,13 @@ async function upsertLawArticles(DB, { lawKey, mst, sourceUrl, articles }) {
   return insertedOrIgnored;
 }
 
-// =========================================================
-// ✅ 주차(법정) 계산 입력 연결용(현재는 still 테스트)
-// =========================================================
+/* =========================
+   parking helpers (DB-first)
+========================= */
+function jurKeyOf(sido, sigungu) {
+  return `${String(sido || "").trim()}__${String(sigungu || "").trim()}`;
+}
+
 function normalizeParkingPayload(body) {
   const jurisdiction = body?.jurisdiction || {};
   const sido = String(jurisdiction?.sido || "").trim();
@@ -147,11 +154,249 @@ function normalizeParkingPayload(body) {
   return { jurisdiction: { sido, sigungu }, usageAreas, primaryUse };
 }
 
-// =========================================================
-// ✅ (핵심) 크롤러 실행 유틸: DB/OC/지자체 인자를 넘겨 "수집+저장" 가능하게
-// - parkingCrawler.js는 다음 형태를 권장:
-//   export async function runParkingCrawler({ db, oc, sido, sigungu, limit, debug }) { ... }
-// =========================================================
+async function ensureParkingJurisdiction(DB, { sido, sigungu }) {
+  const jur_key = jurKeyOf(sido, sigungu);
+  await DB.prepare(
+    `
+    INSERT OR IGNORE INTO parking_jurisdiction (jur_key, sido, sigungu, updated_at)
+    VALUES (?, ?, ?, datetime('now'))
+  `
+  )
+    .bind(jur_key, sido, sigungu)
+    .run();
+
+  // touch updated_at
+  await DB.prepare(
+    `UPDATE parking_jurisdiction SET updated_at=datetime('now') WHERE jur_key=?`
+  )
+    .bind(jur_key)
+    .run();
+
+  return jur_key;
+}
+
+async function upsertParkingIndex(DB, { jur_key, items }) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return { wrote: 0 };
+  }
+
+  const CHUNK = 50;
+  let wrote = 0;
+
+  for (let i = 0; i < items.length; i += CHUNK) {
+    const part = items.slice(i, i + CHUNK);
+
+    const stmts = part.map((it) =>
+      DB.prepare(
+        `
+        INSERT OR REPLACE INTO parking_ordinance_index
+          (jur_key, ordin_id, name, org_name, kind, field, eff_date, ann_date, ann_no, link, collected_at, updated_at)
+        VALUES
+          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+      `
+      ).bind(
+        jur_key,
+        String(it.ordinId || it.ordin_id || "").trim(),
+        String(it.name || "").trim(),
+        it.orgName ? String(it.orgName) : null,
+        it.kind ? String(it.kind) : null,
+        it.field ? String(it.field) : null,
+        it.effDate ? String(it.effDate) : null,
+        it.annDate ? String(it.annDate) : null,
+        it.annNo ? String(it.annNo) : null,
+        it.link ? String(it.link) : null
+      )
+    );
+
+    await DB.batch(stmts);
+    wrote += part.length;
+  }
+
+  return { wrote };
+}
+
+// jur 우선순위: 시군구 → 시도(전체/본청) → (없음)
+function buildJurFallbackKeys({ sido, sigungu }) {
+  const s = String(sido || "").trim();
+  const g = String(sigungu || "").trim();
+  const keys = [];
+  if (s && g) keys.push(jurKeyOf(s, g));
+
+  // ✅ 광역(상위) fallback 후보들
+  // - 서울특별시__전체 (권장)
+  // - 서울특별시__서울특별시 (예비)
+  if (s) {
+    keys.push(jurKeyOf(s, "전체"));
+    keys.push(jurKeyOf(s, s));
+  }
+  return Array.from(new Set(keys));
+}
+
+async function fetchParkingRules(DB, { jur_key }) {
+  const res = await DB.prepare(
+    `
+    SELECT
+      id, jur_key, ordin_id, use_label, unit, value_num, note, source, updated_at
+    FROM parking_rules
+    WHERE jur_key = ?
+    ORDER BY use_label ASC, id ASC
+  `
+  )
+    .bind(jur_key)
+    .all();
+
+  const rows = Array.isArray(res?.results) ? res.results : [];
+  return rows.map((r) => ({
+    id: r.id,
+    jur_key: r.jur_key,
+    ordin_id: r.ordin_id || null,
+    use_label: r.use_label,
+    unit: r.unit,
+    value_num: Number(r.value_num),
+    note: r.note || null,
+    source: r.source || null,
+    updated_at: r.updated_at || null,
+  }));
+}
+
+function calcByRule({ area_m2, rule }) {
+  const unit = String(rule.unit || "").trim();
+
+  // 현재 1단계: m2_per_space만 우선 지원
+  // - value_num = "몇 ㎡당 1대"
+  if (unit === "m2_per_space") {
+    const denom = Number(rule.value_num);
+    if (!Number.isFinite(denom) || denom <= 0) return null;
+    const raw = area_m2 / denom;
+    const rounded = Math.ceil(raw);
+    return { raw, rounded, formula: `ceil(${area_m2} / ${denom})` };
+  }
+
+  // 확장 여지: per_household, fixed_min, etc...
+  return null;
+}
+
+async function computeParkingLegalFromDB(DB, payload) {
+  const { sido, sigungu } = payload.jurisdiction;
+  const fallbacks = buildJurFallbackKeys({ sido, sigungu });
+
+  let usedJurKey = "";
+  let rules = [];
+
+  for (const k of fallbacks) {
+    const got = await fetchParkingRules(DB, { jur_key: k });
+    if (got.length) {
+      usedJurKey = k;
+      rules = got;
+      break;
+    }
+  }
+
+  const totalArea = Math.round(
+    payload.usageAreas.reduce((acc, x) => acc + (Number(x.area_m2) || 0), 0) * 100
+  ) / 100;
+
+  // 규칙이 아직 없으면 “명확하게” NO_RULES_YET로
+  if (!rules.length) {
+    const tmp = Math.max(1, Math.ceil(totalArea / 1000));
+    return {
+      ok: true,
+      mode: "NO_RULES_YET",
+      usedJurKey: null,
+      totalArea_m2: totalArea,
+      legalCount: tmp,
+      breakdown: [],
+      formula:
+        `NO_RULES_YET: parking_rules가 비어있어 임시값을 반환합니다. ` +
+        `ceil(totalArea_m2 / 1000), 최소 1대 (총면적=${totalArea}㎡)`,
+      refs: [],
+      hint:
+        `다음 단계: (1) ${fallbacks[0]}에 해당하는 조례 본문/별표를 parking_ordinance_text에 적재 ` +
+        `→ (2) parking_rules 파싱/적재 → (3) 이 엔드포인트가 즉시 DB 기반 산정으로 전환`,
+      debug: { triedJurKeys: fallbacks },
+    };
+  }
+
+  // rules가 있어도 “use_label 매칭”이 1단계라 100% 일치 보장 못 함
+  // - 현재는 payload.use(예: "업무시설")가 rules.use_label을 포함/동일 비교로 매칭
+  const breakdown = [];
+  let sumRaw = 0;
+
+  for (const ua of payload.usageAreas) {
+    const use = String(ua.use || "").trim();
+    const area_m2 = Number(ua.area_m2) || 0;
+
+    // 가장 단순한 매칭(확장 예정)
+    const candidates = rules.filter((r) => r.use_label === use || r.use_label.includes(use) || use.includes(r.use_label));
+    const rule = candidates[0] || null;
+
+    if (!rule) {
+      breakdown.push({
+        use,
+        area_m2,
+        rule: null,
+        count_raw: null,
+        count_rounded: null,
+        note: "NO_MATCHING_RULE",
+      });
+      continue;
+    }
+
+    const out = calcByRule({ area_m2, rule });
+    if (!out) {
+      breakdown.push({
+        use,
+        area_m2,
+        rule,
+        count_raw: null,
+        count_rounded: null,
+        note: "UNSUPPORTED_RULE_UNIT",
+      });
+      continue;
+    }
+
+    sumRaw += out.raw;
+    breakdown.push({
+      use,
+      area_m2,
+      rule,
+      count_raw: out.raw,
+      count_rounded: out.rounded,
+      formula: out.formula,
+    });
+  }
+
+  // ✅ 합산 소수 처리(1차 정책)
+  // - 각 용도별 ‘올림’이 있는 경우도 있으나,
+  // - 지자체별 별표 규정이 다를 수 있어, 지금은 “총합 올림”을 기본으로 둠.
+  // - (다음 단계) rules에 rounding_policy를 넣어 조례 문구대로 맞출 것.
+  const legalCount = Math.max(1, Math.ceil(sumRaw));
+
+  // refs: 규칙이 연결된 ordin_id를 모아 근거로 반환
+  const ordinIds = Array.from(
+    new Set(rules.map((r) => (r.ordin_id ? String(r.ordin_id) : "")).filter(Boolean))
+  );
+
+  return {
+    ok: true,
+    mode: "DB_RULES",
+    usedJurKey,
+    totalArea_m2: totalArea,
+    legalCount,
+    breakdown,
+    formula: `DB_RULES: total=ceil(sum(count_raw)) => ceil(${sumRaw})`,
+    refs: ordinIds.map((id) => ({ type: "ordin", ordin_id: id })),
+    debug: {
+      triedJurKeys: fallbacks,
+      rulesCount: rules.length,
+      ordinIds,
+    },
+  };
+}
+
+/* =========================
+   crawler runner (dynamic import)
+========================= */
 async function runParkingCrawler({ env, input }) {
   const mod = await import("../../src/crawler/parkingCrawler.js");
 
@@ -197,7 +442,6 @@ async function runParkingCrawler({ env, input }) {
     );
   }
 
-  // 크롤러에 DB/OC/입력값 전달
   return await fn({
     db: env.DB,
     oc,
@@ -205,6 +449,9 @@ async function runParkingCrawler({ env, input }) {
   });
 }
 
+/* =========================
+   handler
+========================= */
 export async function onRequest(context) {
   const { request, env, params } = context;
   const url = new URL(request.url);
@@ -218,7 +465,7 @@ export async function onRequest(context) {
     }
 
     // =========================================================
-    // ✅ NEW: (진짜 단계) 주차 조례 수집+저장 실행
+    // ✅ 주차 조례 수집 실행 + (즉시) DB에 인덱스 upsert
     // GET  /api/crawler/parking/run?sido=서울특별시&sigungu=성동구&limit=20&debug=1
     // POST /api/crawler/parking/run { "sido":"서울특별시","sigungu":"성동구","limit":20,"debug":true }
     // =========================================================
@@ -255,12 +502,23 @@ export async function onRequest(context) {
         );
       }
 
-      const startedAt = Date.now();
+      if (!env.DB) {
+        return json(
+          { ok: false, error: "MISSING_ENV_DB", hint: "D1 binding(env.DB) 연결 필요" },
+          500
+        );
+      }
 
+      const startedAt = Date.now();
       const result = await runParkingCrawler({
         env,
         input: { sido, sigungu, limit, debug },
       });
+
+      // ✅ 여기서 즉시 DB에 누적(허수 방지)
+      const items = Array.isArray(result?.items) ? result.items : [];
+      const jur_key = await ensureParkingJurisdiction(env.DB, { sido, sigungu });
+      const savedIndex = await upsertParkingIndex(env.DB, { jur_key, items });
 
       const ms = Date.now() - startedAt;
 
@@ -270,6 +528,14 @@ export async function onRequest(context) {
         input: { sido, sigungu, limit, debug },
         took_ms: ms,
         result,
+        saved: {
+          jur_key,
+          index_rows: savedIndex.wrote,
+        },
+        note:
+          savedIndex.wrote > 0
+            ? "✅ 크롤링 결과를 parking_ordinance_index에 즉시 저장했습니다."
+            : "⚠️ 크롤링 결과(items)가 비어있어 저장된 인덱스가 없습니다. query/필터/응답 구조를 점검하세요.",
       });
     }
 
@@ -418,7 +684,8 @@ export async function onRequest(context) {
     }
 
     // =========================================================
-    // ✅ 주차(법정) - 아직은 테스트 모드 유지
+    // ✅ 주차(법정) - DB 기반 산정(규칙 있으면 바로 적용)
+    // POST /api/parking/legal
     // =========================================================
     if (request.method === "POST" && path === "parking/legal") {
       const body = await request.json().catch(() => ({}));
@@ -447,32 +714,41 @@ export async function onRequest(context) {
         );
       }
 
-      const totalArea =
-        Math.round(
-          payload.usageAreas.reduce(
-            (acc, x) => acc + (Number(x.area_m2) || 0),
-            0
-          ) * 100
-        ) / 100;
+      if (!env.DB) {
+        return json(
+          {
+            ok: false,
+            error: "MISSING_ENV_DB",
+            hint: "D1 binding(env.DB) 연결 필요",
+          },
+          500
+        );
+      }
 
-      // ✅ 테스트 더미 산정 (다음 단계에서 DB 기반 "용도별 산정+합산"으로 교체)
-      const legalCount = Math.max(1, Math.ceil(totalArea / 1000));
-      const formula = `TEST MODE(WIRED_ONLY): ceil(totalArea_m2 / 1000), 최소 1대 (총면적=${totalArea}㎡)`;
+      const out = await computeParkingLegalFromDB(env.DB, payload);
 
       return json({
         ok: true,
-        mode: "WIRED_ONLY",
+        mode: out.mode,
         jurisdiction: payload.jurisdiction,
         primaryUse: payload.primaryUse || null,
         usageAreas: payload.usageAreas,
-        totalArea_m2: totalArea,
-        legalCount,
-        formula,
-        legalParking: legalCount,
+        totalArea_m2: out.totalArea_m2,
+        legalCount: out.legalCount,
+        formula: out.formula,
+
+        // (기존/향후 호환용)
+        legalParking: out.legalCount,
+
+        breakdown: out.breakdown || [],
+        usedJurKey: out.usedJurKey || null,
+        refs: out.refs || [],
         message:
-          "현재는 조례/부설주차장 설치기준 DB가 없어 테스트 산정값을 반환합니다. (지금부터 크롤러가 DB를 채우기 시작하며, 다음 단계에서 실제 산정으로 교체합니다.)",
-        refs: [],
-        debug: { receivedUsageAreasCount: payload.usageAreas.length },
+          out.mode === "DB_RULES"
+            ? "✅ parking_rules(DB) 기반으로 주차대수를 산정했습니다."
+            : "⚠️ 아직 parking_rules(설치기준)가 비어있어 임시값을 반환합니다. 다음 단계에서 조례 별표 파싱 → parking_rules 적재 후 자동으로 DB 산정으로 전환됩니다.",
+        hint: out.hint || null,
+        debug: out.debug || null,
       });
     }
 
