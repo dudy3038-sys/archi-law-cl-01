@@ -1,20 +1,10 @@
 // src/crawler/parkingCrawler.js (FULL REPLACE)
-// ✅ 2번(전국 자동 수집) 모드 포함: 실수집 + 즉시 DB 적재
+// ✅ 2번(전국 자동 수집) 모드 포함: 실수집 + 즉시 DB 적재 (분기 실패 방지 강화)
 //
-// 사용 방법(기존 엔드포인트 유지):
-// 1) 특정 지자체 인덱스 수집(기존 방식)
-//    /api/crawler/parking/run?sido=서울특별시&sigungu=성동구&limit=50&debug=1
-//
-// 2) ✅ 전국 자동 수집(NEW)
-//    /api/crawler/parking/run?sido=전국&sigungu=전체&limit=200&pagesPerSido=2&debug=1
-//    - sido=전국(또는 "*"), sigungu=전체(또는 "*") 로 주면 전국 모드로 동작
-//    - pagesPerSido: 시도별 몇 페이지까지 긁을지(타임아웃 방지)
-//    - limit: 전체에서 최대 몇 건(rows)을 처리할지(타임아웃 방지)
-//
-// 핵심:
-// - DRF 응답이 { OrdinSearch: { law: [...] } } 형태로 올 수 있어 pickListAny 보강
-// - 전국 모드에서는 rows를 parkingDB.ingestNationwideOrdinIndex(db, { rows })로 넘겨
-//   orgName 기반 자동 jur_key 분류 + parking_jurisdiction / parking_ordinance_index 적재
+// 전국 모드 호출:
+// /api/crawler/parking/run?sido=전국&sigungu=전체&limit=200&pagesPerSido=1&debug=1
+// 또는
+// /api/crawler/parking/run?sido=*&sigungu=*&limit=200&pagesPerSido=1&debug=1
 
 import { SIDO_LIST, cleanText, normalizeSido, normalizeSigungu } from "./cityList.js";
 import { ingestNationwideOrdinIndex } from "../server/parkingDB.js";
@@ -107,43 +97,20 @@ function buildUrl(params) {
   return u.toString();
 }
 
-/**
- * ✅ DRF ordin 검색 결과가 다음 형태로 올 수 있음
- * - { OrdinSearch: { law: [...] } }
- * - { ordinSearch: { law: [...] } }
- * - { 자치법규: { 자치법규: [...] } } 등
- */
 function pickListAny(data) {
   if (!data) return [];
   if (Array.isArray(data)) return data;
 
-  // 1) 가장 흔한 케이스: OrdinSearch.law
   const os = data?.OrdinSearch || data?.ordinSearch || data?.ORDINSEARCH;
   const osLaw = os?.law || os?.Law || os?.list || os?.items;
   if (Array.isArray(osLaw)) return osLaw;
 
-  // 2) 기존 케이스들
-  const a =
-    data?.자치법규 ||
-    data?.ordin ||
-    data?.Ordin ||
-    data?.list ||
-    data?.items ||
-    null;
-
+  const a = data?.자치법규 || data?.ordin || data?.Ordin || data?.list || data?.items || null;
   if (Array.isArray(a)) return a;
 
-  const b =
-    a?.자치법규 ||
-    a?.ordin ||
-    a?.Ordin ||
-    a?.list ||
-    a?.items ||
-    null;
-
+  const b = a?.자치법규 || a?.ordin || a?.Ordin || a?.list || a?.items || null;
   if (Array.isArray(b)) return b;
 
-  // 3) 혹시 law가 바로 최상위에 오는 케이스
   if (Array.isArray(data?.law)) return data.law;
 
   return [];
@@ -227,7 +194,7 @@ export async function fetchOrdinList({
   return { url, rows, raw };
 }
 
-// ----- orgMap scrape (가능하면, 실패하면 fallback) -----
+// ----- orgMap scrape -----
 let _orgMapCache = null;
 
 function parseOrgMapFromHtml(html) {
@@ -264,7 +231,7 @@ export async function resolveOrgBySido(sido) {
 }
 
 // ---------------------------------------------------------
-// 1) 특정 지자체 인덱스 수집(기존 흐름) - 그대로 유지
+// 1) 특정 지자체 인덱스 수집 (기존)
 // ---------------------------------------------------------
 function makeJurKey(sido, sigungu) {
   return `${sido}__${sigungu}`;
@@ -317,6 +284,8 @@ export async function crawlParkingOrdinanceIndex({
   debug = false,
 }) {
   if (!oc) throw new Error("MISSING_OC");
+
+  // ✅ 여기서는 일반 모드이므로 정규화 수행
   const s1 = normalizeSido(sido);
   const s2 = normalizeSigungu(sigungu);
   if (!s1) throw new Error("MISSING_SIDO");
@@ -410,11 +379,11 @@ export async function crawlParkingOrdinanceIndex({
 }
 
 // ---------------------------------------------------------
-// 2) ✅ 전국 자동 수집(NEW) - DB에 계속 쌓는 모드
+// 2) ✅ 전국 자동 수집 (NEW)
 // ---------------------------------------------------------
-function isNationwideInput(sido, sigungu) {
-  const s = String(sido || "").trim();
-  const g = String(sigungu || "").trim();
+function isNationwideRaw(sidoRaw, sigunguRaw) {
+  const s = String(sidoRaw ?? "").trim();
+  const g = String(sigunguRaw ?? "").trim();
   const sOk = (s === "전국" || s === "*" || s.toLowerCase() === "all");
   const gOk = (g === "전체" || g === "*" || g.toLowerCase() === "all");
   return sOk && gOk;
@@ -426,8 +395,8 @@ export async function crawlParkingOrdinanceIndexNationwide({
   query = "주차",
   searchMode = 1,
   knd = "30001",
-  limit = 300,           // ✅ 전체 최대 처리 rows
-  pagesPerSido = 2,      // ✅ 시도별 몇 페이지까지
+  limit = 300,
+  pagesPerSido = 2,
   throttleMs = 250,
   debug = false,
 }) {
@@ -445,12 +414,11 @@ export async function crawlParkingOrdinanceIndexNationwide({
     saved: null,
   };
 
-  // orgMap 준비
   await getOrgMapByScrape();
   out.resolved.orgMapSource = (_orgMapCache === FALLBACK_ORG_MAP) ? "FALLBACK" : "SCRAPED";
 
   const allRows = [];
-  const perSido = SIDO_LIST.slice(); // 전체 시도
+  const perSido = SIDO_LIST.slice();
 
   for (const sido of perSido) {
     if (allRows.length >= limit) break;
@@ -491,7 +459,6 @@ export async function crawlParkingOrdinanceIndexNationwide({
         break;
       }
 
-      // limit에 맞춰 자르면서 누적
       for (const row of rows) {
         allRows.push(row);
         got += 1;
@@ -504,7 +471,6 @@ export async function crawlParkingOrdinanceIndexNationwide({
           org,
           page,
           rowsCount: rows.length,
-          took: "ok",
           sampleOrgNames: rows.slice(0, 3).map(x => x.orgName).filter(Boolean),
           sampleNames: rows.slice(0, 3).map(x => x.name).filter(Boolean),
         });
@@ -513,14 +479,11 @@ export async function crawlParkingOrdinanceIndexNationwide({
       await sleep(throttleMs);
     }
 
-    if (!debug) {
-      out.progress.push({ sido, org, pages: pagesPerSido, collectedRows: got });
-    }
+    if (!debug) out.progress.push({ sido, org, pages: pagesPerSido, collectedRows: got });
   }
 
   out.received_rows = allRows.length;
 
-  // ✅ 여기서 jurKey 자동 분류 + DB 적재
   const saved = await ingestNationwideOrdinIndex(db, { rows: allRows });
   out.saved = saved;
 
@@ -529,8 +492,6 @@ export async function crawlParkingOrdinanceIndexNationwide({
 
 // ---------------------------------------------------------
 // ✅ API entry
-// - 기존처럼 sido/sigungu가 들어오는데,
-// - sido=전국 & sigungu=전체면 nationwide mode로 전환
 // ---------------------------------------------------------
 export async function run({
   db,
@@ -543,7 +504,8 @@ export async function run({
   pagesPerSido = 2,
   throttleMs = 250,
 }) {
-  if (isNationwideInput(sido, sigungu)) {
+  // ✅ 전국 분기는 "정규화 이전(raw)"에서 먼저 처리 (실패 방지 핵심)
+  if (isNationwideRaw(sido, sigungu)) {
     return crawlParkingOrdinanceIndexNationwide({
       db,
       oc,
