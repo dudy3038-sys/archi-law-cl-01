@@ -1,13 +1,17 @@
 // src/crawler/parkingCrawler.js (FULL REPLACE)
-// ✅ 실수집 + 즉시 DB 적재 + (2단계) 조례 본문 저장 + 전국/전체 지원 버전
+// ✅ 실수집 + 즉시 DB 적재 + (2단계) 조례 본문 저장 + (2.5단계) 설치기준 파싱/적재 + 전국/전체 지원 버전
 //
-// 핵심:
-// 1) DRF 자치법규 검색 응답이 { OrdinSearch: { law: [...] } } 형태일 수 있어 pickListAny 보강
-// 2) run({ db, oc, sido, sigungu, ... }) 호출 시
-//    - parking_jurisdiction / parking_ordinance_index 즉시 upsert
-//    - (2단계) parking_ordinance_text에 원문(JSON) + 텍스트 추출 저장
-// 3) sido="전국"|"*" 또는 sigungu="전체"|"*" 지원
-//    - 전국모드: 17개 시도를 순회하며 수집(요청량/차단 방지 위해 상한/스로틀 적용)
+// 추가된 핵심(2.5단계):
+// - parking_ordinance_text에서 방금 저장한 본문을 읽어
+// - parkingParser.js로 "㎡당 1대"류 규칙을 뽑아
+// - parking_rules 테이블에 INSERT OR REPLACE로 저장
+//
+// 기대 결과:
+// - /api/crawler/parking/run 호출 응답에 saved.rules_rows가 생김
+// - UI에서 "설치기준 파싱"이 ✅로 바뀔 준비 완료
+//
+// ⚠️ 실제 산정(legal 계산)은 parking_rules를 읽어서 계산하는 서버 로직이 연결되어 있어야 함
+//   (그건 다음 단계에서 확인/수정)
 
 import {
   SIDO_LIST,
@@ -15,6 +19,10 @@ import {
   normalizeSido,
   normalizeSigungu,
 } from "./cityList.js";
+
+import {
+  parseParkingRulesFromOrdinanceTextRow,
+} from "./parkingParser.js";
 
 const DRF_BASE = "https://www.law.go.kr/DRF/lawSearch.do";
 const LAW_SERVICE_URL = "https://www.law.go.kr/DRF/lawService.do";
@@ -382,7 +390,6 @@ function extractTextByKeyHints(obj) {
 
   walk(obj, "");
 
-  // 중복/공백 정리
   const norm = (arr) =>
     arr
       .map((x) => String(x).trim())
@@ -414,7 +421,6 @@ async function fetchOrdinanceJson({ oc, ordinId }) {
   try {
     data = JSON.parse(text);
   } catch {
-    // 가끔 HTML로 떨어지는 케이스 방지용
     throw new Error(`ORDIN_TEXT_NOT_JSON: ${text.slice(0, 120)}`);
   }
 
@@ -441,7 +447,65 @@ async function upsertOrdinText(db, { jurKey, ordinId, name, sourceUrl, rawJson, 
     .run();
 }
 
-// ✅ 수집 + 필터 + (DB 적재) + (2단계) 본문 저장
+// ----- (2.5단계) rules 저장 -----
+async function loadOrdinanceTextRows(db, { jurKey, ordinIds }) {
+  if (!ordinIds.length) return [];
+
+  // D1 IN (?)는 placeholder 확장 이슈가 있어 안전하게 OR로 처리 (개수는 textSaveLimit로 제한됨)
+  const stmts = ordinIds.map((id) =>
+    db
+      .prepare(
+        `SELECT ordin_id, jur_key, name, source_url, body_text, tables_text, updated_at
+         FROM parking_ordinance_text
+         WHERE jur_key = ? AND ordin_id = ?
+         LIMIT 1`
+      )
+      .bind(jurKey, String(id))
+  );
+
+  const out = [];
+  for (const st of stmts) {
+    const row = await st.first();
+    if (row) out.push(row);
+  }
+  return out;
+}
+
+async function upsertParkingRulesBatch(db, rules) {
+  if (!rules.length) return 0;
+
+  const CHUNK = 80;
+  let saved = 0;
+
+  for (let i = 0; i < rules.length; i += CHUNK) {
+    const part = rules.slice(i, i + CHUNK);
+    const stmts = part.map((r) =>
+      db
+        .prepare(
+          `INSERT OR REPLACE INTO parking_rules
+           (jur_key, ordin_id, use_label, unit, value_num, note, source, collected_at, updated_at)
+           VALUES
+           (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
+        )
+        .bind(
+          r.jur_key || null,
+          r.ordin_id || null,
+          r.use_label || null,
+          r.unit || null,
+          Number.isFinite(Number(r.value_num)) ? Number(r.value_num) : null,
+          r.note || null,
+          r.source || null
+        )
+    );
+
+    await db.batch(stmts);
+    saved += part.length;
+  }
+
+  return saved;
+}
+
+// ✅ 수집 + 필터 + (DB 적재) + (2단계) 본문 저장 + (2.5단계) 규칙 파싱/적재
 export async function crawlParkingOrdinanceIndex({
   db,
   oc,
@@ -460,6 +524,10 @@ export async function crawlParkingOrdinanceIndex({
   // (2단계 보호장치)
   textSaveLimit = 20,
   textThrottleMs = 250,
+
+  // (2.5단계 보호장치)
+  parseRules = true,
+  rulesParseLimit = 20,     // 보통 textSaveLimit과 맞추는 게 안전
 }) {
   if (!oc) throw new Error("MISSING_OC");
 
@@ -477,7 +545,6 @@ export async function crawlParkingOrdinanceIndex({
     : [normalizeSido(sidoRaw)];
 
   if (!targetSidos[0]) {
-    // 전국/전체가 아닌데 정규화 실패한 케이스
     throw new Error(`ORG_NOT_FOUND_FOR_SIDO: ${sidoRaw || "(empty)"}`);
   }
 
@@ -486,9 +553,7 @@ export async function crawlParkingOrdinanceIndex({
   const collected = [];
   const debugPack = debug ? { phases: [], rawHints: [] } : null;
 
-  let sidoIdx = 0;
   for (const s1 of targetSidos) {
-    sidoIdx += 1;
     const org = await resolveOrgBySido(s1);
 
     let page = 1;
@@ -535,7 +600,6 @@ export async function crawlParkingOrdinanceIndex({
         const orgName = row.orgName || "";
 
         if (sigunguAll) {
-          // ✅ 시군구 전체면 필터 없이 적재
           collected.push({ sido: s1, sigungu: s2, org, sborg: null, ...row });
         } else {
           if (!orgName) continue;
@@ -559,8 +623,8 @@ export async function crawlParkingOrdinanceIndex({
       await sleep(throttleMs);
     }
 
-    if (!nationwide) break; // 단일 시도면 1회만
-    if (collected.length >= limit) break; // 전국모드도 limit 채우면 중단
+    if (!nationwide) break;
+    if (collected.length >= limit) break;
   }
 
   // 중복 제거
@@ -568,18 +632,26 @@ export async function crawlParkingOrdinanceIndex({
   for (const it of collected) uniq.set(String(it.ordinId), it);
   const items = Array.from(uniq.values()).slice(0, limit);
 
-  // ✅ 즉시 DB 적재
+  // ✅ 즉시 DB 적재 + 텍스트 저장 + 규칙 파싱/저장
   let savedIndex = 0;
   let savedText = 0;
   const textErrors = [];
 
+  let savedRules = 0;
+  const rulesErrors = [];
+
   if (db) {
-    await upsertJurisdiction(db, { jurKey, sido: nationwide ? "전국" : targetSidos[0], sigungu: s2 });
+    await upsertJurisdiction(db, {
+      jurKey,
+      sido: nationwide ? "전국" : targetSidos[0],
+      sigungu: s2,
+    });
+
     savedIndex = await upsertOrdinIndexBatch(db, { jurKey, items });
 
-    // ✅ (2단계) 조례 본문 저장: 상한(textSaveLimit)까지만 (요청 폭주 방지)
-    const toSave = items.slice(0, Math.max(0, Math.min(textSaveLimit, items.length)));
-    for (const it of toSave) {
+    // (2단계) 조례 본문 저장
+    const toSaveText = items.slice(0, Math.max(0, Math.min(textSaveLimit, items.length)));
+    for (const it of toSaveText) {
       try {
         const { data, finalUrl } = await fetchOrdinanceJson({ oc, ordinId: it.ordinId });
         const rawJson = safeJsonStringify(data);
@@ -601,11 +673,40 @@ export async function crawlParkingOrdinanceIndex({
       }
       await sleep(textThrottleMs);
     }
+
+    // (2.5단계) 저장된 본문 → 규칙 파싱 → parking_rules 적재
+    if (parseRules) {
+      const ordinIdsForParse = toSaveText
+        .slice(0, Math.max(0, Math.min(rulesParseLimit, toSaveText.length)))
+        .map((x) => x.ordinId);
+
+      const textRows = await loadOrdinanceTextRows(db, {
+        jurKey,
+        ordinIds: ordinIdsForParse,
+      });
+
+      const allRules = [];
+      for (const row of textRows) {
+        try {
+          const rules = parseParkingRulesFromOrdinanceTextRow(row) || [];
+          for (const r of rules) allRules.push(r);
+        } catch (e) {
+          rulesErrors.push({
+            ordinId: String(row?.ordin_id || ""),
+            error: String(e?.message || e),
+          });
+        }
+      }
+
+      if (allRules.length) {
+        savedRules = await upsertParkingRulesBatch(db, allRules);
+      }
+    }
   }
 
   return {
     ok: true,
-    step: "COLLECT_SAVE_INDEX_AND_TEXT",
+    step: "COLLECT_SAVE_INDEX_TEXT_AND_RULES",
     input: {
       sido: nationwide ? "전국" : targetSidos[0],
       sigungu: s2,
@@ -613,6 +714,7 @@ export async function crawlParkingOrdinanceIndex({
       query,
       nationwide,
       sigunguAll,
+      parseRules,
     },
     jurKey,
     collected: items.length,
@@ -620,6 +722,8 @@ export async function crawlParkingOrdinanceIndex({
       index_rows: savedIndex,
       text_rows: savedText,
       text_errors: textErrors.slice(0, 10),
+      rules_rows: savedRules,
+      rules_errors: rulesErrors.slice(0, 10),
     },
     sample: items.slice(0, Math.min(5, items.length)),
     debug: debug ? debugPack : undefined,
